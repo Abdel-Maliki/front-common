@@ -1,7 +1,220 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-  }
+    "sk-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/sk-app",
+      "sourceRoot": "projects/sk-app/src",
+      "prefix": "sk",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/sk-app",
+            "index": "projects/sk-app/src/index.html",
+            "main": "projects/sk-app/src/main.ts",
+            "polyfills": "projects/sk-app/src/polyfills.ts",
+            "tsConfig": "projects/sk-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/sk-app/src/favicon.ico",
+              "projects/sk-app/src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+              "./node_modules/material-design-icons/iconfont/material-icons.css",
+              "./node_modules/primeicons/primeicons.css",
+              "./node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "./node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "projects/sk-app/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/sk-app/src/environments/environment.ts",
+                  "with": "projects/sk-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "sk-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "sk-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "sk-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sk-app/src/test.ts",
+            "polyfills": "projects/sk-app/src/polyfills.ts",
+            "tsConfig": "projects/sk-app/tsconfig.spec.json",
+            "karmaConfig": "projects/sk-app/karma.conf.js",
+            "assets": [
+              "projects/sk-app/src/favicon.ico",
+              "projects/sk-app/src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "projects/sk-app/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sk-app/tsconfig.app.json",
+              "projects/sk-app/tsconfig.spec.json",
+              "projects/sk-app/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/sk-app/e2e/protractor.conf.js",
+            "devServerTarget": "sk-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "sk-app:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "sk-lib": {
+      "projectType": "library",
+      "root": "projects/sk-lib",
+      "sourceRoot": "projects/sk-lib/src",
+      "prefix": "sk",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/sk-lib/tsconfig.lib.json",
+            "project": "projects/sk-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/sk-lib/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sk-lib/src/test.ts",
+            "tsConfig": "projects/sk-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/sk-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sk-lib/tsconfig.lib.json",
+              "projects/sk-lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "sk-core": {
+      "projectType": "library",
+      "root": "projects/sk-core",
+      "sourceRoot": "projects/sk-core/src",
+      "prefix": "sk",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/sk-core/tsconfig.lib.json",
+            "project": "projects/sk-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/sk-core/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sk-core/src/test.ts",
+            "tsConfig": "projects/sk-core/tsconfig.spec.json",
+            "karmaConfig": "projects/sk-core/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sk-core/tsconfig.lib.json",
+              "projects/sk-core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "sk-app"
 }

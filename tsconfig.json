@@ -14,6 +14,16 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "sk-core": [
+        "dist/sk-core/sk-core",
+        "dist/sk-core"
+      ],
+      "sk-lib": [
+        "dist/sk-lib/sk-lib",
+        "dist/sk-lib"
+      ]
+    },
     "target": "es2015",
     "module": "es2020",
     "lib": [

@@ -1,0 +1,10 @@
+<mat-toolbar [color]="color" *ngIf="displayToolbar$ | async">
+  <button (click)="toggleSidenav()" *ngIf="displayMenuButton$ | async" mat-icon-button class="example-icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>My App</span>
+  <span class="example-spacer"></span>
+  <ng-container *ngIf="templateRef">
+    <ng-template [ngTemplateOutlet]="templateRef"></ng-template>
+  </ng-container>
+</mat-toolbar>
