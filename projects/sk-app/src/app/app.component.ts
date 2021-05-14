@@ -1,4 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngxs/store';
 
 
 @Component({
@@ -9,7 +10,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'sk-app';
 
-  constructor() {
+  constructor(public store: Store) {
   }
 
 

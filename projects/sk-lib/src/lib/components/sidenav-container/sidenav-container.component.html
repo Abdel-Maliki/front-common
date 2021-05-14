@@ -4,10 +4,8 @@
   <mat-sidenav-container class="example-sidenav-container"
                          [style.marginTop.px]="(hasXLarge | async) ? 56 : 0">
 
-    <mat-sidenav [opened]="displayMenuLeft$| async"
-                 [mode]="mode$ | async"
-                 [fixedInViewport]="hasXLarge | async"
-                 fixedTopGap="56">
+    <mat-sidenav [opened]="displayMenuLeft$| async" [mode]="mode"
+                 fixedTopGap="56" [fixedInViewport]="hasXLarge | async">
       <mat-nav-list>
         <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a>
       </mat-nav-list>

@@ -1,8 +1,8 @@
 import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
-import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {sidenavToggleAction, layoutSelectors, SKState} from 'sk-core';
+import {Select, Store} from '@ngxs/store';
+import {SidenavToggleAction, SkLayoutState} from 'sk-core';
 
 @Component({
   selector: 'sk-tool-bar',
@@ -12,17 +12,17 @@ import {sidenavToggleAction, layoutSelectors, SKState} from 'sk-core';
 export class ToolBarComponent implements OnInit {
   @Input() color: ThemePalette = 'primary';
   @Input() templateRef: TemplateRef<any> | null = null;
-  displayToolbar$: Observable<any> = this.store.pipe(select(layoutSelectors.displayToolbar));
-  displayMenuButton$: Observable<any> = this.store.pipe(select(layoutSelectors.displayMenuButton));
+  @Select(SkLayoutState.displayToolbarSelector) displayToolbar$: Observable<any> | undefined;
+  @Select(SkLayoutState.displayMenuButtonSelector) displayMenuButton$: Observable<any> | undefined;
 
-  constructor(public store: Store<SKState>) {
+  constructor(public store: Store) {
   }
 
   ngOnInit(): void {
   }
 
   toggleSidenav(): void {
-    this.store.dispatch(sidenavToggleAction());
+    this.store.dispatch(new SidenavToggleAction());
   }
 
 }

@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {hideMenuLeftAction, layoutSelectors, SKState} from 'sk-core';
 import {MatDrawerMode, MatSidenav} from '@angular/material/sidenav';
+import {Select, Store} from '@ngxs/store';
+import {HideMenuLeftAction, SkLayoutState} from 'sk-core';
 
 @Component({
   selector: 'sk-sidenav-container',
@@ -12,17 +12,18 @@ import {MatDrawerMode, MatSidenav} from '@angular/material/sidenav';
 export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() toolBarRightContent: TemplateRef<any> | null = null;
   @Input() sidenavContent: TemplateRef<any> | null = null;
-  mode$: Observable<MatDrawerMode> = this.store.pipe(select(layoutSelectors.drawerMode));
-  displayMenuLeft$: Observable<boolean> = this.store.pipe(select(layoutSelectors.displayMenuLeft));
-  hasXLarge: Observable<boolean> = this.store.pipe(select(layoutSelectors.hasXLarge));
+  @Select(SkLayoutState.drawerModeSelector) mode$: Observable<MatDrawerMode> | undefined;
+  @Select(SkLayoutState.displayMenuLeftSelector) displayMenuLeft$: Observable<boolean> | undefined;
+  @Select(SkLayoutState.hasXLargeSelector) hasXLarge: Observable<boolean> | undefined;
   @ViewChild(MatSidenav) sidenav: MatSidenav | undefined;
+  mode: MatDrawerMode = 'side';
 
   private subscribeClosedStart: Subscription | undefined;
-
+  private subscribeMode: Subscription | undefined;
 
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
-  constructor(private store: Store<SKState>) {
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
@@ -33,12 +34,13 @@ export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   toggleJob(): void {
-    this.subscribeClosedStart = this.sidenav?.closedStart?.subscribe(() => this.store.dispatch(hideMenuLeftAction()));
+    this.subscribeClosedStart = this.sidenav?.closedStart?.subscribe(() => this.store.dispatch(new HideMenuLeftAction()));
+    this.subscribeMode = this.mode$?.subscribe(value => this.mode = value ? value : 'side');
   }
-
 
   ngOnDestroy(): void {
     this.subscribeClosedStart?.unsubscribe();
+    this.subscribeMode?.unsubscribe();
   }
 }
 
