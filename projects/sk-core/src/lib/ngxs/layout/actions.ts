@@ -40,6 +40,18 @@ export class HideMenuButtonAction {
   static readonly type = '[Layout] Hide menu button';
 }
 
+export class FixedMenuLeftAction {
+  static readonly type = '[Layout] Fixed menu left';
+
+  constructor(public fixedInViewport: boolean,
+              public autoFixed: boolean,
+              public fixedBottomGap?: number,
+              public fixedTopGap: number = 56) {
+  }
+}
+
+
+
 
 
 

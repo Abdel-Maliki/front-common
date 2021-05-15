@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {MatDrawerMode, MatSidenav} from '@angular/material/sidenav';
+import {MatSidenav} from '@angular/material/sidenav';
 import {Select, Store} from '@ngxs/store';
-import {HideMenuLeftAction, SkLayoutState} from 'sk-core';
+import {HideMenuLeftAction, MenuLeftState, SkLayoutState, MENU_LEFT_DEFAULT_STATE} from 'sk-core';
 
 @Component({
   selector: 'sk-sidenav-container',
@@ -12,11 +12,10 @@ import {HideMenuLeftAction, SkLayoutState} from 'sk-core';
 export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() toolBarRightContent: TemplateRef<any> | null = null;
   @Input() sidenavContent: TemplateRef<any> | null = null;
-  @Select(SkLayoutState.drawerModeSelector) mode$: Observable<MatDrawerMode> | undefined;
-  @Select(SkLayoutState.displayMenuLeftSelector) displayMenuLeft$: Observable<boolean> | undefined;
+  @Select(SkLayoutState.menuLeftStateSelector) menuLeftState$: Observable<MenuLeftState> | undefined;
   @Select(SkLayoutState.hasXLargeSelector) hasXLarge: Observable<boolean> | undefined;
   @ViewChild(MatSidenav) sidenav: MatSidenav | undefined;
-  mode: MatDrawerMode = 'side';
+  menuLeftState: MenuLeftState = MENU_LEFT_DEFAULT_STATE;
 
   private subscribeClosedStart: Subscription | undefined;
   private subscribeMode: Subscription | undefined;
@@ -35,7 +34,7 @@ export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestr
 
   toggleJob(): void {
     this.subscribeClosedStart = this.sidenav?.closedStart?.subscribe(() => this.store.dispatch(new HideMenuLeftAction()));
-    this.subscribeMode = this.mode$?.subscribe(value => this.mode = value ? value : 'side');
+    this.subscribeMode = this.menuLeftState$?.subscribe(value => this.menuLeftState = value ? value : MENU_LEFT_DEFAULT_STATE);
   }
 
   ngOnDestroy(): void {

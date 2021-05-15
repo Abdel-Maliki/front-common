@@ -19,6 +19,10 @@ export interface ToolbarState {
 export interface MenuLeftState {
   display: boolean;
   mode: MatDrawerMode;
+  autoFixed: boolean;
+  fixedTopGap: number;
+  fixedBottomGap: number;
+  fixedInViewport: boolean;
 }
 
 export interface SkLayoutStateModel {

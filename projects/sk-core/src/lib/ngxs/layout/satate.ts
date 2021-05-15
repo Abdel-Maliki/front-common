@@ -8,7 +8,7 @@ import {
   HideMenuLeftAction,
   DisplayToolbarAction,
   HideToolbarAction,
-  DisplayMenuButtonAction, HideMenuButtonAction, SidenavToggleAction
+  DisplayMenuButtonAction, HideMenuButtonAction, SidenavToggleAction, FixedMenuLeftAction
 } from './actions';
 import {MatDrawerMode} from '@angular/material/sidenav';
 import {Action, NgxsOnInit, Selector, State, StateContext, StateToken, Store} from '@ngxs/store';
@@ -17,13 +17,21 @@ import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/lay
 
 
 export const SK_LAYOUT_STATE_TOKEN = new StateToken<SkLayoutStateModel>('skLayoutState');
+export const MENU_LEFT_DEFAULT_STATE: MenuLeftState = {
+  display: true,
+  autoFixed: true,
+  mode: 'side',
+  fixedInViewport: true,
+  fixedBottomGap: 0,
+  fixedTopGap: 56
+};
 
 @State({
   name: SK_LAYOUT_STATE_TOKEN,
   defaults: {
     breakpointType: BreakpointType.XLARGE,
     toolbarState: {display: true},
-    menuLeftState: {display: true, mode: 'side'},
+    menuLeftState: MENU_LEFT_DEFAULT_STATE,
     displayMenuButton: true,
   }
 })
@@ -92,15 +100,19 @@ export class SkLayoutState implements NgxsOnInit {
     return state.breakpointType === BreakpointType.XLARGE;
   }
 
-
   @Action(ScreenSizeChangedAction)
   screenSizeChanged(ctx: StateContext<SkLayoutStateModel>, action: ScreenSizeChangedAction): void {
     const state = ctx.getState();
-    const mode: MatDrawerMode = action.payload.breakpointType === BreakpointType.XSMALL ? 'over' : 'side';
-    const display: boolean = action.payload.breakpointType !== BreakpointType.XSMALL;
+    let menuLeftState: MenuLeftState = ctx.getState().menuLeftState;
+    if (state.menuLeftState.autoFixed) {
+      const mode: MatDrawerMode = action.payload.breakpointType === BreakpointType.XSMALL ? 'over' : 'side';
+      const display: boolean = action.payload.breakpointType !== BreakpointType.XSMALL;
+      const fixedInViewport: boolean = action.payload.breakpointType === BreakpointType.XLARGE;
+      menuLeftState = {...state.menuLeftState, mode, display, fixedInViewport};
+    }
     ctx.patchState({
       breakpointType: action.payload.breakpointType,
-      menuLeftState: {...state.menuLeftState, mode, display}
+      menuLeftState
     });
   }
 
@@ -155,6 +167,20 @@ export class SkLayoutState implements NgxsOnInit {
     const state = ctx.getState();
     ctx.patchState({
       menuLeftState: {...state.menuLeftState, display: !state.menuLeftState.display}
+    });
+  }
+
+  @Action(FixedMenuLeftAction)
+  fixedMenuLeftAction(ctx: StateContext<SkLayoutStateModel>, action: FixedMenuLeftAction): void {
+    const state = ctx.getState();
+    ctx.patchState({
+      menuLeftState: {
+        ...state.menuLeftState,
+        fixedInViewport: action.fixedInViewport,
+        autoFixed: action.autoFixed || MENU_LEFT_DEFAULT_STATE.autoFixed,
+        fixedTopGap: action.fixedTopGap || MENU_LEFT_DEFAULT_STATE.fixedTopGap,
+        fixedBottomGap: action.fixedBottomGap || MENU_LEFT_DEFAULT_STATE.fixedBottomGap
+      }
     });
   }
 
