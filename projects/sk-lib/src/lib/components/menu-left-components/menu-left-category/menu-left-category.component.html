@@ -1,0 +1,10 @@
+<ng-container *ngIf="menuCategory && menuCategory.menuItems">
+  <div class="menu-category-title">{{ menuCategory.title}}</div>
+  <ng-container *ngFor="let menuItem of menuCategory.menuItems">
+    <sk-menu-left-item (closeBrother)="checkAndCloseOtherChildren($event)"
+                       (currentMenuItemEvent)="dispatchCurrentMenu($event)"
+                       [menuItem]="menuItem"></sk-menu-left-item>
+  </ng-container>
+  <mat-divider *ngIf="displayDivider" class="divider"></mat-divider>
+</ng-container>
+

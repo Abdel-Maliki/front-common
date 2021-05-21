@@ -1,0 +1,24 @@
+<mat-list-item (click)="updateShow()" class="my-list-item">
+  <span class="full-width p-6">{{ menuItem ? menuItem.title : ''}}</span>
+  <mat-icon [style.padding-left.px]="(8 * level) + 6" mat-list-icon *ngIf="haseMaterialIcon()">{{ menuItem?.icon}}</mat-icon>
+  <div [style.padding-left.px]="(8 * level) + 6" mat-list-icon style="font-size: 0.7rem;">
+    <i [class]="menuItem?.icon + ' fa-fw fa-lg'" *ngIf="hasFontAwesomeIcon()"></i>
+    <i [class]="menuItem?.icon" *ngIf="hasPrimeNgIcon()"></i>
+  </div>
+  <mat-icon *ngIf="withChild(menuItem)" class="menu-button"
+            [ngClass]="{'rotated' : menuItem && menuItem.displayChildren}">expand_more
+  </mat-icon>
+</mat-list-item>
+
+
+<div [@submenu]="withChild(menuItem) && menuItem && menuItem.displayChildren ? 'visible': 'hidden'">
+  <mat-divider style="margin-left: 20px" [vertical]="true"></mat-divider>
+  <ng-container *ngFor="let menuItem2 of (menuItem && menuItem.menuItems ? menuItem.menuItems : [])">
+    <sk-menu-left-item (closeBrother)="closeOtherChildren(menuItem2)"
+                       (currentMenuItemEvent)="currentMenuItemEvent.emit($event)"
+                       [parents]="getChildParents()"
+                       [menuItem]="menuItem2" [level]="level + 1"></sk-menu-left-item>
+  </ng-container>
+</div>
+
+
