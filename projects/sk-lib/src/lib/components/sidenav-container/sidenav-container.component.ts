@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {MatSidenav} from '@angular/material/sidenav';
 import {Select, Store} from '@ngxs/store';
-import {HideMenuLeftAction, MenuLeftState, SkLayoutState, MENU_LEFT_DEFAULT_STATE} from 'sk-core';
+import {MenuLeftState, SkLayoutState, SK_MENU_LEFT_DEFAULT_STATE, HideMenuLeftAction} from 'sk-core';
+import {MatSidenav} from '@angular/material/sidenav';
 
 @Component({
   selector: 'sk-sidenav-container',
@@ -10,22 +10,20 @@ import {HideMenuLeftAction, MenuLeftState, SkLayoutState, MENU_LEFT_DEFAULT_STAT
   styleUrls: ['./sidenav-container.component.css']
 })
 export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() toolBarRightContent: TemplateRef<any> | null = null;
-  @Input() sidenavContent: TemplateRef<any> | null = null;
+  @Input() toolBarRightContent: TemplateRef<any> | undefined;
+  @Input() sidenavContent: TemplateRef<any> | undefined;
   @Select(SkLayoutState.menuLeftStateSelector) menuLeftState$: Observable<MenuLeftState> | undefined;
   @Select(SkLayoutState.hasXLargeSelector) hasXLarge: Observable<boolean> | undefined;
+  menuLeftState: MenuLeftState = SK_MENU_LEFT_DEFAULT_STATE;
   @ViewChild(MatSidenav) sidenav: MatSidenav | undefined;
-  menuLeftState: MenuLeftState = MENU_LEFT_DEFAULT_STATE;
-
   private subscribeClosedStart: Subscription | undefined;
   private subscribeMode: Subscription | undefined;
-
-  fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
   constructor(private store: Store) {
   }
 
   ngOnInit(): void {
+    this.subscribeMode = this.menuLeftState$?.subscribe(value => this.menuLeftState = value);
   }
 
   ngAfterViewInit(): void {
@@ -34,7 +32,6 @@ export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestr
 
   toggleJob(): void {
     this.subscribeClosedStart = this.sidenav?.closedStart?.subscribe(() => this.store.dispatch(new HideMenuLeftAction()));
-    this.subscribeMode = this.menuLeftState$?.subscribe(value => this.menuLeftState = value ? value : MENU_LEFT_DEFAULT_STATE);
   }
 
   ngOnDestroy(): void {
@@ -42,4 +39,3 @@ export class SidenavContainerComponent implements OnInit, AfterViewInit, OnDestr
     this.subscribeMode?.unsubscribe();
   }
 }
-

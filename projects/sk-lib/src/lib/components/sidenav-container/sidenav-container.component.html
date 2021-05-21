@@ -2,14 +2,12 @@
   <sk-tool-bar [color]="'primary'" [templateRef]="toolBarRightContent" class="example-toolbar"></sk-tool-bar>
 
   <mat-sidenav-container class="example-sidenav-container">
-
     <mat-sidenav [opened]="menuLeftState.display"
+                 class="scrollable-element"
                  [mode]="menuLeftState.mode"
                  [fixedTopGap]="menuLeftState.fixedTopGap"
-                 [fixedInViewport]="false">
-      <mat-nav-list>
-        <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a>
-      </mat-nav-list>
+                 [fixedInViewport]="menuLeftState.fixedInViewport">
+      <sk-menu-left></sk-menu-left>
     </mat-sidenav>
 
     <mat-sidenav-content>

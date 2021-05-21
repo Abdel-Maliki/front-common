@@ -1,4 +1,5 @@
 import {MatDrawerMode} from '@angular/material/sidenav';
+import {MenuItem} from 'primeng/api/menuitem';
 
 export enum BreakpointType {
   XSMALL = 'XSMALL',
@@ -18,11 +19,13 @@ export interface ToolbarState {
 
 export interface MenuLeftState {
   display: boolean;
+  autoCloseBrother: boolean;
   mode: MatDrawerMode;
   autoFixed: boolean;
   fixedTopGap: number;
   fixedBottomGap: number;
   fixedInViewport: boolean;
+  current: MenuItem[];
 }
 
 export interface SkLayoutStateModel {

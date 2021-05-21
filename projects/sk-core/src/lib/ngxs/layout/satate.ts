@@ -1,6 +1,3 @@
-/**
- * @author abdel-maliki
- */
 import {BreakpointType, MenuLeftState, SkLayoutStateModel, ToolbarState} from './types';
 import {
   ScreenSizeChangedAction,
@@ -8,32 +5,46 @@ import {
   HideMenuLeftAction,
   DisplayToolbarAction,
   HideToolbarAction,
-  DisplayMenuButtonAction, HideMenuButtonAction, SidenavToggleAction, FixedMenuLeftAction
+  DisplayMenuButtonAction,
+  HideMenuButtonAction,
+  SidenavToggleAction,
+  FixedMenuLeftAction,
+  UpdateAutoCloseMenuLeftBrother,
+  CurrentMenuLeftItem
 } from './actions';
 import {MatDrawerMode} from '@angular/material/sidenav';
 import {Action, NgxsOnInit, Selector, State, StateContext, StateToken, Store} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {MenuItem} from 'primeng/api/menuitem';
 
+/**
+ * @author abdel-maliki
+ */
 
 export const SK_LAYOUT_STATE_TOKEN = new StateToken<SkLayoutStateModel>('skLayoutState');
-export const MENU_LEFT_DEFAULT_STATE: MenuLeftState = {
+
+export const SK_MENU_LEFT_DEFAULT_STATE: MenuLeftState = {
   display: true,
   autoFixed: true,
+  autoCloseBrother: true,
   mode: 'side',
   fixedInViewport: true,
   fixedBottomGap: 0,
-  fixedTopGap: 56
+  fixedTopGap: 56,
+  current: [],
+};
+
+export const SK_LAYOUT_DEFAULT_STATE: SkLayoutStateModel = {
+  breakpointType: BreakpointType.XLARGE,
+  toolbarState: {display: true},
+  menuLeftState: SK_MENU_LEFT_DEFAULT_STATE,
+  displayMenuButton: true,
 };
 
 @State({
   name: SK_LAYOUT_STATE_TOKEN,
-  defaults: {
-    breakpointType: BreakpointType.XLARGE,
-    toolbarState: {display: true},
-    menuLeftState: MENU_LEFT_DEFAULT_STATE,
-    displayMenuButton: true,
-  }
+  defaults: SK_LAYOUT_DEFAULT_STATE
 })
 @Injectable()
 export class SkLayoutState implements NgxsOnInit {
@@ -98,6 +109,16 @@ export class SkLayoutState implements NgxsOnInit {
   @Selector([SK_LAYOUT_STATE_TOKEN])
   static hasXLargeSelector(state: SkLayoutStateModel): boolean {
     return state.breakpointType === BreakpointType.XLARGE;
+  }
+
+  @Selector([SK_LAYOUT_STATE_TOKEN])
+  static autoCloseBrotherSelector(state: SkLayoutStateModel): boolean {
+    return state.menuLeftState.autoCloseBrother;
+  }
+
+  @Selector([SK_LAYOUT_STATE_TOKEN])
+  static currentMenuItemSelector(state: SkLayoutStateModel): MenuItem[] {
+    return state.menuLeftState.current;
   }
 
   @Action(ScreenSizeChangedAction)
@@ -170,6 +191,22 @@ export class SkLayoutState implements NgxsOnInit {
     });
   }
 
+  @Action(UpdateAutoCloseMenuLeftBrother)
+  updateAutoCloseMenuLeftBrother(ctx: StateContext<SkLayoutStateModel>, action: UpdateAutoCloseMenuLeftBrother): void {
+    const state = ctx.getState();
+    ctx.patchState({
+      menuLeftState: {...state.menuLeftState, autoCloseBrother: action.autoCloseBrother}
+    });
+  }
+
+  @Action(CurrentMenuLeftItem)
+  CurrentMenuLeftItem(ctx: StateContext<SkLayoutStateModel>, action: CurrentMenuLeftItem): void {
+    const state = ctx.getState();
+    ctx.patchState({
+      menuLeftState: {...state.menuLeftState, current: action.current}
+    });
+  }
+
   @Action(FixedMenuLeftAction)
   fixedMenuLeftAction(ctx: StateContext<SkLayoutStateModel>, action: FixedMenuLeftAction): void {
     const state = ctx.getState();
@@ -177,9 +214,9 @@ export class SkLayoutState implements NgxsOnInit {
       menuLeftState: {
         ...state.menuLeftState,
         fixedInViewport: action.fixedInViewport,
-        autoFixed: action.autoFixed || MENU_LEFT_DEFAULT_STATE.autoFixed,
-        fixedTopGap: action.fixedTopGap || MENU_LEFT_DEFAULT_STATE.fixedTopGap,
-        fixedBottomGap: action.fixedBottomGap || MENU_LEFT_DEFAULT_STATE.fixedBottomGap
+        autoFixed: action.autoFixed || SK_MENU_LEFT_DEFAULT_STATE.autoFixed,
+        fixedTopGap: action.fixedTopGap || SK_MENU_LEFT_DEFAULT_STATE.fixedTopGap,
+        fixedBottomGap: action.fixedBottomGap || SK_MENU_LEFT_DEFAULT_STATE.fixedBottomGap
       }
     });
   }

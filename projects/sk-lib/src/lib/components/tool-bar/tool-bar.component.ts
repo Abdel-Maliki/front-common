@@ -11,7 +11,7 @@ import {SidenavToggleAction, SkLayoutState} from 'sk-core';
 })
 export class ToolBarComponent implements OnInit {
   @Input() color: ThemePalette = 'primary';
-  @Input() templateRef: TemplateRef<any> | null = null;
+  @Input() templateRef: TemplateRef<any> | undefined;
   @Select(SkLayoutState.displayToolbarSelector) displayToolbar$: Observable<any> | undefined;
   @Select(SkLayoutState.displayMenuButtonSelector) displayMenuButton$: Observable<any> | undefined;
 

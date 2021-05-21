@@ -1,4 +1,5 @@
 import {ScreenSizeChangedProps} from './types';
+import {MenuItem} from 'primeng/api/menuitem';
 
 /**
  * @author abdel-maliki
@@ -39,6 +40,21 @@ export class DisplayMenuButtonAction {
 export class HideMenuButtonAction {
   static readonly type = '[Layout] Hide menu button';
 }
+
+export class UpdateAutoCloseMenuLeftBrother {
+  static readonly type = '[Layout] Update Auto Close MenuLeft Brother';
+
+  constructor(public autoCloseBrother: boolean) {
+  }
+}
+
+export class CurrentMenuLeftItem {
+  static readonly type = '[Layout] Current menu left iTem';
+
+  constructor(public current: MenuItem[]) {
+  }
+}
+
 
 export class FixedMenuLeftAction {
   static readonly type = '[Layout] Fixed menu left';
