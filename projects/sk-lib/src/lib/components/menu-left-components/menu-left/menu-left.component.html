@@ -1,6 +1,8 @@
-<mat-nav-list class="my-nav-list">
-  <ng-container *ngFor="let menuCategory of menuCategories">
-    <sk-menu-left-category [menuCategory]="menuCategory"
-                           [displayDivider]="!hasLast(menuCategory)"></sk-menu-left-category>
-  </ng-container>
-</mat-nav-list>
+<div style="display: flex">
+  <mat-nav-list class="sk-nav-list">
+    <ng-container *ngFor="let category of menuCategories">
+      <sk-menu-left-category [menuCategory]="category" [displayDivider]="!hasLast(category)"></sk-menu-left-category>
+    </ng-container>
+  </mat-nav-list>
+<mat-divider vertical class="sk-menu-divider"></mat-divider>
+</div>

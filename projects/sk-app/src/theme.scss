@@ -1,0 +1,53 @@
+@use '~@angular/material' as mat;
+
+@include mat.core();
+
+// Define a light theme
+$sk-primary: mat.define-palette(mat.$indigo-palette, 400);
+$sk-accent: mat.define-palette(mat.$pink-palette);
+$sk-light-theme: mat.define-light-theme((
+  color: (
+    primary: $sk-primary,
+    accent: $sk-accent,
+  )
+));
+
+// Define a dark theme
+$sk-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $sk-primary,
+    accent: $sk-accent,
+  )
+));
+
+// Apply the dark theme by default
+@include mat.core-theme($sk-light-theme);
+@include mat.button-theme($sk-light-theme);
+@include mat.strong-focus-indicators-theme($sk-light-theme);
+@include mat.all-component-themes($sk-light-theme);
+
+// Apply the light theme only when the `.my-light-theme` CSS class is applied
+// to an ancestor element of the components (such as `body`).
+.sk-light-theme {
+  @include mat.core-color($sk-light-theme);
+  @include mat.button-color($sk-light-theme);
+  @include mat.all-component-themes($sk-light-theme);
+}
+
+.sk-dark-theme {
+  @include mat.core-color($sk-dark-theme);
+  @include mat.button-color($sk-dark-theme);
+  @include mat.all-component-themes($sk-dark-theme);
+}
+
+.sk-primary-color {
+  color: mat.get-color-from-palette($sk-primary);
+}
+
+.sk-accent-color {
+  color: mat.get-color-from-palette($sk-accent);
+}
+
+.background-black {
+  background-color: rgb(24, 29, 46);
+}

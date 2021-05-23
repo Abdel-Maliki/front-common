@@ -8,7 +8,7 @@ import {SkLayoutState} from 'sk-core';
 @Component({
   selector: 'sk-menu-left-item',
   templateUrl: './menu-left-item.component.html',
-  styleUrls: ['./menu-left-item.component.css'],
+  styleUrls: ['./menu-left-item.component.scss'],
   animations: [
     trigger('submenu', [
       state('hidden', style({
@@ -31,6 +31,7 @@ export class MenuLeftItemComponent implements OnInit, OnDestroy {
   @Output() closeBrother: EventEmitter<MenuItem> = new EventEmitter<MenuItem>();
   @Output() currentMenuItemEvent: EventEmitter<MenuItem[]> = new EventEmitter<MenuItem[]>();
   @Input() parents: MenuItem[] = [];
+  isLeave = false;
 
   constructor(private store: Store) {
   }
@@ -40,8 +41,8 @@ export class MenuLeftItemComponent implements OnInit, OnDestroy {
 
   updateShow(): void {
     if (this.menuItem) {
-      this.menuItem.displayChildren = !this.menuItem.displayChildren;
-      if (this.menuItem.displayChildren) {
+      this.menuItem.selected = !this.menuItem.selected;
+      if (this.menuItem.selected) {
         const item = this.emptyChild(this.menuItem);
         this.currentMenuItemEvent.emit(Object.assign([], item ? [item, ...this.parents] : this.parents));
         this.closeBrother.emit(this.menuItem);
@@ -89,5 +90,9 @@ export class MenuLeftItemComponent implements OnInit, OnDestroy {
       return item;
     }
     return undefined;
+  }
+
+  selectedClass(): string {
+    return this.menuItem && (this.isLeave || this.menuItem.selected) ? ' sk-menu-selected' : ' default-color';
   }
 }

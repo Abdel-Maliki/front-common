@@ -6,7 +6,7 @@ import {SkLayoutState, CurrentMenuLeftItem} from 'sk-core';
 @Component({
   selector: 'sk-menu-left-category',
   templateUrl: './menu-left-category.component.html',
-  styleUrls: ['./menu-left-category.component.css'],
+  styleUrls: ['./menu-left-category.component.scss'],
 })
 export class MenuLeftCategoryComponent implements OnInit, OnDestroy {
 
@@ -21,7 +21,7 @@ export class MenuLeftCategoryComponent implements OnInit, OnDestroy {
   }
 
   private static setDisplay(menuItem: MenuItem): MenuItem {
-    menuItem.displayChildren = false;
+    menuItem.selected = false;
     return menuItem;
   }
 

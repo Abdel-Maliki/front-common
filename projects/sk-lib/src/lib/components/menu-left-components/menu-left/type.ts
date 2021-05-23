@@ -6,7 +6,7 @@ export interface MenuItem {
   title: string;
   link?: string;
   icon?: string;
-  displayChildren?: boolean;
+  selected?: boolean;
   menuItems?: MenuItem[];
   id?: string;
   roles?: string[];
