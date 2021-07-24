@@ -19,7 +19,10 @@ import {NgModule} from '@angular/core';
 import {NgxsModule} from '@ngxs/store';
 import {environment} from '../environments/environment';
 import {skStates} from '../../../sk-core/src/lib/ngxs';
-import {SidenavContainerModule} from '../../../sk-lib/src/lib/components/sidenav-container/sidenav-container.module';
+import {SidenavContainerModule} from '../../../sk-lib/src/lib/components';
+import {SkListComponentHeaderModule} from '../../../sk-lib/src/lib/components';
+import {SharedModule} from '../../../sk-lib/src/lib/shared/shared-module';
+import {SkEnterpriseListModule} from '../../../sk-lib/src/lib/sk-user-management';
 
 
 @NgModule({
@@ -50,6 +53,9 @@ import {SidenavContainerModule} from '../../../sk-lib/src/lib/components/sidenav
     MatToolbarModule,
     MatListModule,
     SidenavContainerModule,
+    SkListComponentHeaderModule,
+    SkEnterpriseListModule,
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

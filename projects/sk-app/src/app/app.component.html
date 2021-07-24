@@ -1,7 +1,18 @@
 <sk-sidenav-container [toolBarRightContent]="templateRef" [sidenavContent]="sidenavContent"></sk-sidenav-container>
 
 <ng-template #sidenavContent>
+  <sk-enterprise-list></sk-enterprise-list>
   <router-outlet></router-outlet>
+</ng-template>
+
+
+<ng-template #raisedButton>
+  <div fxLayout="row">
+    <button mat-raised-button class="margin-8">Basic</button>
+    <button mat-raised-button class="margin-8" color="primary">Primary</button>
+    <button mat-raised-button class="margin-8" color="accent">Accent</button>
+    <button mat-raised-button class="margin-8" color="warn">Warn</button>
+  </div>
 </ng-template>
 
 <ng-template #templateRef>

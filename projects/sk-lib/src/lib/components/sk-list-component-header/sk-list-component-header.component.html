@@ -1,0 +1,19 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <div>
+    <ng-container *ngIf="leftTemplate">
+      <ng-template [ngTemplateOutlet]="leftTemplate"></ng-template>
+    </ng-container>
+  </div>
+
+  <div>
+    <ng-container *ngIf="centerTemplate">
+      <ng-template [ngTemplateOutlet]="centerTemplate"></ng-template>
+    </ng-container>
+  </div>
+
+  <div>
+    <ng-container *ngIf="rightTemplate">
+      <ng-template [ngTemplateOutlet]="rightTemplate"></ng-template>
+    </ng-container>
+  </div>
+</mat-toolbar>

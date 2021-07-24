@@ -3,7 +3,7 @@
 @include mat.core();
 
 // Define a light theme
-$sk-primary: mat.define-palette(mat.$indigo-palette, 400);
+$sk-primary: mat.define-palette(mat.$indigo-palette, 900);
 $sk-accent: mat.define-palette(mat.$pink-palette);
 $sk-light-theme: mat.define-light-theme((
   color: (
@@ -21,10 +21,10 @@ $sk-dark-theme: mat.define-dark-theme((
 ));
 
 // Apply the dark theme by default
-@include mat.core-theme($sk-light-theme);
-@include mat.button-theme($sk-light-theme);
-@include mat.strong-focus-indicators-theme($sk-light-theme);
-@include mat.all-component-themes($sk-light-theme);
+@include mat.core-theme($sk-dark-theme);
+@include mat.button-theme($sk-dark-theme);
+@include mat.strong-focus-indicators-theme($sk-dark-theme);
+@include mat.all-component-themes($sk-dark-theme);
 
 // Apply the light theme only when the `.my-light-theme` CSS class is applied
 // to an ancestor element of the components (such as `body`).

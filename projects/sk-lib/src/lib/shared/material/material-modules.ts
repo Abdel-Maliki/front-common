@@ -42,6 +42,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
+
 
 @NgModule({
   exports: [
@@ -89,6 +91,9 @@ import {OverlayModule} from '@angular/cdk/overlay';
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule
   ]
 })
-export class MaterialModules {}
+export class MaterialModules {
+}

@@ -1,11 +1,10 @@
 <div class="example-container" [class.example-is-mobile]="hasXLarge | async">
   <mat-sidenav-container class="example-sidenav-container">
     <mat-sidenav [opened]="menuLeftState.display"
-                 class="background-black"
                  [mode]="menuLeftState.mode"
                  [fixedTopGap]="menuLeftState.fixedTopGap"
                  [fixedInViewport]="menuLeftState.fixedInViewport">
-      <sk-menu-left class="sk-dark-theme"></sk-menu-left>
+      <sk-menu-left></sk-menu-left>
     </mat-sidenav>
     <mat-sidenav-content>
       <sk-tool-bar [color]="'primary'" [templateRef]="toolBarRightContent" class="example-toolbar"></sk-tool-bar>
