@@ -3,9 +3,9 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Store} from '@ngxs/store';
-import {ResponseWrapper} from '../utils/response-wrapper';
-import {SKConfigState} from '../ngxs/config/state';
-import {LogoutAction, SetRolesAction, SetUserAction} from '../ngxs/auth/actions';
+import {ResponseWrapper} from '../classes';
+import {SKConfigState} from '../ngxs';
+import {LogoutAction, SetRolesAction, SetUserAction} from '../ngxs';
 
 /**
  * @author abdel-maliki

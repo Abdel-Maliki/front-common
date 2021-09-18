@@ -1,9 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {RouterTestComponent} from './router-test/router-test.component';
 
 const routes: Routes = [
-  {path: 'test', component: RouterTestComponent}
+  {
+    path: 'enterprises',
+    loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkEnterpriseModule),
+  }
 ];
 
 @NgModule({

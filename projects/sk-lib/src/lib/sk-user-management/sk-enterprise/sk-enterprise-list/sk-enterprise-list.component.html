@@ -11,3 +11,12 @@
 <ng-template #centerTemplate>
   <div>Liste des entreprises</div>
 </ng-template>
+
+<sk-table
+  [datasource]="datasource"
+  [totalElements]="pagination.totalElements"
+  [pagination]="pagination"
+  (pageChange)="pageChange($event)"
+  [displayedColumns]="displayedColumns">
+
+</sk-table>

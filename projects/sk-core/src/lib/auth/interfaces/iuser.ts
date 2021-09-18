@@ -1,6 +1,5 @@
-import {ISkService} from '../../interfaces/service';
-import {Pagination} from '../../utils/pagination';
-import {ResponseWrapper} from '../../utils/response-wrapper';
+import {ISkService, SKIPagination} from '../../interfaces';
+import {ResponseWrapper} from '../../classes';
 import {InjectionToken} from '@angular/core';
 
 class UserDomain {
@@ -14,13 +13,13 @@ export const USER_SERVICE_IMP = new InjectionToken<ISKUser>('IUser Implementatio
 
 export interface ISKUser extends ISkService<UserDomain> {
 
-  activateAccount(pagination: Pagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  activateAccount(pagination: SKIPagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
 
-  disableAccount(pagination: Pagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  disableAccount(pagination: SKIPagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
 
-  activateAllAccount(entities: UserDomain[], pagination: Pagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  activateAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
 
-  disableAllAccount(entities: UserDomain[], pagination: Pagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  disableAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
 
   resetPassword(id: string | number, password: string): Promise<ResponseWrapper<void>>;
 

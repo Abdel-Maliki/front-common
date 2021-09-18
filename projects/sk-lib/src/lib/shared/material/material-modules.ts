@@ -92,7 +92,8 @@ import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-mater
     PortalModule,
     ScrollingModule,
     NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule
+    NgxMatTimepickerModule,
+    MatIconModule,
   ]
 })
 export class MaterialModules {

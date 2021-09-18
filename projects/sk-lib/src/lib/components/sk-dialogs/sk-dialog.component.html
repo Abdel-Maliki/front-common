@@ -1,0 +1,22 @@
+<ng-container *ngIf="!dialogFullContent">
+  <h2 mat-dialog-title *ngIf="title">{{ title }}</h2>
+  <mat-dialog-content>
+    <h3 *ngIf="dialogContentString">{{dialogContentString}}</h3>
+    <ng-container [ngTemplateOutlet]="dialogContent"></ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" *ngIf="displayValidateButton || displayCancelButton">
+    <sk-actions
+      [displayCancelButton]="displayCancelButton"
+      [disabledCancelButton]="disabledCancelButton"
+      [cancelTitle]="cancelTitle"
+      [displayValidateButton]="displayValidateButton"
+      [disabledValidateButton]="disabledValidateButton"
+      [validateTitle]="validateTitle"
+      (validateAction)="validateEvent()"
+      (cancelAction)="cancelEvent()"></sk-actions>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="dialogFullContent">
+  <ng-container [ngTemplateOutlet]="dialogFullContent"></ng-container>
+</ng-container>

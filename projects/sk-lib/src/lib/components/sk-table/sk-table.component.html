@@ -1,0 +1,42 @@
+<mat-table class="components-table" [dataSource]="datasource">
+  <ng-container *ngFor="let displayedColumn of displayedColumns" [matColumnDef]="displayedColumn.title">
+    <mat-header-cell *matHeaderCellDef>{{ displayedColumn.title }}</mat-header-cell>
+    <mat-cell *matCellDef="let component">
+      <p class="text-truncate">{{ displayedColumn.value(component) }}</p>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Buttons Column -->
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+    <mat-cell *matCellDef="let component">
+      <div fxFlex="row" fxLayoutAlign="end center">
+        <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                (click)="$event.stopPropagation();" *ngIf="component.username !== 'admin'">
+          <mat-icon class="secondary-text">more_vert</mat-icon>
+        </button>
+        <mat-menu #moreMenu="matMenu">
+          <ng-container [ngTemplateOutlet]="actionsTemplate"
+                        [ngTemplateOutletContext]="{$implicit:component}">
+          </ng-container>
+        </mat-menu>
+      </div>
+
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="columns; sticky:true" class="sng-mat-header"></mat-header-row>
+
+  <mat-row *matRowDef="let component; columns: columns;" [style.cursor]="cursor" matRipple
+           class="component-list-base sng-mat-row"
+           [matRippleDisabled]="disabledRipple" (click)="lineClicked.emit(component)">
+  </mat-row>
+</mat-table>
+
+<mat-paginator *ngIf="displayPagination"
+               [pageSizeOptions]="pageSizeOptions"
+               [length]='totalElements ?? pagination.totalElements ?? datasource.data.length'
+               [pageIndex]="pageIndex ?? pagination.page ?? 0"
+               [pageSize]="pageSize ?? pagination.size ?? pageSizeOptions[0]"
+               (page)="pageEvent($event)">
+</mat-paginator>

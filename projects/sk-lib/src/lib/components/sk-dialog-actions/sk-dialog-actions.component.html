@@ -1,0 +1,6 @@
+<div fxLayout="row">
+    <button mat-button *ngIf="displayCancelButton" (click)="cancelAction.emit()"
+            [disabled]="disabledCancelButton">{{cancelTitle}}</button>
+    <button mat-button *ngIf="displayValidateButton" (click)="validateAction.emit()"
+            [disabled]="disabledValidateButton">{{validateTitle}}</button>
+</div>
