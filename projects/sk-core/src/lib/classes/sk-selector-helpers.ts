@@ -84,6 +84,14 @@ export class SKSelectorHelpers {
     return state.lastDelete;
   }
 
+  static loadEntitiesSelector<T extends SkAbstractEntity<T>, S extends SkAbstractStateModel<T>>(state: S): boolean {
+    return state?.loadEntities ?? true;
+  }
+
+  static selector<T extends SkAbstractEntity<T>, S extends SkAbstractStateModel<T>>(state: S): S {
+    return state;
+  }
+
   static paginationSelector<T extends SkAbstractEntity<T>,
     S extends SkAbstractStateModel<T, F>,
     F extends { [key: string]: any } = any>(state: S, defaultPagination: SKIPagination<F>): SKIPagination<F> {

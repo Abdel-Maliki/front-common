@@ -293,6 +293,16 @@ export class SKEnterpriseModelState implements NgxsOnInit {
     return SKSelectorHelpers.paginationSelector(state, DEFAULT_PAGINATION);
   }
 
+  @Selector([SK_ENTERPRISE_STATE_TOKEN])
+  static loadEntitiesSelector(state: SKEnterpriseModelStateModel): boolean {
+    return SKSelectorHelpers.loadEntitiesSelector(state);
+  }
+
+  @Selector([SK_ENTERPRISE_STATE_TOKEN])
+  static selector(state: SKEnterpriseModelStateModel): SKEnterpriseModelStateModel {
+    return SKSelectorHelpers.selector(state);
+  }
+
 
   ngxsOnInit(ctx?: StateContext<any>): any {
   }

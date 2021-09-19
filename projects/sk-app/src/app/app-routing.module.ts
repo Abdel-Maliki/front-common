@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: 'enterprises',
     loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkEnterpriseModule),
+  },
+  {
+    path: '**',
+    loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkEnterpriseModule),
   }
 ];
 

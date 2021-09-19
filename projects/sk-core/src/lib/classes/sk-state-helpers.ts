@@ -36,8 +36,9 @@ export abstract class SkStateHelpers {
     response: ResponseWrapper<K, F>,
     ctx: StateContext<any>,
     defaultErrorMessage: string,
-    val?: keyof SkAbstractStateModel<T, F>,
-    updatePageInf: boolean = false): Partial<SkAbstractStateModel<T, F>> {
+    val: keyof SkAbstractStateModel<T, F>,
+    updatePageInf: boolean = false,
+    loadEntities: boolean = true): Partial<SkAbstractStateModel<T, F>> {
 
     const partial: Partial<SkAbstractStateModel<T, F>> = response.isNotValid ? {
       error: response.error?.full,
@@ -47,6 +48,7 @@ export abstract class SkStateHelpers {
 
     if (val && response.isValid) {
       partial[val] = response.data;
+      partial.loadEntities = loadEntities;
 
       if (updatePageInf) {
         partial.page = response.pagination?.page;
@@ -74,12 +76,13 @@ export abstract class SkStateHelpers {
     ctx: StateContext<SkAbstractStateModel<K>>,
     val: keyof SkAbstractStateModel<K, F>,
     updatePageInf: boolean = false,
+    loadEntities: boolean = true,
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
         map((value: ResponseWrapper<RESPONSE_TYPE | Array<RESPONSE_TYPE>>) => ResponseWrapper
           .fromJson<K, RETURN_TYPE, RESPONSE_TYPE>(value, service)),
-        tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', val, updatePageInf)})),
+        tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', val, updatePageInf, loadEntities)})),
         map(value => value.data as RETURN_TYPE),
         catchError(err => {
           ctx.patchState({
@@ -100,7 +103,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<SkAbstractStateModel<T>>,
     action: SKGetAction<ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity');
+    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', false, false);
   }
 
   static getAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -108,7 +111,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<SkAbstractStateModel<T>>,
     action: SkGetAllAction<A>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all');
+    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', false, false);
   }
 
   static pageElements<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -121,7 +124,7 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true);
+      true, false);
   }
 
 
@@ -139,7 +142,10 @@ export abstract class SkStateHelpers {
       service.create(action.payload.entity, action.payload.others),
       service,
       ctx,
-      'lastCreate');
+      'lastCreate',
+      false,
+      true
+    );
   }
 
   static createAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -152,7 +158,9 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true);
+      true,
+      true
+    );
   }
 
   static createAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -169,7 +177,10 @@ export abstract class SkStateHelpers {
       service.createAll(action.payload.entities, action.payload.others),
       service,
       ctx,
-      'lastCreates');
+      'lastCreates',
+      false,
+      true
+    );
   }
 
   /**********************************************************
@@ -185,7 +196,10 @@ export abstract class SkStateHelpers {
       service.update(action.payload.entity, action.payload.id, action.payload.others),
       service,
       ctx,
-      'lastUpdate');
+      'lastUpdate',
+      false,
+      true
+    );
   }
 
   static updateAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -201,7 +215,9 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true);
+      true,
+      true
+    );
   }
 
   static updateAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -218,7 +234,10 @@ export abstract class SkStateHelpers {
       service.updateAll(action.payload.entities, action.payload.others),
       service,
       ctx,
-      'lastUpdates');
+      'lastUpdates',
+      false,
+      true
+    );
   }
 
 
@@ -235,7 +254,10 @@ export abstract class SkStateHelpers {
       service.delete(action.payload.id, action.payload.others),
       service,
       ctx,
-      'lastDelete');
+      'lastDelete',
+      false,
+      true,
+    );
   }
 
   static deleteAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -248,7 +270,9 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true);
+      true,
+      true
+    );
   }
 
   static deleteAllAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
@@ -266,7 +290,9 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true);
+      true,
+      true
+    );
   }
 
 
@@ -286,7 +312,10 @@ export abstract class SkStateHelpers {
       service.deleteAll(ids, action.payload.others),
       service,
       ctx,
-      'lastDeletes');
+      'lastDeletes',
+      false,
+      true
+    );
   }
 
 }

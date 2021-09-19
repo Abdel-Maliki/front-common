@@ -22,8 +22,8 @@ export abstract class SkAbstractStateModel<T, F = { [key: string]: any }> {
   lastUpdates?: T[] = [];
   lastDelete?: T;
   lastDeletes?: T[] = [];
+  loadEntities?: boolean;
 }
-
 
 
 export const SKDefaultState: SkAbstractStateModel<any, any> = {
@@ -47,4 +47,5 @@ export const SKDefaultState: SkAbstractStateModel<any, any> = {
   lastCreate: undefined,
   lastUpdate: undefined,
   lastDelete: undefined,
+  loadEntities: true,
 };

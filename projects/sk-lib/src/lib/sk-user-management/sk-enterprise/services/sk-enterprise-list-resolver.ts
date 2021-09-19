@@ -11,7 +11,7 @@ import {SkAbstractListResolver, SKConfigState} from 'sk-core';
 @Injectable()
 export class SKEnterpriseListResolver extends SkAbstractListResolver<SkEnterpriseModel, SKEnterpriseModelStateModel> {
   constructor(protected store: Store) {
-    super(store, SKEnterpriseModelState.entitiesSelector, new SKEnterprisePageAction({
+    super(store, SKEnterpriseModelState.loadEntitiesSelector, new SKEnterprisePageAction({
       pagination: store.selectSnapshot(SKConfigState.paginationSelector)
     }));
   }
