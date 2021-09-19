@@ -5,7 +5,7 @@
 </sk-list-component-header>
 
 <ng-template #leftTemplate>
-  <sk-add-button></sk-add-button>
+  <sk-add-button [routerLink]=" '/' + enterpriseLink + '/new' "></sk-add-button>
 </ng-template>
 
 <ng-template #rightTemplate>
@@ -20,7 +20,7 @@
 <ng-template #actionsTemplate let-data>
   <button mat-menu-item aria-label="edit">
     <mat-icon>edit</mat-icon>
-    <span>lllll</span>
+    <span>Modifier</span>
   </button>
 </ng-template>
 

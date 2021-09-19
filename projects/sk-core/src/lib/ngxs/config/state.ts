@@ -1,7 +1,7 @@
 import {NgxsOnInit, Selector, State, StateContext, StateToken} from '@ngxs/store';
 import {SkAuthStateModel} from '../auth/type';
 import {Injectable} from '@angular/core';
-import {SkConfigStateModel} from './type';
+import {SkConfigStateModel, SkLinksConfig} from './type';
 import {SKIPagination} from '../../interfaces';
 
 /**
@@ -19,6 +19,11 @@ export const DEFAULT_PAGINATION: SKIPagination = {
   sort: 'desc',
 };
 
+export const DEFAULT_LINKS_CONFIG: SkLinksConfig = {
+  enterpriseLink: 'enterprises',
+  userLink: 'users',
+};
+
 @State({
   name: SK_CONFIG_STATE_TOKEN,
   defaults: {
@@ -28,6 +33,7 @@ export const DEFAULT_PAGINATION: SKIPagination = {
     useLoadingInterceptor: true,
     pagination: DEFAULT_PAGINATION,
     pageSizeOptions: [10, 20, 50, 100, 150, 200, 300, 500],
+    links: DEFAULT_LINKS_CONFIG,
   }
 })
 @Injectable()
@@ -61,6 +67,11 @@ export class SKConfigState implements NgxsOnInit {
   @Selector([SK_CONFIG_STATE_TOKEN])
   static pageSizeOptionsSelector(state: SkConfigStateModel): number[] {
     return state.pageSizeOptions;
+  }
+
+  @Selector([SK_CONFIG_STATE_TOKEN])
+  static configModelSelector(state: SkConfigStateModel): SkConfigStateModel {
+    return state;
   }
 
 

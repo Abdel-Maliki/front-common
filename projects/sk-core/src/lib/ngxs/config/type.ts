@@ -11,4 +11,10 @@ export interface SkConfigStateModel {
   useLoadingInterceptor: boolean;
   pagination: SKIPagination;
   pageSizeOptions: number[];
+  links: SkLinksConfig;
+}
+
+export interface SkLinksConfig {
+  userLink: string;
+  enterpriseLink: string;
 }

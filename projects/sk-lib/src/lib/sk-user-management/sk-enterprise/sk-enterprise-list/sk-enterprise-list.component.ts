@@ -5,7 +5,7 @@ import {ColumnItem} from '../../../components';
 import {Store} from '@ngxs/store';
 import {SKEnterpriseModelState, SKEnterprisePageAction} from '../sk-enterprise-state';
 import {Subscription} from 'rxjs';
-import {DateHelpers, SKIPagination} from 'sk-core';
+import {DateHelpers, SKConfigState, SKIPagination} from 'sk-core';
 
 @Component({
   selector: 'sk-enterprise-list',
@@ -17,6 +17,7 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
   subscriptionList: Subscription = new Subscription();
   datasource: MatTableDataSource<SkEnterpriseModel> = new MatTableDataSource<SkEnterpriseModel>([]);
   pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector);
+  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.configModelSelector).links.enterpriseLink;
 
   @Input() displayedColumns: ColumnItem<SkEnterpriseModel>[] = [
     {title: 'ID', value: data => data?.id ?? ''},
