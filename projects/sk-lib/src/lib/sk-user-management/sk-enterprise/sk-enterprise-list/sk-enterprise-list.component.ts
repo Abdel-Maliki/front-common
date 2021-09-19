@@ -5,7 +5,7 @@ import {ColumnItem} from '../../../components';
 import {Store} from '@ngxs/store';
 import {SKEnterpriseModelState, SKEnterprisePageAction} from '../sk-enterprise-state';
 import {Subscription} from 'rxjs';
-import {SKIPagination} from 'sk-core';
+import {DateHelpers, SKIPagination} from 'sk-core';
 
 @Component({
   selector: 'sk-enterprise-list',
@@ -19,8 +19,12 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
   pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector);
 
   @Input() displayedColumns: ColumnItem<SkEnterpriseModel>[] = [
+    {title: 'ID', value: data => data?.id ?? ''},
     {title: 'Nom', value: data => data?.name ?? ''},
     {title: 'Téléphone', value: data => data?.tel ?? ''},
+    {title: 'Adresse', value: data => data?.address ?? ''},
+    {title: 'Email', value: data => data?.email ?? ''},
+    {title: 'Date d\'Ajout', value: data => DateHelpers.dateToDDMMYYYY(data?.createdAt) ?? ''},
   ];
 
   constructor(protected store: Store) {

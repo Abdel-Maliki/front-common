@@ -15,7 +15,7 @@ export const SK_CONFIG_STATE_TOKEN = new StateToken<SkConfigStateModel>('skConfi
 export const DEFAULT_PAGINATION: SKIPagination = {
   direction: 0,
   page: 0,
-  size: 20,
+  size: 10,
   sort: 'desc',
 };
 

@@ -1,22 +1,35 @@
 <br>
 <sk-list-component-header [leftTemplate]="leftTemplate"
                           [centerTemplate]="centerTemplate"
-                          [rightTemplate]="leftTemplate">
+                          [rightTemplate]="rightTemplate">
 </sk-list-component-header>
 
 <ng-template #leftTemplate>
   <sk-add-button></sk-add-button>
 </ng-template>
 
+<ng-template #rightTemplate>
+  <div></div>
+</ng-template>
+
+
 <ng-template #centerTemplate>
   <div>Liste des entreprises</div>
 </ng-template>
+
+<ng-template #actionsTemplate let-data>
+  <button mat-menu-item aria-label="edit">
+    <mat-icon>edit</mat-icon>
+    <span>lllll</span>
+  </button>
+</ng-template>
+
 
 <sk-table
   [datasource]="datasource"
   [totalElements]="pagination.totalElements"
   [pagination]="pagination"
   (pageChange)="pageChange($event)"
-  [displayedColumns]="displayedColumns">
+  [displayedColumns]="displayedColumns" [actionsTemplate]="actionsTemplate">
 
 </sk-table>
