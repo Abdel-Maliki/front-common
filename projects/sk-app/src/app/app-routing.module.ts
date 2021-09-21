@@ -7,8 +7,8 @@ const routes: Routes = [
     loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkEnterpriseModule),
   },
   {
-    path: '**',
-    loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkEnterpriseModule),
+    path: '',
+    redirectTo: 'enterprises'
   }
 ];
 

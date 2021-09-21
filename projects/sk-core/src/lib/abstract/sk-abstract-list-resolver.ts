@@ -15,6 +15,6 @@ export abstract class SkAbstractListResolver<T extends SkAbstractEntity<T, ID>,
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<T> {
     const loadEntities = this.store.selectSnapshot(this.loadEntitiesSelector);
-    return loadEntities ? this.store.dispatch(this.pageAction) : of([]);
+    return loadEntities ? this.store.dispatch(this.pageAction) : of(loadEntities);
   }
 }

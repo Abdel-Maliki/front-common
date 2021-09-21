@@ -1,7 +1,7 @@
 import {NgxsOnInit, Selector, State, StateContext, StateToken} from '@ngxs/store';
 import {SkAuthStateModel} from '../auth/type';
 import {Injectable} from '@angular/core';
-import {SkConfigStateModel, SkLinksConfig} from './type';
+import {SkConfigStateModel, SkFormConfig, SkLinksConfig} from './type';
 import {SKIPagination} from '../../interfaces';
 
 /**
@@ -24,6 +24,13 @@ export const DEFAULT_LINKS_CONFIG: SkLinksConfig = {
   userLink: 'users',
 };
 
+export const DEFAULT_FORM_CONFIG: SkFormConfig = {
+  validators: {
+    maxLength: 255,
+    minLength: 4,
+  }
+};
+
 @State({
   name: SK_CONFIG_STATE_TOKEN,
   defaults: {
@@ -34,6 +41,7 @@ export const DEFAULT_LINKS_CONFIG: SkLinksConfig = {
     pagination: DEFAULT_PAGINATION,
     pageSizeOptions: [10, 20, 50, 100, 150, 200, 300, 500],
     links: DEFAULT_LINKS_CONFIG,
+    form: DEFAULT_FORM_CONFIG,
   }
 })
 @Injectable()
@@ -68,6 +76,12 @@ export class SKConfigState implements NgxsOnInit {
   static pageSizeOptionsSelector(state: SkConfigStateModel): number[] {
     return state.pageSizeOptions;
   }
+
+  @Selector([SK_CONFIG_STATE_TOKEN])
+  static formSelector(state: SkConfigStateModel): SkFormConfig {
+    return state.form;
+  }
+
 
   @Selector([SK_CONFIG_STATE_TOKEN])
   static configModelSelector(state: SkConfigStateModel): SkConfigStateModel {

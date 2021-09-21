@@ -12,9 +12,19 @@ export interface SkConfigStateModel {
   pagination: SKIPagination;
   pageSizeOptions: number[];
   links: SkLinksConfig;
+  form: SkFormConfig;
 }
 
 export interface SkLinksConfig {
   userLink: string;
   enterpriseLink: string;
+}
+
+export interface SkFormConfig {
+  validators: SkFormValidatorConfig;
+}
+
+export interface SkFormValidatorConfig {
+  maxLength: number;
+  minLength: number;
 }

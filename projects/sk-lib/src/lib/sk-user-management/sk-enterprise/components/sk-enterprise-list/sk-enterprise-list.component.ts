@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {SkEnterpriseModel} from '../sk-enterprise-model';
-import {ColumnItem} from '../../../components';
+import {SkEnterpriseModel} from '../../sk-enterprise-model';
+import {ColumnItem} from '../../../../components';
 import {Store} from '@ngxs/store';
-import {SKEnterpriseModelState, SKEnterprisePageAction} from '../sk-enterprise-state';
+import {SKEnterpriseModelState, SKEnterprisePageAction} from '../../sk-enterprise-state';
 import {Subscription} from 'rxjs';
 import {DateHelpers, SKConfigState, SKIPagination} from 'sk-core';
 
