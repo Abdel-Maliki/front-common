@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {SkEnterpriseModel, SkIEnterprise} from '../../sk-enterprise-model';
+import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {Store} from '@ngxs/store';
 import {SKConfigState, SkFormConfig} from 'sk-core';
+import {SKCreateEnterpriseAction, SKUpdateEnterpriseAction} from '../../sk-enterprise-state';
 
 @Component({
   selector: 'sk-sk-enterprise-form',
@@ -10,9 +11,10 @@ import {SKConfigState, SkFormConfig} from 'sk-core';
   styleUrls: ['./sk-enterprise-form.component.css']
 })
 export class SkEnterpriseFormComponent implements OnInit {
-  form: FormGroup = this.formBuilder.group({});
+  form: FormGroup | undefined;
   entity: SkEnterpriseModel = new SkEnterpriseModel();
   formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
+  disableButton = false;
 
   constructor(protected store: Store, protected formBuilder: FormBuilder) {
   }
@@ -21,17 +23,21 @@ export class SkEnterpriseFormComponent implements OnInit {
     this.buildForm();
   }
 
+
   buildForm(): void {
     const target = Object
       .keys(this.entity)
-      .map((value: any) => value as keyof SkIEnterprise)
-      .reduce((pr, cu) => pr[cu] = this.entity[cu], new SkEnterpriseModel());
+      .map((value: any) => value as keyof SkEnterpriseModel)
+      .reduce<SkEnterpriseModel>((pr: SkEnterpriseModel, cu: keyof SkEnterpriseModel) => {
+        pr[cu] = this.entity[cu];
+        return pr;
+      }, new SkEnterpriseModel());
 
     const source = {
       name: [this.entity.name, [
         Validators.required,
         Validators.maxLength(this.formConfig.validators.maxLength),
-        Validators.minLength(this.formConfig.validators.maxLength),
+        Validators.minLength(this.formConfig.validators.minLength),
       ]],
       email: [this.entity.email, [Validators.email]],
       address: [this.entity.address],
@@ -41,5 +47,24 @@ export class SkEnterpriseFormComponent implements OnInit {
     this.form = this.formBuilder.group(Object.assign(target, source));
   }
 
+  saveOrUpdate(): void {
+    this.disableButton = true;
+    !!this.entity.id && this.entity.id > 0 ? this.update() : this.save();
+  }
+
+  save(): void {
+    this.store.dispatch(new SKCreateEnterpriseAction({entity: this.entity})).subscribe(value => {
+      console.log('Class: SkEnterpriseFormComponent, Function: , Line 58 value(): '
+        , value);
+      this.disableButton = false;
+    });
+  }
+
+  update(): void {
+    this.store.dispatch(new SKUpdateEnterpriseAction({
+      entity: this.entity,
+      id: this.entity.id
+    })).subscribe(value => this.disableButton = false);
+  }
 
 }

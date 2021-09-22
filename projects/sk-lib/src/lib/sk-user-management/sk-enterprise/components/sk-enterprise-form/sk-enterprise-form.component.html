@@ -1,3 +1,161 @@
-<form [formGroup]="form">
+<form *ngIf="form" [formGroup]="form" class="full-width">
+
+  <!--  Name-->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom</mat-label>
+      <mat-icon matSuffix class="secondary-text">label</mat-icon>
+      <input formControlName="name" matInput required>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors &&
+           form.controls['name'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors && form.controls['name'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors &&
+          form.controls['name'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors">
+        {{ !!form && !!form.controls && !!form.controls['name'] && !!form.controls['name'].errors ? (form.controls['name'].errors | json) : '' }}
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+  <!--  Email-->
+
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <mat-icon matSuffix class="secondary-text">email</mat-icon>
+      <input formControlName="email" matInput>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors &&
+           form.controls['email'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors && form.controls['email'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors &&
+          form.controls['email'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors &&
+          form.controls['email'].errors['email']">
+        Email non valide
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+  <!--  Telephone-->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Téléphone</mat-label>
+      <mat-icon matSuffix class="secondary-text">phone</mat-icon>
+      <input formControlName="tel" matInput>
+
+      <mat-error *ngIf="form && form.controls && form.controls['tel'] && form.controls['tel'].invalid && form.controls['tel'].dirty &&
+          form.controls['tel'].errors &&
+           form.controls['tel'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['tel'] && form.controls['tel'].invalid && form.controls['tel'].dirty &&
+          form.controls['tel'].errors && form.controls['tel'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['tel'] && form.controls['tel'].invalid && form.controls['tel'].dirty &&
+          form.controls['tel'].errors &&
+          form.controls['tel'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+  <!--  Address-->
+
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Adresse</mat-label>
+      <mat-icon matSuffix class="secondary-text">label</mat-icon>
+      <textarea formControlName="address" matInput></textarea>
+
+      <mat-error *ngIf="form && form.controls && form.controls['address'] && form.controls['address'].invalid && form.controls['address'].dirty &&
+          form.controls['address'].errors &&
+           form.controls['address'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['address'] && form.controls['address'].invalid && form.controls['address'].dirty &&
+          form.controls['address'].errors && form.controls['address'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['address'] && form.controls['address'].invalid && form.controls['address'].dirty &&
+          form.controls['address'].errors &&
+          form.controls['address'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+
+  <!--  description-->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <mat-icon matSuffix class="secondary-text">description</mat-icon>
+      <textarea formControlName="description" matInput
+                [mat-autosize]="true"
+                [matAutosizeMinRows]="2"
+                [matAutosizeMaxRows]="5"></textarea>
+
+      <mat-error *ngIf="form && form.controls && form.controls['description'] && form.controls['description'].invalid && form.controls['description'].dirty &&
+          form.controls['description'].errors &&
+           form.controls['description'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['description'] && form.controls['description'].invalid && form.controls['description'].dirty &&
+          form.controls['description'].errors && form.controls['description'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['description'] && form.controls['description'].invalid && form.controls['description'].dirty &&
+          form.controls['description'].errors &&
+          form.controls['description'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" (click)="saveOrUpdate()" class="full-width"
+          [disabled]="disableButton || (form && form.invalid)">Valider
+  </button>
+
 
 </form>

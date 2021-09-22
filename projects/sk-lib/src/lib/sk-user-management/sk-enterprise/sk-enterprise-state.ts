@@ -13,6 +13,7 @@ import {SkEnterpriseModel} from './sk-enterprise-model';
 import {SkEnterpriseService} from './services/sk-enterprise.service';
 import {Pagination} from '../../utils/pagination';
 import {SKIPagination} from 'sk-core';
+import {ISkState} from 'sk-core';
 
 /**
  * @author abdel-maliki
@@ -176,7 +177,7 @@ export const SK_ENTERPRISE_DEFAULT_STATE: SKEnterpriseModelStateModel = SKDefaul
   defaults: SK_ENTERPRISE_DEFAULT_STATE
 })
 @Injectable()
-export class SKEnterpriseModelState implements NgxsOnInit {
+export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterpriseModel, SKEnterpriseModelStateModel> {
 
   constructor(private service: SkEnterpriseService) {
   }
@@ -318,6 +319,10 @@ export class SKEnterpriseModelState implements NgxsOnInit {
   /**************************************************************
    *********************** READ  REDUCERS ***********************
    **************************************************************/
+
+
+
+
 
   @Action(SkGetEnterpriseAction)
   async getAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SkGetEnterpriseAction): Promise<void> {

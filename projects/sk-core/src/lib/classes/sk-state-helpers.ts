@@ -30,24 +30,27 @@ export abstract class SkStateHelpers {
 
   static readonly INVALID_PASSWORD_MESSAGE = 'Le mot de passe est incorrect';
 
-  static setBasicState<K, T extends SkAbstractEntity<T, ID>,
+  static setBasicState<K,
+    T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T, F>,
     ID extends string | number = any,
     F = { [key: string]: any }>(
     response: ResponseWrapper<K, F>,
     ctx: StateContext<any>,
     defaultErrorMessage: string,
-    val: keyof SkAbstractStateModel<T, F>,
+    val: keyof ST,
     updatePageInf: boolean = false,
-    loadEntities: boolean = true): Partial<SkAbstractStateModel<T, F>> {
+    loadEntities: boolean = true): Partial<ST> {
 
-    const partial: Partial<SkAbstractStateModel<T, F>> = response.isNotValid ? {
-      error: response.error?.full,
-      errorMessage: response.error && response.error.message ? response.error.message : defaultErrorMessage,
-      loader: false,
-    } : {loader: false};
+    const partial: Partial<ST> = {};
+    partial.loader = false;
+    if (response.isNotValid) {
+      partial.error = response.error?.full;
+      partial.errorMessage = response.error && response.error.message ? response.error.message : defaultErrorMessage;
+    }
 
-    if (val && response.isValid) {
-      partial[val] = response.data;
+    if (val && response.data && response.isValid) {
+      partial[val] = (response.data as any);
       partial.loadEntities = loadEntities;
 
       if (updatePageInf) {
@@ -68,27 +71,29 @@ export abstract class SkStateHelpers {
     return partial;
   }
 
-  static setState<K,
+  static setState<T,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    F = { [key: string]: any },
     ID extends string | number = any,
-    F = { [key: string]: any }, RETURN_TYPE extends K | Array<K> = K, RESPONSE_TYPE = K>(
-    observable: Observable<ResponseWrapper<RESPONSE_TYPE | Array<RESPONSE_TYPE>>>,
-    service: ISkService<K, RESPONSE_TYPE>,
-    ctx: StateContext<SkAbstractStateModel<K>>,
-    val: keyof SkAbstractStateModel<K, F>,
+    RETURN_TYPE extends T | Array<T> = T>(
+    observable: Observable<ResponseWrapper<T | Array<T>>>,
+    service: S,
+    ctx: StateContext<ST>,
+    val: keyof SkAbstractStateModel<T, F>,
     updatePageInf: boolean = false,
     loadEntities: boolean = true,
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
-        map((value: ResponseWrapper<RESPONSE_TYPE | Array<RESPONSE_TYPE>>) => ResponseWrapper
-          .fromJson<K, RETURN_TYPE, RESPONSE_TYPE>(value, service)),
+        map((value: ResponseWrapper<T | Array<T>>) => ResponseWrapper.fromJson(value, service)),
         tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', val, updatePageInf, loadEntities)})),
         map(value => value.data as RETURN_TYPE),
         catchError(err => {
-          ctx.patchState({
-            error: err,
-            loader: false,
-          });
+          const partial: Partial<ST> = {};
+          partial.error = err;
+          partial.loader = false;
+          ctx.patchState(partial);
           throw new Error(err);
         })
       );
@@ -98,25 +103,36 @@ export abstract class SkStateHelpers {
    ******************************* READ *************************
    **************************************************************/
 
-  static get<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static get<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any, TM = T>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKGetAction<ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', false, false);
   }
 
-  static getAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static getAll<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SkGetAllAction<A>,
   ): Observable<T> {
     return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', false, false);
   }
 
-  static pageElements<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static pageElements<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKPageAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -133,9 +149,13 @@ export abstract class SkStateHelpers {
    **********************************************************/
 
 
-  static create<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static create<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKCreateAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -148,9 +168,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static createAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static createAndGet<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKCreateAndGetAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -163,9 +187,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static createAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static createAll<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKCreateAllAction<T, ID>,
   ): Observable<T> {
 
@@ -187,9 +215,13 @@ export abstract class SkStateHelpers {
    *************************** UPDATE ************************
    **********************************************************/
 
-  static update<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static update<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKUpdateAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -202,9 +234,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static updateAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static updateAndGet<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKUpdateAndGetAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -220,9 +256,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static updateAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static updateAll<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKUpdateAllAction<T, ID>,
   ): Observable<T> {
 
@@ -245,9 +285,13 @@ export abstract class SkStateHelpers {
    *************************** DELETE ************************
    **********************************************************/
 
-  static delete<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static delete<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKDeleteAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -260,9 +304,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static deleteAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static deleteAndGet<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKDeleteAndGetAction<T, ID>,
   ): Observable<T> {
     return SkStateHelpers.setState(
@@ -275,9 +323,13 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static deleteAllAndGet<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static deleteAllAndGet<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKDeleteAllAndGetAction<T, ID>,
   ): Observable<T> {
 
@@ -296,9 +348,13 @@ export abstract class SkStateHelpers {
   }
 
 
-  static deleteAll<T extends SkAbstractEntity<T, ID>, ID extends string | number = any, TM = T, A = any>(
-    service: ISkService<T, TM>,
-    ctx: StateContext<SkAbstractStateModel<T>>,
+  static deleteAll<T extends SkAbstractEntity<T, ID>,
+    ST extends SkAbstractStateModel<T>,
+    S extends ISkService<T>,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
     action: SKDeleteAllAction<T, ID>,
   ): Observable<T> {
 

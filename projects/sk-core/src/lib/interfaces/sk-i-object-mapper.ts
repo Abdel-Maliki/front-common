@@ -1,5 +1,5 @@
-export interface SkIObjectMapper<T, TM = T> {
-  toJson(o: T | undefined): TM | undefined;
+export interface SkIObjectMapper<T> {
+  toJson(o: T | undefined): any | undefined;
 
-  fromJson(o: TM | undefined): T | undefined;
+  fromJson(o: any | undefined): T | undefined;
 }

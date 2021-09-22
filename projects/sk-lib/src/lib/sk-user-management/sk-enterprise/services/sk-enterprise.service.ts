@@ -6,7 +6,7 @@ import {Observable, of} from 'rxjs';
 import {Pagination} from '../../../utils/pagination';
 
 @Injectable()
-export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel, SkIEnterprise> {
+export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
 
   constructor(protected data: SkServiceData, protected store: Store) {
     super(data, store);

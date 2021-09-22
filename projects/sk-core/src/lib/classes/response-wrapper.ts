@@ -21,10 +21,10 @@ export class ResponseWrapper<T, F extends { [key: string]: any } = any> {
     return new ResponseWrapper<T>(undefined, undefined, status, {message});
   }
 
-  static fromJson<T, RETURN_TYPE extends T | Array<T> = T, R = any>(responseWrapper: ResponseWrapper<R| Array<R>>,
-                                                                    skObjectMapper: SkIObjectMapper<T, R>): ResponseWrapper<RETURN_TYPE> {
+  static fromJson<T, RETURN_TYPE extends T | Array<T> = T>(responseWrapper: ResponseWrapper<any>,
+                                                           skObjectMapper: SkIObjectMapper<T>): ResponseWrapper<RETURN_TYPE> {
     return new ResponseWrapper<RETURN_TYPE>(
-      Helpers.fromJson<T, RETURN_TYPE, R>(responseWrapper?.data, skObjectMapper),
+      Helpers.fromJson<T, RETURN_TYPE>(responseWrapper?.data, skObjectMapper),
       responseWrapper.pagination,
       responseWrapper.code,
       responseWrapper.error

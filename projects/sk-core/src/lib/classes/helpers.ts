@@ -17,8 +17,8 @@ export class Helpers {
     return roles && roles.some(role => Helpers.hasRole(allRoles, role));
   }
 
-  static fromJson<T, RETURN_TYPE extends T | Array<T> = T, R = any>(response: R | Array<R> | undefined,
-                                                                    skObjectMapper: SkIObjectMapper<T, R>): RETURN_TYPE {
+  static fromJson<T, RETURN_TYPE extends T | Array<T> = T>(response: any | undefined,
+                                                           skObjectMapper: SkIObjectMapper<T>): RETURN_TYPE {
     return ((response instanceof Array)
       ? response.map(value => skObjectMapper.fromJson(value))
       : skObjectMapper.fromJson(response)) as RETURN_TYPE;

@@ -1,47 +1,63 @@
 import {Observable} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {SkAbstractStateModel} from '../abstract';
+import {SkAbstractEntity, SkAbstractStateModel} from '../abstract';
 import {ActionType} from '@ngxs/store/src/actions/symbols';
+import {
+  SKCreateAction,
+  SKCreateAllAction,
+  SKCreateAndGetAction, SKDeleteAction, SKDeleteAllAction, SKDeleteAllAndGetAction, SKDeleteAndGetAction,
+  SKGetAction,
+  SkGetAllAction,
+  SKPageAction,
+  SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction
+} from './sk-i-actions';
 
 /**
  * @author abdel-maliki
  */
 
 
-export interface ISkState<T> {
+export interface ISkState<T extends SkAbstractEntity<T, ID>,
+  S extends SkAbstractStateModel<T>,
+  ID extends number | string = any,
+  F = { [key: string]: any }> {
 
   /******* READ *********/
 
-  getAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T>;
+  getAction(ctx: StateContext<S>, action: SKGetAction<ID>): Observable<void> | Promise<void> | void;
 
-  getAllAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  getAllAction(ctx: StateContext<S>, action: SkGetAllAction<T>): Observable<void> | Promise<void> | void;
 
-  pageElementsAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  pageAction(ctx: StateContext<S>, action: SKPageAction<T, ID>): Observable<void> | Promise<void> | void;
 
   /******* WRITE *********/
 
-  createAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T>;
+  createAction(ctx: StateContext<S>, action: SKCreateAction<T, ID>): Observable<void> | Promise<void> | void;
 
-  createAndGetAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  createAndGetAction(ctx: StateContext<S>, action: SKCreateAndGetAction<T, ID>)
+    : Observable<void> | Promise<void> | void;
 
-  createAllAction?<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  createAllAction?(ctx: StateContext<S>, action: SKCreateAllAction<T, ID>): Observable<void> | Promise<void> | void;
 
   /******* UPDATE *********/
 
-  updateAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T>;
+  updateAction(ctx: StateContext<S>, action: SKUpdateAction<T, ID>): Observable<void> | Promise<void> | void;
 
-  updateAndGetAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  updateAndGetAction(ctx: StateContext<S>, action: SKUpdateAndGetAction<T, ID>)
+    : Observable<void> | Promise<void> | void;
 
-  updateAllAction?<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  updateAllAction?(ctx: StateContext<S>, action: SKUpdateAllAction<T, ID>): Observable<void> | Promise<void> | void;
 
 
   /******* DELETE *********/
 
-  deleteAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T>;
+  deleteAction(ctx: StateContext<S>, action: SKDeleteAction<T>): Observable<void> | Promise<void> | void;
 
-  deleteAndGetAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  deleteAndGetAction(ctx: StateContext<S>, action: SKDeleteAndGetAction<T, ID>)
+    : Observable<void> | Promise<void> | void;
 
-  deleteAllAndGetAction<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  deleteAllAndGetAction(ctx: StateContext<S>, action: SKDeleteAllAndGetAction<T, ID>)
+    : Observable<void> | Promise<void> | void;
 
-  deleteAllAction?<ACTION>(ctx: StateContext<SkAbstractStateModel<T>>, action: ActionType & ACTION): Observable<T[]>;
+  deleteAllAction?(ctx: StateContext<S>, action: SKDeleteAllAction<T, ID>): Observable<void> | Promise<void> | void;
 }
