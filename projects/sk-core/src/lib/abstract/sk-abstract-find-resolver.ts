@@ -1,11 +1,10 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
-import {SKGetAction} from '../interfaces';
-import {SkAbstractEntity} from './sk-abstract-entity';
+import {SKGetAction, SKIEntity} from '../interfaces';
 import {SkAbstractStateModel} from './sk-abstract-state-model';
 
-export abstract class SkAbstractFindResolver<T extends SkAbstractEntity<T, ID>,
+export abstract class SkAbstractFindResolver<T extends SKIEntity<T, ID>,
   S extends SkAbstractStateModel<T>,
   ID extends string | number = any> implements Resolve<T> {
   protected constructor(protected store: Store,

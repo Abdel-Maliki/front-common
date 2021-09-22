@@ -1,6 +1,5 @@
 import {StateContext} from '@ngxs/store';
 
-import {SkAbstractEntity} from './sk-abstract-entity';
 import {
   ISkService,
   ISkState,
@@ -8,7 +7,7 @@ import {
   SKCreateAllAction,
   SKCreateAndGetAction, SKDeleteAction, SKDeleteAllAction, SKDeleteAllAndGetAction, SKDeleteAndGetAction,
   SKGetAction,
-  SkGetAllAction,
+  SkGetAllAction, SKIEntity,
   SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction
 } from '../interfaces';
 import {SkAbstractStateModel} from './sk-abstract-state-model';
@@ -19,7 +18,7 @@ import {SkStateHelpers} from '../classes';
  */
 
 
-export abstract class SKModelState<T extends SkAbstractEntity<T, ID>,
+export abstract class SKModelState<T extends SKIEntity<T, ID>,
   ST extends SkAbstractStateModel<T, F>,
   S extends ISkService<T>,
   ID extends number | string = any,

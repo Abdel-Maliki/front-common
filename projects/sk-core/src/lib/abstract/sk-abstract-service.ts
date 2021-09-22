@@ -1,8 +1,7 @@
 /**
  * @author abdel-maliki
  */
-import {SkAbstractEntity} from './sk-abstract-entity';
-import {ISkService} from '../interfaces';
+import {ISkService, SKIEntity} from '../interfaces';
 import {i18nConstantes} from '../constants';
 import {SkServiceData} from '../services';
 import {HeadersOptions, HttpHelpers, ResponseWrapper} from '../classes';
@@ -12,7 +11,7 @@ import {SKConfigState} from '../ngxs';
 import {SKIPagination} from '../interfaces';
 
 
-export abstract class SkAbstractService<T extends SkAbstractEntity<T>, ID extends string | number = any> implements ISkService<T> {
+export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends string | number = any> implements ISkService<T> {
 
   errorMessage: string | undefined;
 

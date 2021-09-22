@@ -2,9 +2,8 @@ import {SkAbstractStateModel} from '../abstract';
 import {ResponseWrapper} from './response-wrapper';
 import {Observable} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {ISkService} from '../interfaces';
+import {ISkService, SKIEntity} from '../interfaces';
 import {catchError, map, tap} from 'rxjs/operators';
-import {SkAbstractEntity} from '../abstract';
 import {InvalidPasswordAction} from '../ngxs';
 import {
   SKCreateAction,
@@ -31,7 +30,7 @@ export abstract class SkStateHelpers {
   static readonly INVALID_PASSWORD_MESSAGE = 'Le mot de passe est incorrect';
 
   static setBasicState<K,
-    T extends SkAbstractEntity<T, ID>,
+    T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T, F>,
     ID extends string | number = any,
     F = { [key: string]: any }>(
@@ -103,7 +102,7 @@ export abstract class SkStateHelpers {
    ******************************* READ *************************
    **************************************************************/
 
-  static get<T extends SkAbstractEntity<T, ID>,
+  static get<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any, TM = T>(
@@ -114,7 +113,7 @@ export abstract class SkStateHelpers {
     return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', false, false);
   }
 
-  static getAll<T extends SkAbstractEntity<T, ID>,
+  static getAll<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -126,7 +125,7 @@ export abstract class SkStateHelpers {
     return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', false, false);
   }
 
-  static pageElements<T extends SkAbstractEntity<T, ID>,
+  static pageElements<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -149,7 +148,7 @@ export abstract class SkStateHelpers {
    **********************************************************/
 
 
-  static create<T extends SkAbstractEntity<T, ID>,
+  static create<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -168,7 +167,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static createAndGet<T extends SkAbstractEntity<T, ID>,
+  static createAndGet<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -187,7 +186,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static createAll<T extends SkAbstractEntity<T, ID>,
+  static createAll<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -215,7 +214,7 @@ export abstract class SkStateHelpers {
    *************************** UPDATE ************************
    **********************************************************/
 
-  static update<T extends SkAbstractEntity<T, ID>,
+  static update<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -234,7 +233,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static updateAndGet<T extends SkAbstractEntity<T, ID>,
+  static updateAndGet<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -256,7 +255,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static updateAll<T extends SkAbstractEntity<T, ID>,
+  static updateAll<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -285,7 +284,7 @@ export abstract class SkStateHelpers {
    *************************** DELETE ************************
    **********************************************************/
 
-  static delete<T extends SkAbstractEntity<T, ID>,
+  static delete<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -304,7 +303,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static deleteAndGet<T extends SkAbstractEntity<T, ID>,
+  static deleteAndGet<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -323,7 +322,7 @@ export abstract class SkStateHelpers {
     );
   }
 
-  static deleteAllAndGet<T extends SkAbstractEntity<T, ID>,
+  static deleteAllAndGet<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,
@@ -348,7 +347,7 @@ export abstract class SkStateHelpers {
   }
 
 
-  static deleteAll<T extends SkAbstractEntity<T, ID>,
+  static deleteAll<T extends SKIEntity<T, ID>,
     ST extends SkAbstractStateModel<T>,
     S extends ISkService<T>,
     ID extends string | number = any,

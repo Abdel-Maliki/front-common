@@ -1,7 +1,6 @@
 import {Observable} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {SkAbstractEntity, SkAbstractStateModel} from '../abstract';
-import {ActionType} from '@ngxs/store/src/actions/symbols';
+import {SkAbstractStateModel} from '../abstract';
 import {
   SKCreateAction,
   SKCreateAllAction,
@@ -11,13 +10,14 @@ import {
   SKPageAction,
   SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction
 } from './sk-i-actions';
+import {SKIEntity} from './sk-i-entity';
 
 /**
  * @author abdel-maliki
  */
 
 
-export interface ISkState<T extends SkAbstractEntity<T, ID>,
+export interface ISkState<T extends SKIEntity<T, ID>,
   S extends SkAbstractStateModel<T>,
   ID extends number | string = any,
   F = { [key: string]: any }> {
