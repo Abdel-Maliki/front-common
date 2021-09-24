@@ -1,8 +1,7 @@
 /**
  * @author abdel-maliki
  */
-import {SKIEntity} from '../interfaces';
-import {UpdateLog} from '../interfaces';
+import {SKIEntity, UpdateLog} from 'sk-core';
 
 export abstract class SkAbstractEntity<T, ID extends string | number = any> implements SKIEntity<T> {
   protected constructor(

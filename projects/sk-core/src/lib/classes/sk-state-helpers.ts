@@ -1,8 +1,7 @@
-import {SkAbstractStateModel} from '../abstract';
 import {ResponseWrapper} from './response-wrapper';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {ISkService, SKIEntity} from '../interfaces';
+import {ISkService, SkIActionError, SkIActionsError, SKIEntity, SkIStateModel} from '../interfaces';
 import {catchError, map, tap} from 'rxjs/operators';
 import {InvalidPasswordAction} from '../ngxs';
 import {
@@ -31,21 +30,22 @@ export abstract class SkStateHelpers {
 
   static setBasicState<K,
     T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T, F>,
+    ST extends SkIStateModel<T, F>,
     ID extends string | number = any,
     F = { [key: string]: any }>(
     response: ResponseWrapper<K, F>,
     ctx: StateContext<any>,
     defaultErrorMessage: string,
     val: keyof ST,
+    actionError: keyof SkIActionsError,
     updatePageInf: boolean = false,
     loadEntities: boolean = true): Partial<ST> {
 
     const partial: Partial<ST> = {};
-    partial.loader = false;
+    partial.actionsError = ({...ctx.getState().actionError, [actionError]: undefined} as any);
+
     if (response.isNotValid) {
-      partial.error = response.error?.full;
-      partial.errorMessage = response.error && response.error.message ? response.error.message : defaultErrorMessage;
+      partial.actionsError = ({...ctx.getState().actionError, [actionError]: {error: response.error, exist: true}} as any);
     }
 
     if (val && response.data && response.isValid) {
@@ -53,13 +53,7 @@ export abstract class SkStateHelpers {
       partial.loadEntities = loadEntities;
 
       if (updatePageInf) {
-        partial.page = response.pagination?.page;
-        partial.size = response.pagination?.size;
-        partial.sort = response.pagination?.sort;
-        partial.filters = response.pagination?.filters;
-        partial.direction = response.pagination?.direction;
-        partial.globalFilter = response.pagination?.globalFilter;
-        partial.totalElements = response.pagination?.totalElements;
+        partial.pagination = {...ctx.getState().pagination, ...response.pagination};
       }
     }
 
@@ -71,29 +65,31 @@ export abstract class SkStateHelpers {
   }
 
   static setState<T,
-    ST extends SkAbstractStateModel<T>,
+    ST extends SkIStateModel<T, F, E>,
     S extends ISkService<T>,
-    F = { [key: string]: any },
+    F = any,
+    E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     RETURN_TYPE extends T | Array<T> = T>(
     observable: Observable<ResponseWrapper<T | Array<T>>>,
     service: S,
     ctx: StateContext<ST>,
-    val: keyof SkAbstractStateModel<T, F>,
+    fieldToSet: keyof ST,
+    actionError: keyof SkIActionsError,
     updatePageInf: boolean = false,
     loadEntities: boolean = true,
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
         map((value: ResponseWrapper<T | Array<T>>) => ResponseWrapper.fromJson(value, service)),
-        tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', val, updatePageInf, loadEntities)})),
+        tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', fieldToSet, actionError, updatePageInf, loadEntities)})),
         map(value => value.data as RETURN_TYPE),
         catchError(err => {
           const partial: Partial<ST> = {};
-          partial.error = err;
-          partial.loader = false;
+          const skIActionError: SkIActionError = {error: err ?? {error: 'Not found'}, exist: true};
+          partial.actionsError = ({...ctx.getState().actionsError, [actionError]: skIActionError} as any);
           ctx.patchState(partial);
-          throw new Error(err);
+          return of(err);
         })
       );
   }
@@ -103,31 +99,31 @@ export abstract class SkStateHelpers {
    **************************************************************/
 
   static get<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any, TM = T>(
     service: S,
     ctx: StateContext<ST>,
     action: SKGetAction<ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', false, false);
+    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', 'get', false, false);
   }
 
   static getAll<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
     ctx: StateContext<ST>,
     action: SkGetAllAction<A>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', false, false);
+    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', 'getAll', false, false);
   }
 
   static pageElements<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -139,7 +135,10 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
-      true, false);
+      'page',
+      true,
+      false
+    );
   }
 
 
@@ -149,8 +148,8 @@ export abstract class SkStateHelpers {
 
 
   static create<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -162,14 +161,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastCreate',
+      'create',
       false,
       true
     );
   }
 
   static createAndGet<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -181,14 +181,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
+      'createAndGet',
       true,
       true
     );
   }
 
   static createAll<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -205,6 +206,7 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastCreates',
+      'createAll',
       false,
       true
     );
@@ -215,8 +217,8 @@ export abstract class SkStateHelpers {
    **********************************************************/
 
   static update<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -228,14 +230,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastUpdate',
+      'update',
       false,
       true
     );
   }
 
   static updateAndGet<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -250,14 +253,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
+      'updateAndGet',
       true,
       true
     );
   }
 
   static updateAll<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -274,6 +278,7 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastUpdates',
+      'updateAll',
       false,
       true
     );
@@ -285,8 +290,8 @@ export abstract class SkStateHelpers {
    **********************************************************/
 
   static delete<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -298,14 +303,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastDelete',
+      'delete',
       false,
       true,
     );
   }
 
   static deleteAndGet<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -317,14 +323,15 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
+      'deleteAndGet',
       true,
       true
     );
   }
 
   static deleteAllAndGet<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -341,6 +348,7 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'entities',
+      'deleteAllAndGet',
       true,
       true
     );
@@ -348,8 +356,8 @@ export abstract class SkStateHelpers {
 
 
   static deleteAll<T extends SKIEntity<T, ID>,
-    ST extends SkAbstractStateModel<T>,
-    S extends ISkService<T>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
@@ -368,9 +376,9 @@ export abstract class SkStateHelpers {
       service,
       ctx,
       'lastDeletes',
+      'deleteAll',
       false,
       true
     );
   }
-
 }

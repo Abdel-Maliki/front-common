@@ -5,6 +5,10 @@ export interface SKGetAction<ID extends string | number = any> {
   payload: ID;
 }
 
+export interface SKGetActionD {
+  payload: number;
+}
+
 export interface SkGetAllAction<A = any> {
   payload?: A;
 }

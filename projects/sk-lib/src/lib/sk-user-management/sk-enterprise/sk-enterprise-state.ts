@@ -6,14 +6,17 @@ import {
   SKCreateAndGetAction, SKDeleteAction, SKDeleteAllAction, SKDeleteAllAndGetAction, SKDeleteAndGetAction,
   SKGetAction,
   SkGetAllAction,
-  SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction, SkAbstractStateModel, SKDefaultState,
-  SKSelectorHelpers, SkStateHelpers, DEFAULT_PAGINATION
+  SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction,
+  SKSelectorHelpers, SkStateHelpers
 } from 'sk-core';
 import {SkEnterpriseModel} from './sk-enterprise-model';
 import {SkEnterpriseService} from './services/sk-enterprise.service';
 import {Pagination} from '../../utils/pagination';
 import {SKIPagination} from 'sk-core';
 import {ISkState} from 'sk-core';
+import {Observable} from 'rxjs';
+import {SkIActionsError} from 'sk-core';
+import {SkAbstractStateModel, SKDefaultState} from '../../abstract';
 
 /**
  * @author abdel-maliki
@@ -179,7 +182,7 @@ export const SK_ENTERPRISE_DEFAULT_STATE: SKEnterpriseModelStateModel = SKDefaul
 @Injectable()
 export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterpriseModel, SKEnterpriseModelStateModel> {
 
-  constructor(private service: SkEnterpriseService) {
+  constructor(protected service: SkEnterpriseService) {
   }
 
   /**************************************************************
@@ -197,31 +200,6 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   static entitiesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
     return SKSelectorHelpers.entitiesSelector(state);
 
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static loaderSelector(state: SKEnterpriseModelStateModel): boolean {
-    return SKSelectorHelpers.loaderSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static pageSelector(state: SKEnterpriseModelStateModel): number {
-    return SKSelectorHelpers.pageSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static sizeSelector(state: SKEnterpriseModelStateModel): number {
-    return SKSelectorHelpers.sizeSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static filtersSelector(state: SKEnterpriseModelStateModel): object {
-    return SKSelectorHelpers.filtersSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static totalElementsSelector(state: SKEnterpriseModelStateModel): number {
-    return SKSelectorHelpers.totalElementsSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
@@ -245,33 +223,13 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static errorSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
-    return SKSelectorHelpers.errorSelector(state);
+  static actionsErrorSelector(state: SKEnterpriseModelStateModel): SkIActionsError | undefined {
+    return SKSelectorHelpers.actionsErrorSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
   static currentSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
     return SKSelectorHelpers.currentSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static errorMessageSelector(state: SKEnterpriseModelStateModel): string | undefined {
-    return SKSelectorHelpers.errorMessageSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static sortSelector(state: SKEnterpriseModelStateModel): string | undefined {
-    return SKSelectorHelpers.sortSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static directionSelector(state: SKEnterpriseModelStateModel): number {
-    return SKSelectorHelpers.directionSelector(state);
-  }
-
-  @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static globalFilterSelector(state: SKEnterpriseModelStateModel): string | undefined {
-    return SKSelectorHelpers.globalFilterSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
@@ -290,8 +248,8 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static paginationSelector(state: SKEnterpriseModelStateModel): SKIPagination {
-    return SKSelectorHelpers.paginationSelector(state, DEFAULT_PAGINATION);
+  static paginationSelector(state: SKEnterpriseModelStateModel): SKIPagination | undefined {
+    return SKSelectorHelpers.paginationSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
@@ -325,21 +283,18 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
 
 
   @Action(SkGetEnterpriseAction)
-  async getAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SkGetEnterpriseAction): Promise<void> {
-    SkStateHelpers.get(this.service, ctx, action).subscribe(() => {
-    });
+  getAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SkGetEnterpriseAction): Observable<any> {
+    return SkStateHelpers.get(this.service, ctx, action);
   }
 
   @Action(SkGetAllEnterpriseAction)
-  async getAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SkGetAllEnterpriseAction): Promise<void> {
-    SkStateHelpers.getAll(this.service, ctx, action).subscribe(() => {
-    });
+  getAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SkGetAllEnterpriseAction): Observable<any> {
+    return SkStateHelpers.getAll(this.service, ctx, action);
   }
 
   @Action(SKEnterprisePageAction)
-  async pageAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKEnterprisePageAction): Promise<void> {
-    SkStateHelpers.pageElements(this.service, ctx, action).subscribe(() => {
-    });
+  pageAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKEnterprisePageAction): Observable<any> {
+    return SkStateHelpers.pageElements(this.service, ctx, action);
   }
 
 
@@ -348,22 +303,19 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
    **************************************************************/
 
   @Action(SKCreateEnterpriseAction)
-  async createAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateEnterpriseAction): Promise<void> {
-    SkStateHelpers.create(this.service, ctx, action).subscribe(() => {
-    });
+  createAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateEnterpriseAction): Observable<any> {
+    return SkStateHelpers.create(this.service, ctx, action);
   }
 
   @Action(SKCreateAndGetEnterpriseAction)
-  async createAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateAndGetEnterpriseAction): Promise<void> {
-    SkStateHelpers.createAndGet(this.service, ctx, action).subscribe(() => {
-    });
+  createAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateAndGetEnterpriseAction): Observable<any> {
+    return SkStateHelpers.createAndGet(this.service, ctx, action);
   }
 
 
   @Action(SKCreateAllEnterpriseAction)
-  async createAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateAllEnterpriseAction): Promise<void> {
-    SkStateHelpers.createAll(this.service, ctx, action).subscribe(() => {
-    });
+  createAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKCreateAllEnterpriseAction): Observable<any> {
+    return SkStateHelpers.createAll(this.service, ctx, action);
   }
 
 
@@ -373,21 +325,18 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
 
 
   @Action(SKUpdateEnterpriseAction)
-  async updateAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateEnterpriseAction): Promise<void> {
-    SkStateHelpers.update(this.service, ctx, action).subscribe(() => {
-    });
+  updateAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateEnterpriseAction): Observable<any> {
+    return SkStateHelpers.update(this.service, ctx, action);
   }
 
   @Action(SKUpdateAndGetEnterpriseAction)
-  async updateAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateAndGetEnterpriseAction): Promise<void> {
-    SkStateHelpers.updateAndGet(this.service, ctx, action).subscribe(() => {
-    });
+  updateAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateAndGetEnterpriseAction): Observable<any> {
+    return SkStateHelpers.updateAndGet(this.service, ctx, action);
   }
 
   @Action(SKUpdateAllEnterpriseAction)
-  async updateAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateAllEnterpriseAction): Promise<void> {
-    SkStateHelpers.updateAll(this.service, ctx, action).subscribe(() => {
-    });
+  updateAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKUpdateAllEnterpriseAction): Observable<any> {
+    return SkStateHelpers.updateAll(this.service, ctx, action);
   }
 
 
@@ -397,27 +346,23 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
 
 
   @Action(SKDeleteEnterpriseAction)
-  async deleteAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteEnterpriseAction): Promise<void> {
-    SkStateHelpers.delete(this.service, ctx, action).subscribe(() => {
-    });
+  deleteAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteEnterpriseAction): Observable<any> {
+    return SkStateHelpers.delete(this.service, ctx, action);
   }
 
   @Action(SKDeleteAndGetEnterpriseAction)
-  async deleteAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAndGetEnterpriseAction): Promise<void> {
-    SkStateHelpers.deleteAndGet(this.service, ctx, action).subscribe(() => {
-    });
+  deleteAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAndGetEnterpriseAction): Observable<any> {
+    return SkStateHelpers.deleteAndGet(this.service, ctx, action);
   }
 
   @Action(SKDeleteAllEnterpriseAction)
-  async deleteAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAllEnterpriseAction): Promise<void> {
-    SkStateHelpers.deleteAll(this.service, ctx, action).subscribe(() => {
-    });
+  deleteAllAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAllEnterpriseAction): Observable<any> {
+    return SkStateHelpers.deleteAll(this.service, ctx, action);
   }
 
   @Action(SKDeleteAllAndGetEnterpriseAction)
-  async deleteAllAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAllAndGetEnterpriseAction): Promise<void> {
-    SkStateHelpers.deleteAllAndGet(this.service, ctx, action).subscribe(() => {
-    });
+  deleteAllAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAllAndGetEnterpriseAction): Observable<any> {
+    return SkStateHelpers.deleteAllAndGet(this.service, ctx, action);
   }
 }
 

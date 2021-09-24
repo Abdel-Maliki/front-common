@@ -6,3 +6,5 @@ export * from './sk-i-service';
 export * from './sk-i-state';
 export * from './sk-i-state-actions';
 export * from './update-log';
+export * from './sk-i-state-model';
+

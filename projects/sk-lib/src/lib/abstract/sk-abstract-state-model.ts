@@ -1,21 +1,16 @@
+import {SkIActionsError, SkIStateModel} from 'sk-core';
+import {SKIPagination} from 'sk-core';
+
 /**
  * @author abdel-maliki
  */
-export abstract class SkAbstractStateModel<T, F = { [key: string]: any }> {
+export class SkAbstractStateModel<T, F = any, E extends SkIActionsError = SkIActionsError> implements SkIStateModel<T, F, E> {
   all?: T[] = [];
   entities?: T[] = [];
   entity?: T;
-  loader?: boolean;
-  error?: any;
   current?: T;
   errorMessage?: string;
-  page?: number;
-  size?: number;
-  filters?: F;
-  totalElements?: number;
-  sort?: string;
-  direction?: number;
-  globalFilter?: string;
+  pagination?: SKIPagination<F>;
   lastCreate?: T;
   lastCreates?: T[] = [];
   lastUpdate?: T;
@@ -23,29 +18,22 @@ export abstract class SkAbstractStateModel<T, F = { [key: string]: any }> {
   lastDelete?: T;
   lastDeletes?: T[] = [];
   loadEntities?: boolean;
+  actionsError?: E;
 }
 
 
-export const SKDefaultState: SkAbstractStateModel<any, any> = {
+export const SKDefaultState: SkIStateModel<any> = {
   all: [],
   entities: [],
-  loader: false,
-  page: 0,
-  size: 10,
-  filters: {},
-  totalElements: 0,
+  pagination: undefined,
   lastCreates: [],
   lastUpdates: [],
   lastDeletes: [],
   entity: null,
-  error: undefined,
   current: undefined,
-  errorMessage: undefined,
-  sort: 'asc',
-  direction: 1,
-  globalFilter: undefined,
   lastCreate: undefined,
   lastUpdate: undefined,
   lastDelete: undefined,
   loadEntities: true,
+  actionsError: {},
 };

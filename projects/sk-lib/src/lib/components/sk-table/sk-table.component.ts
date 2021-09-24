@@ -38,10 +38,7 @@ export class SkTableComponent implements OnDestroy {
   }
 
   pageEvent(pageEvent: PageEvent): void {
-    this.pageChange.emit(Object.assign(
-      this.pagination,
-      {page: pageEvent.pageIndex, size: pageEvent.pageSize}
-    ));
+    this.pageChange.emit({...this.pagination, page: pageEvent.pageIndex, size: pageEvent.pageSize});
   }
 
   ngOnDestroy(): void {

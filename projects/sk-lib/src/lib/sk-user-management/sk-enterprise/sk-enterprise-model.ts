@@ -1,4 +1,5 @@
-import {SkAbstractEntity, SKIEntity, UpdateLog} from 'sk-core';
+import {SKIEntity, UpdateLog} from 'sk-core';
+import {SkAbstractEntity} from '../../abstract';
 
 export class SkEnterpriseModel extends SkAbstractEntity<SkEnterpriseModel> implements SkIEnterprise {
   constructor(public name?: string,

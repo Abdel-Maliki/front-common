@@ -1,11 +1,9 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
-import {SKIEntity, SKPageAction} from '../interfaces';
-import {SkAbstractStateModel} from './sk-abstract-state-model';
+import {SKIEntity, SKPageAction, SkIStateModel} from 'sk-core';
 
-export abstract class SkAbstractListResolver<T extends SKIEntity<T, ID>,
-  S extends SkAbstractStateModel<T>,
+export abstract class SkAbstractListResolver<T extends SKIEntity<T, ID>, S extends SkIStateModel<T>,
   ID extends string | number = any> implements Resolve<T> {
   protected constructor(protected store: Store,
                         protected loadEntitiesSelector: (state: S) => boolean,

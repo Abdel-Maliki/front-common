@@ -9,7 +9,7 @@ import {Store} from '@ngxs/store';
 })
 export class SkEnterpriseListPageComponent implements OnInit {
 
-  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.configModelSelector).links.enterpriseLink;
+  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.selector).links.enterpriseLink;
 
   constructor(protected store: Store) {
   }

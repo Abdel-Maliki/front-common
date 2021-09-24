@@ -16,8 +16,9 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
 
   subscriptionList: Subscription = new Subscription();
   datasource: MatTableDataSource<SkEnterpriseModel> = new MatTableDataSource<SkEnterpriseModel>([]);
-  pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector);
-  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.configModelSelector).links.enterpriseLink;
+  pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector)
+    || this.store.selectSnapshot(SKConfigState.selector).pagination;
+  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.selector).links.enterpriseLink;
 
   @Input() displayedColumns: ColumnItem<SkEnterpriseModel>[] = [
     {title: 'ID', value: data => data?.id ?? ''},
@@ -30,7 +31,6 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
 
   constructor(protected store: Store) {
     this.subscriptionList.add(this.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
-    this.subscriptionList.add(this.store.select(SKEnterpriseModelState.paginationSelector).subscribe(value => this.pagination = value));
   }
 
   ngOnInit(): void {

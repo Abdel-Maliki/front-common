@@ -3,7 +3,8 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {Store} from '@ngxs/store';
 import {SKConfigState, SkFormConfig} from 'sk-core';
-import {SKCreateEnterpriseAction, SKUpdateEnterpriseAction} from '../../sk-enterprise-state';
+import {SKCreateEnterpriseAction, SKEnterpriseModelState, SKUpdateEnterpriseAction} from '../../sk-enterprise-state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'sk-sk-enterprise-form',
@@ -53,11 +54,15 @@ export class SkEnterpriseFormComponent implements OnInit {
   }
 
   save(): void {
-    this.store.dispatch(new SKCreateEnterpriseAction({entity: this.entity})).subscribe(value => {
-      console.log('Class: SkEnterpriseFormComponent, Function: , Line 58 value(): '
-        , value);
-      this.disableButton = false;
-    });
+    this.store
+      .dispatch(new SKCreateEnterpriseAction({entity: this.entity}))
+      .pipe(
+        map(() => this.store.selectSnapshot(SKEnterpriseModelState.selector)),
+      )
+      .subscribe(value => {
+        console.log('Class: SkEnterpriseFormComponent, Function: , Line 61 value(): '
+          , value);
+      });
   }
 
   update(): void {

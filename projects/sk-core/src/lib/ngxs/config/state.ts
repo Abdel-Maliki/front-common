@@ -84,7 +84,7 @@ export class SKConfigState implements NgxsOnInit {
 
 
   @Selector([SK_CONFIG_STATE_TOKEN])
-  static configModelSelector(state: SkConfigStateModel): SkConfigStateModel {
+  static selector(state: SkConfigStateModel): SkConfigStateModel {
     return state;
   }
 
