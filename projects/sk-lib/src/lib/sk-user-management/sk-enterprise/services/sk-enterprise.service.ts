@@ -26,7 +26,8 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
   }
 
   get(id: any, others?: any): Observable<ResponseWrapper<SkIEnterprise>> {
-    return of(new ResponseWrapper<SkIEnterprise>(new SkEnterpriseModel('name', 'tel'), undefined, 200));
+    return of(new ResponseWrapper<SkIEnterprise>(new SkEnterpriseModel('name', 'tel', 'desciption', 'address', 'email@gmail.com', id),
+      undefined, 200));
   }
 
   pageElements(pagination: Pagination, others?: any): Observable<ResponseWrapper<SkIEnterprise[]>> {
@@ -49,6 +50,10 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
   create(entity: SkEnterpriseModel, others?: any): Observable<ResponseWrapper<SkEnterpriseModel>> {
     entity.id = Math.round(Math.random() * 10);
     return of(new ResponseWrapper<SkIEnterprise>(entity, undefined, 200));
+  }
+
+  update(entity: SkEnterpriseModel, id: any, others?: any): Observable<ResponseWrapper<SkEnterpriseModel>> {
+    return of(new ResponseWrapper<SkIEnterprise>({...entity, id}, undefined, 200));
   }
 
 }

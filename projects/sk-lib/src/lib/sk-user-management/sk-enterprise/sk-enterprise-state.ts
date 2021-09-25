@@ -6,16 +6,13 @@ import {
   SKCreateAndGetAction, SKDeleteAction, SKDeleteAllAction, SKDeleteAllAndGetAction, SKDeleteAndGetAction,
   SKGetAction,
   SkGetAllAction,
-  SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction,
-  SKSelectorHelpers, SkStateHelpers
+  SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction, SKSetCurrentForFormAction,
+  SKSelectorHelpers, SkStateHelpers, SKIPagination, ISkState, SkIActionsError
 } from 'sk-core';
 import {SkEnterpriseModel} from './sk-enterprise-model';
 import {SkEnterpriseService} from './services/sk-enterprise.service';
 import {Pagination} from '../../utils/pagination';
-import {SKIPagination} from 'sk-core';
-import {ISkState} from 'sk-core';
 import {Observable} from 'rxjs';
-import {SkIActionsError} from 'sk-core';
 import {SkAbstractStateModel, SKDefaultState} from '../../abstract';
 
 /**
@@ -156,6 +153,19 @@ export class SKDeleteAllAndGetEnterpriseAction implements SKDeleteAllAndGetActio
   static readonly type = '[SkEnterprise] SKDeleteAllAndGetEnterprise';
 
   constructor(public payload: { entities: SkEnterpriseModel[], pagination: Pagination, others?: any }) {
+  }
+}
+
+
+/**************************************************************
+ *********************** OTHERS  ACTIONS **********************
+ **************************************************************/
+
+export class SKSetCurrentForFormEnterpriseAction implements SKSetCurrentForFormAction {
+
+  static readonly type = '[SkEnterprise] SKSetCurrentForFormEnterpriseAction';
+
+  constructor(public payload?: any) {
   }
 }
 
@@ -363,6 +373,16 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   @Action(SKDeleteAllAndGetEnterpriseAction)
   deleteAllAndGetAction(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKDeleteAllAndGetEnterpriseAction): Observable<any> {
     return SkStateHelpers.deleteAllAndGet(this.service, ctx, action);
+  }
+
+
+  /**************************************************************
+   *********************** OTHERS  REDUCERS **********************
+   **************************************************************/
+
+  @Action(SKSetCurrentForFormEnterpriseAction)
+  setCurrentForForm(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKSetCurrentForFormEnterpriseAction): Observable<any> {
+    return SkStateHelpers.setCurrentForForm(this.service, ctx, action, new SkEnterpriseModel());
   }
 }
 

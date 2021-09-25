@@ -61,6 +61,10 @@ export interface SKDeleteAllAction<T extends SKIEntity<T, ID>, ID extends string
   payload: { entities: T[], others?: any };
 }
 
+export interface SKSetCurrentForFormAction<ID extends string | number = any> {
+  payload?: ID;
+}
+
 
 
 

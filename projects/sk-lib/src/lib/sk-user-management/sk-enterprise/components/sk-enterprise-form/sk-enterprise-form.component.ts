@@ -3,8 +3,13 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {Store} from '@ngxs/store';
 import {SKConfigState, SkFormConfig} from 'sk-core';
-import {SKCreateEnterpriseAction, SKEnterpriseModelState, SKUpdateEnterpriseAction} from '../../sk-enterprise-state';
-import {map} from 'rxjs/operators';
+import {
+  SKCreateEnterpriseAction,
+  SKEnterpriseModelState,
+  SKEnterpriseModelStateModel,
+  SKUpdateEnterpriseAction
+} from '../../sk-enterprise-state';
+import {finalize, map} from 'rxjs/operators';
 
 @Component({
   selector: 'sk-sk-enterprise-form',
@@ -13,7 +18,7 @@ import {map} from 'rxjs/operators';
 })
 export class SkEnterpriseFormComponent implements OnInit {
   form: FormGroup | undefined;
-  entity: SkEnterpriseModel = new SkEnterpriseModel();
+  entity: SkEnterpriseModel = this.store.selectSnapshot(SKEnterpriseModelState.currentSelector) || new SkEnterpriseModel();
   formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
   disableButton = false;
 
@@ -55,21 +60,41 @@ export class SkEnterpriseFormComponent implements OnInit {
 
   save(): void {
     this.store
-      .dispatch(new SKCreateEnterpriseAction({entity: this.entity}))
+      .dispatch(new SKCreateEnterpriseAction({entity: this.form?.getRawValue()}))
       .pipe(
-        map(() => this.store.selectSnapshot(SKEnterpriseModelState.selector)),
+        map(() => this.stateSelector()),
+        finalize(() => this.disableButton = false),
       )
       .subscribe(value => {
-        console.log('Class: SkEnterpriseFormComponent, Function: , Line 61 value(): '
+        console.log('Class: SkEnterpriseFormComponent, Function: , Line 68 value(): '
           , value);
-      });
+
+        if (!value.actionsError || !value.actionsError.create || !value.actionsError.create.exist) {
+          this.buildForm();
+        }
+      }, error => console.log('Class: SkEnterpriseFormComponent, Function: , Line 74 error(): '
+        , error));
   }
+
 
   update(): void {
     this.store.dispatch(new SKUpdateEnterpriseAction({
-      entity: this.entity,
+      entity: this.form?.getRawValue(),
       id: this.entity.id
-    })).subscribe(value => this.disableButton = false);
+    }))
+      .pipe(
+        map(() => this.stateSelector()),
+        finalize(() => this.disableButton = false),
+      )
+      .subscribe(value => {
+          console.log('Class: SkEnterpriseFormComponent, Function: , Line 87 value(): '
+            , value);
+        },
+        error => console.log('Class: SkEnterpriseFormComponent, Function: , Line 83 error(): ', error));
+  }
+
+  stateSelector(): SKEnterpriseModelStateModel {
+    return this.store.selectSnapshot(SKEnterpriseModelState.selector);
   }
 
 }

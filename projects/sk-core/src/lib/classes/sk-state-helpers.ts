@@ -1,7 +1,7 @@
 import {ResponseWrapper} from './response-wrapper';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {ISkService, SkIActionError, SkIActionsError, SKIEntity, SkIStateModel} from '../interfaces';
+import {ISkService, SkIActionsError, SKIEntity, SkIStateModel, SKSetCurrentForFormAction} from '../interfaces';
 import {catchError, map, tap} from 'rxjs/operators';
 import {InvalidPasswordAction} from '../ngxs';
 import {
@@ -28,14 +28,13 @@ export abstract class SkStateHelpers {
 
   static readonly INVALID_PASSWORD_MESSAGE = 'Le mot de passe est incorrect';
 
-  static setBasicState<K,
+  static success<K,
     T extends SKIEntity<T, ID>,
     ST extends SkIStateModel<T, F>,
     ID extends string | number = any,
     F = { [key: string]: any }>(
     response: ResponseWrapper<K, F>,
     ctx: StateContext<any>,
-    defaultErrorMessage: string,
     val: keyof ST,
     actionError: keyof SkIActionsError,
     updatePageInf: boolean = false,
@@ -82,16 +81,22 @@ export abstract class SkStateHelpers {
     return observable
       .pipe(
         map((value: ResponseWrapper<T | Array<T>>) => ResponseWrapper.fromJson(value, service)),
-        tap(response => ctx.patchState({...this.setBasicState(response, ctx, '', fieldToSet, actionError, updatePageInf, loadEntities)})),
-        map(value => value.data as RETURN_TYPE),
-        catchError(err => {
-          const partial: Partial<ST> = {};
-          const skIActionError: SkIActionError = {error: err ?? {error: 'Not found'}, exist: true};
-          partial.actionsError = ({...ctx.getState().actionsError, [actionError]: skIActionError} as any);
-          ctx.patchState(partial);
-          return of(err);
-        })
+        tap(response => ctx.patchState({...this.success(response, ctx, fieldToSet, actionError, updatePageInf, loadEntities)})),
+        catchError(err => this.error(err, ctx, actionError))
       );
+  }
+
+  private static error<T, ST extends SkIStateModel<T, F, E>, S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError>(
+    err: any, ctx: StateContext<ST>,
+    actionError: keyof SkIActionsError): Observable<any> {
+
+    ctx.patchState(({
+      actionsError: {
+        ...ctx.getState().actionsError,
+        ...{[actionError]: {error: err ?? {error: 'Not found'}, exist: true}}
+      }
+    } as Partial<ST>));
+    return throwError(err);
   }
 
   /**************************************************************
@@ -380,5 +385,25 @@ export abstract class SkStateHelpers {
       false,
       true
     );
+  }
+
+
+  /**********************************************************
+   ************************** OTHERS ************************
+   **********************************************************/
+
+  static setCurrentForForm<T extends SKIEntity<T, ID>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
+    action: SKSetCurrentForFormAction<ID>,
+    newInstance: T,
+  ): Observable<any> {
+    return action.payload
+      ? this.setState(service.get(action.payload), service, ctx, 'current', 'get', false, false)
+      : of(ctx.patchState(({current: newInstance} as Partial<ST>))).pipe(map(() => newInstance));
   }
 }
