@@ -2,27 +2,49 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {Store} from '@ngxs/store';
-import {SKConfigState, SkFormConfig} from 'sk-core';
+import {SKConfigState, SkFormConfig, SkServiceData} from 'sk-core';
 import {
+  SKCreateAllEnterpriseAction,
+  SKCreateAndGetEnterpriseAction,
   SKCreateEnterpriseAction,
   SKEnterpriseModelState,
-  SKEnterpriseModelStateModel,
-  SKUpdateEnterpriseAction
+  SKEnterpriseModelStateModel, SKUpdateAllEnterpriseAction, SKUpdateAndGetEnterpriseAction, SKUpdateEnterpriseAction
 } from '../../sk-enterprise-state';
-import {finalize, map} from 'rxjs/operators';
+import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'sk-sk-enterprise-form',
   templateUrl: './sk-enterprise-form.component.html',
   styleUrls: ['./sk-enterprise-form.component.css']
 })
-export class SkEnterpriseFormComponent implements OnInit {
+export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpriseModel, SKEnterpriseModelStateModel> implements OnInit {
   form: FormGroup | undefined;
   entity: SkEnterpriseModel = this.store.selectSnapshot(SKEnterpriseModelState.currentSelector) || new SkEnterpriseModel();
   formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
   disableButton = false;
 
-  constructor(protected store: Store, protected formBuilder: FormBuilder) {
+  constructor(store: Store,
+              serviceData: SkServiceData,
+              protected router: Router,
+              protected formBuilder: FormBuilder) {
+    super(store, serviceData);
+  }
+
+  state(): SKEnterpriseModelStateModel {
+    return this.store.selectSnapshot(SKEnterpriseModelState.selector);
+  }
+
+  get actions(): SkAbstractFormAction<SkEnterpriseModel> {
+    return {
+      create: (entity: SkEnterpriseModel, others) => new SKCreateEnterpriseAction({entity, others}),
+      createAndGet: ((entity, pagination, others) => new SKCreateAndGetEnterpriseAction({entity, pagination, others})),
+      createAll: (entities: SkEnterpriseModel[], others) => new SKCreateAllEnterpriseAction({entities, others}),
+
+      update: (entity: SkEnterpriseModel, id, others) => new SKUpdateEnterpriseAction({entity, id, others}),
+      updateAndGet: ((entity, id, pagination, others) => new SKUpdateAndGetEnterpriseAction({entity, id, pagination, others})),
+      updateAll: (entities: SkEnterpriseModel[], others) => new SKUpdateAllEnterpriseAction({entities, others})
+    };
   }
 
   ngOnInit(): void {
@@ -53,48 +75,11 @@ export class SkEnterpriseFormComponent implements OnInit {
     this.form = this.formBuilder.group(Object.assign(target, source));
   }
 
-  saveOrUpdate(): void {
-    this.disableButton = true;
-    !!this.entity.id && this.entity.id > 0 ? this.update() : this.save();
+  update(): Promise<SkEnterpriseModel> {
+    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']).then(), this.emptyFunction());
   }
 
-  save(): void {
-    this.store
-      .dispatch(new SKCreateEnterpriseAction({entity: this.form?.getRawValue()}))
-      .pipe(
-        map(() => this.stateSelector()),
-        finalize(() => this.disableButton = false),
-      )
-      .subscribe(value => {
-        console.log('Class: SkEnterpriseFormComponent, Function: , Line 68 value(): '
-          , value);
-
-        if (!value.actionsError || !value.actionsError.create || !value.actionsError.create.exist) {
-          this.buildForm();
-        }
-      }, error => console.log('Class: SkEnterpriseFormComponent, Function: , Line 74 error(): '
-        , error));
+  create(): Promise<SkEnterpriseModel> {
+    return super.create(this.form?.getRawValue(), () => this.buildForm(), this.emptyFunction());
   }
-
-
-  update(): void {
-    this.store.dispatch(new SKUpdateEnterpriseAction({
-      entity: this.form?.getRawValue(),
-      id: this.entity.id
-    }))
-      .pipe(
-        map(() => this.stateSelector()),
-        finalize(() => this.disableButton = false),
-      )
-      .subscribe(value => {
-          console.log('Class: SkEnterpriseFormComponent, Function: , Line 87 value(): '
-            , value);
-        },
-        error => console.log('Class: SkEnterpriseFormComponent, Function: , Line 83 error(): ', error));
-  }
-
-  stateSelector(): SKEnterpriseModelStateModel {
-    return this.store.selectSnapshot(SKEnterpriseModelState.selector);
-  }
-
 }

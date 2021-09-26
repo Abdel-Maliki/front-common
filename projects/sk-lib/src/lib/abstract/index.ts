@@ -5,3 +5,5 @@ export * from './sk-abstract-find-resolver';
 export * from './sk-abstract-form-resolver';
 export * from './sk-abstract-display-resolver';
 export * from './sk-abstract-state-model';
+export * from './sk-abstract-form-component';
+export * from './sk-abstract-list-component';
