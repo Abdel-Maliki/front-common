@@ -1,5 +1,5 @@
 import {ISkService, SKIPagination} from '../../interfaces';
-import {ResponseWrapper} from '../../classes';
+import {SkIResponseWrapper} from '../../interfaces';
 import {InjectionToken} from '@angular/core';
 
 class UserDomain {
@@ -13,22 +13,22 @@ export const USER_SERVICE_IMP = new InjectionToken<ISKUser>('IUser Implementatio
 
 export interface ISKUser extends ISkService<UserDomain> {
 
-  activateAccount(pagination: SKIPagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  activateAccount(pagination: SKIPagination, id: number | string, password: string): Promise<SkIResponseWrapper<UserDomain[]>>;
 
-  disableAccount(pagination: SKIPagination, id: number | string, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  disableAccount(pagination: SKIPagination, id: number | string, password: string): Promise<SkIResponseWrapper<UserDomain[]>>;
 
-  activateAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  activateAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<SkIResponseWrapper<UserDomain[]>>;
 
-  disableAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<ResponseWrapper<UserDomain[]>>;
+  disableAllAccount(entities: UserDomain[], pagination: SKIPagination, password: string): Promise<SkIResponseWrapper<UserDomain[]>>;
 
-  resetPassword(id: string | number, password: string): Promise<ResponseWrapper<void>>;
+  resetPassword(id: string | number, password: string): Promise<SkIResponseWrapper<void>>;
 
-  updateMyPassword(oldPassword: string, newPassword: string): Promise<ResponseWrapper<{ token: string }>>;
+  updateMyPassword(oldPassword: string, newPassword: string): Promise<SkIResponseWrapper<{ token: string }>>;
 
-  forgotPasswordRequest(email: string): Promise<ResponseWrapper<void>>;
+  forgotPasswordRequest(email: string): Promise<SkIResponseWrapper<void>>;
 
-  forgotPasswordFinalisation(token: string, password: string): Promise<ResponseWrapper<void>>;
+  forgotPasswordFinalisation(token: string, password: string): Promise<SkIResponseWrapper<void>>;
 
-  allUsernames(): Promise<ResponseWrapper<string[]>>;
+  allUsernames(): Promise<SkIResponseWrapper<string[]>>;
 
 }

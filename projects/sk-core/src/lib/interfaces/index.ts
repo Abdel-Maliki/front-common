@@ -7,4 +7,5 @@ export * from './sk-i-state';
 export * from './sk-i-state-actions';
 export * from './update-log';
 export * from './sk-i-state-model';
+export * from './sk-i-response-wrapper';
 

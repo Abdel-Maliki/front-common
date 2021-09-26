@@ -1,9 +1,6 @@
-import {ResponseWrapper} from './response-wrapper';
 import {Observable, of, throwError} from 'rxjs';
 import {StateContext} from '@ngxs/store';
-import {ISkService, SkIActionsError, SKIEntity, SkIStateModel, SKSetCurrentForFormAction} from '../interfaces';
 import {catchError, map, tap} from 'rxjs/operators';
-import {InvalidPasswordAction} from '../ngxs';
 import {
   SKCreateAction,
   SKCreateAllAction,
@@ -17,8 +14,16 @@ import {
   SKPageAction,
   SKUpdateAction,
   SKUpdateAllAction,
-  SKUpdateAndGetAction
-} from '../interfaces';
+  SKUpdateAndGetAction,
+  InvalidPasswordAction,
+  ISkService,
+  SkIActionsError,
+  SKIEntity, SkIResponseWrapper,
+  SkIStateModel,
+  SKSetCurrentAction,
+  SKSetCurrentForFormAction
+} from 'sk-core';
+import {Helpers} from './helpers';
 
 /**
  * @author abdel-maliki
@@ -33,7 +38,7 @@ export abstract class SkStateHelpers {
     ST extends SkIStateModel<T, F>,
     ID extends string | number = any,
     F = { [key: string]: any }>(
-    response: ResponseWrapper<K, F>,
+    response: SkIResponseWrapper<K, F>,
     ctx: StateContext<any>,
     val: keyof ST,
     actionError: keyof SkIActionsError,
@@ -43,7 +48,7 @@ export abstract class SkStateHelpers {
     const partial: Partial<ST> = {};
     partial.actionsError = ({...ctx.getState().actionError, [actionError]: undefined} as any);
 
-    if (response.isNotValid) {
+    if (response.isNotValid()) {
       partial.actionsError = ({...ctx.getState().actionError, [actionError]: {error: response.error, exist: true}} as any);
     }
 
@@ -56,7 +61,7 @@ export abstract class SkStateHelpers {
       }
     }
 
-    if (response.isNotValid && response.error?.message === SkStateHelpers.INVALID_PASSWORD_MESSAGE) {
+    if (response.isNotValid() && response.error?.message === SkStateHelpers.INVALID_PASSWORD_MESSAGE) {
       ctx.dispatch(new InvalidPasswordAction());
     }
 
@@ -70,7 +75,7 @@ export abstract class SkStateHelpers {
     E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     RETURN_TYPE extends T | Array<T> = T>(
-    observable: Observable<ResponseWrapper<T | Array<T>>>,
+    observable: Observable<SkIResponseWrapper<T | Array<T>>>,
     service: S,
     ctx: StateContext<ST>,
     fieldToSet: keyof ST,
@@ -80,7 +85,7 @@ export abstract class SkStateHelpers {
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
-        map((value: ResponseWrapper<T | Array<T>>) => ResponseWrapper.fromJson(value, service)),
+        map((value: SkIResponseWrapper<T | Array<T>>) => Helpers.fromJsonResponseWrapper(value, service)),
         tap(response => ctx.patchState({...this.success(response, ctx, fieldToSet, actionError, updatePageInf, loadEntities)})),
         catchError(err => this.error(err, ctx, actionError))
       );
@@ -391,6 +396,19 @@ export abstract class SkStateHelpers {
   /**********************************************************
    ************************** OTHERS ************************
    **********************************************************/
+
+
+  static setCurrent<T extends SKIEntity<T, ID>,
+    ST extends SkIStateModel<T, F, E>,
+    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
+    ID extends string | number = any,
+    A = any>(
+    service: S,
+    ctx: StateContext<ST>,
+    action: SKSetCurrentAction<T>,
+  ): Observable<any> {
+    return of(action.payload).pipe(tap(() => ctx.patchState(({current: action.payload} as Partial<ST>))));
+  }
 
   static setCurrentForForm<T extends SKIEntity<T, ID>,
     ST extends SkIStateModel<T, F, E>,

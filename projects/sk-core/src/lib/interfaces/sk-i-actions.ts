@@ -65,6 +65,9 @@ export interface SKSetCurrentForFormAction<ID extends string | number = any> {
   payload?: ID;
 }
 
+export interface SKSetCurrentAction<T extends SKIEntity<T, ID>, ID extends string | number = any> {
+  payload?: T;
+}
 
 
 

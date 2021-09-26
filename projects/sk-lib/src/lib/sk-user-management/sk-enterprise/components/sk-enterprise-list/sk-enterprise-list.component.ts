@@ -3,9 +3,11 @@ import {MatTableDataSource} from '@angular/material/table';
 import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {ColumnItem} from '../../../../components';
 import {Store} from '@ngxs/store';
-import {SKEnterpriseModelState, SKEnterprisePageAction} from '../../sk-enterprise-state';
+import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAction} from '../../sk-enterprise-state';
 import {Subscription} from 'rxjs';
-import {DateHelpers, SKConfigState, SKIPagination} from 'sk-core';
+import { SKConfigState, SKIPagination} from 'sk-core';
+import {Router} from '@angular/router';
+import {DateHelpers} from '../../../../utils';
 
 @Component({
   selector: 'sk-enterprise-list',
@@ -29,8 +31,15 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
     {title: 'Date d\'Ajout', value: data => DateHelpers.dateToDDMMYYYY(data?.createdAt) ?? ''},
   ];
 
-  constructor(protected store: Store) {
+  constructor(protected store: Store, protected router: Router) {
     this.subscriptionList.add(this.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
+  }
+
+  goToUpdate(entity: SkEnterpriseModel): void {
+    this.store
+      .dispatch(new SKSetCurrentEnterpriseAction(entity))
+      .toPromise()
+      .then(() => this.router.navigate([`update/${entity.id}`]).then());
   }
 
   ngOnInit(): void {

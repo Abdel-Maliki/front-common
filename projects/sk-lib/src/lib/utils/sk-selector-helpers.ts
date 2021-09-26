@@ -1,4 +1,4 @@
-import {SkIActionsError, SKIEntity, SKIPagination, SkIStateModel} from '../interfaces';
+import {SkIActionsError, SKIEntity, SKIPagination, SkIStateModel} from 'sk-core';
 
 export class SKSelectorHelpers {
 

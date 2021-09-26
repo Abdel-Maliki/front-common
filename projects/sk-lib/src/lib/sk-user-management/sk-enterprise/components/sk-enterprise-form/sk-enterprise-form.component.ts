@@ -76,10 +76,10 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
   }
 
   update(): Promise<SkEnterpriseModel> {
-    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']).then(), this.emptyFunction());
+    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']), this.emptyFunction());
   }
 
   create(): Promise<SkEnterpriseModel> {
-    return super.create(this.form?.getRawValue(), () => this.buildForm(), this.emptyFunction());
+    return super.create(this.form?.getRawValue(), () => this.router.navigate(['../']), this.emptyFunction());
   }
 }

@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {SkEnterpriseModel, SkIEnterprise} from '../sk-enterprise-model';
-import {SkServiceData, ResponseWrapper} from 'sk-core';
+import {SkServiceData, SkIResponseWrapper} from 'sk-core';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
 import {Pagination} from '../../../utils/pagination';
 import {SkAbstractService} from '../../../abstract';
+import {ResponseWrapper} from '../../../utils';
 
 @Injectable()
 export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
@@ -25,12 +26,12 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     return SkEnterpriseModel.toJson(model);
   }
 
-  get(id: any, others?: any): Observable<ResponseWrapper<SkIEnterprise>> {
+  get(id: any, others?: any): Observable<SkIResponseWrapper<SkIEnterprise>> {
     return of(new ResponseWrapper<SkIEnterprise>(new SkEnterpriseModel('name', 'tel', 'desciption', 'address', 'email@gmail.com', id),
       undefined, 200));
   }
 
-  pageElements(pagination: Pagination, others?: any): Observable<ResponseWrapper<SkIEnterprise[]>> {
+  pageElements(pagination: Pagination, others?: any): Observable<SkIResponseWrapper<SkIEnterprise[]>> {
     pagination = this.saFePagination(pagination);
     const list: SkIEnterprise[] = [];
     const first = (pagination.size * pagination.page) + 1;
@@ -47,12 +48,12 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     }, 200));
   }
 
-  create(entity: SkEnterpriseModel, others?: any): Observable<ResponseWrapper<SkEnterpriseModel>> {
+  create(entity: SkEnterpriseModel, others?: any): Observable<SkIResponseWrapper<SkEnterpriseModel>> {
     entity.id = Math.round(Math.random() * 10);
     return of(new ResponseWrapper<SkIEnterprise>(entity, undefined, 200));
   }
 
-  update(entity: SkEnterpriseModel, id: any, others?: any): Observable<ResponseWrapper<SkEnterpriseModel>> {
+  update(entity: SkEnterpriseModel, id: any, others?: any): Observable<SkIResponseWrapper<SkEnterpriseModel>> {
     return of(new ResponseWrapper<SkIEnterprise>({...entity, id}, undefined, 200));
   }
 

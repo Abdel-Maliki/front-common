@@ -3,17 +3,29 @@ import {Injectable} from '@angular/core';
 import {
   SKCreateAction,
   SKCreateAllAction,
-  SKCreateAndGetAction, SKDeleteAction, SKDeleteAllAction, SKDeleteAllAndGetAction, SKDeleteAndGetAction,
+  SKCreateAndGetAction,
+  SKDeleteAction,
+  SKDeleteAllAction,
+  SKDeleteAllAndGetAction,
+  SKDeleteAndGetAction,
   SKGetAction,
   SkGetAllAction,
-  SKPageAction, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction, SKSetCurrentForFormAction,
-  SKSelectorHelpers, SkStateHelpers, SKIPagination, ISkState, SkIActionsError
+  SKPageAction,
+  SKUpdateAction,
+  SKUpdateAllAction,
+  SKUpdateAndGetAction,
+  SKSetCurrentForFormAction,
+  SKIPagination,
+  ISkState,
+  SkIActionsError,
+  SKSetCurrentAction
 } from 'sk-core';
 import {SkEnterpriseModel} from './sk-enterprise-model';
 import {SkEnterpriseService} from './services/sk-enterprise.service';
 import {Pagination} from '../../utils/pagination';
 import {Observable} from 'rxjs';
 import {SkAbstractStateModel, SKDefaultState} from '../../abstract';
+import {SKSelectorHelpers, SkStateHelpers} from '../../utils';
 
 /**
  * @author abdel-maliki
@@ -166,6 +178,14 @@ export class SKSetCurrentForFormEnterpriseAction implements SKSetCurrentForFormA
   static readonly type = '[SkEnterprise] SKSetCurrentForFormEnterpriseAction';
 
   constructor(public payload?: any) {
+  }
+}
+
+export class SKSetCurrentEnterpriseAction implements SKSetCurrentAction<SkEnterpriseModel> {
+
+  static readonly type = '[SkEnterprise] SKSetCurrentEnterpriseAction';
+
+  constructor(public payload?: SkEnterpriseModel) {
   }
 }
 
@@ -383,6 +403,11 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   @Action(SKSetCurrentForFormEnterpriseAction)
   setCurrentForForm(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKSetCurrentForFormEnterpriseAction): Observable<any> {
     return SkStateHelpers.setCurrentForForm(this.service, ctx, action, new SkEnterpriseModel());
+  }
+
+  @Action(SKSetCurrentEnterpriseAction)
+  setCurrent(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKSetCurrentEnterpriseAction): Observable<any> {
+    return SkStateHelpers.setCurrent(this.service, ctx, action);
   }
 }
 

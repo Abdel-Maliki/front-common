@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {ResponseWrapper} from '../classes';
+import {SkIResponseWrapper} from '../interfaces';
 import {SkIObjectMapper} from './sk-i-object-mapper';
 import {SKIPagination} from './sk-i-pagination';
 
@@ -11,36 +11,36 @@ import {SKIPagination} from './sk-i-pagination';
 export interface ISkService<T, ID extends string | number = any> extends SkIObjectMapper<T> {
 
   /******* READ *********/
-  get(id: ID): Observable<ResponseWrapper<T>>;
+  get(id: ID): Observable<SkIResponseWrapper<T>>;
 
-  getAll(others?: any): Observable<ResponseWrapper<T[]>>;
+  getAll(others?: any): Observable<SkIResponseWrapper<T[]>>;
 
-  pageElements(pagination: SKIPagination, others?: any): Observable<ResponseWrapper<T[]>>;
+  pageElements(pagination: SKIPagination, others?: any): Observable<SkIResponseWrapper<T[]>>;
 
   /******* WRITE *********/
-  create(entity: T, others?: any): Observable<ResponseWrapper<T>>;
+  create(entity: T, others?: any): Observable<SkIResponseWrapper<T>>;
 
-  createAndGet(data: { entity: T, pagination: SKIPagination }, others?: any): Observable<ResponseWrapper<T[]>>;
+  createAndGet(data: { entity: T, pagination: SKIPagination }, others?: any): Observable<SkIResponseWrapper<T[]>>;
 
-  createAll?(entities: T[], others?: any): Observable<ResponseWrapper<T[]>>;
+  createAll?(entities: T[], others?: any): Observable<SkIResponseWrapper<T[]>>;
 
   /******* UPDATE *********/
-  update(entity: T, id: ID, others?: any): Observable<ResponseWrapper<T>>;
+  update(entity: T, id: ID, others?: any): Observable<SkIResponseWrapper<T>>;
 
-  updateAndGet(data: { entity: T, pagination: SKIPagination }, id: ID, others?: any): Observable<ResponseWrapper<T[]>>;
+  updateAndGet(data: { entity: T, pagination: SKIPagination }, id: ID, others?: any): Observable<SkIResponseWrapper<T[]>>;
 
-  updateAll?(entities: T[], others?: any): Observable<ResponseWrapper<T[]>>;
+  updateAll?(entities: T[], others?: any): Observable<SkIResponseWrapper<T[]>>;
 
 
   /******* DELETE *********/
 
-  delete(id: ID, ...data: any): Observable<ResponseWrapper<T>>;
+  delete(id: ID, ...data: any): Observable<SkIResponseWrapper<T>>;
 
-  deleteAndGet(pagination: SKIPagination, id: number | string, others?: any): Observable<ResponseWrapper<T[]>>;
+  deleteAndGet(pagination: SKIPagination, id: number | string, others?: any): Observable<SkIResponseWrapper<T[]>>;
 
-  deleteAllAndGet?(entities: T[], pagination: SKIPagination, others?: any): Observable<ResponseWrapper<T[]>>;
+  deleteAllAndGet?(entities: T[], pagination: SKIPagination, others?: any): Observable<SkIResponseWrapper<T[]>>;
 
-  deleteAll?(ids: ID[], others?: any): Observable<ResponseWrapper<T[]>>;
+  deleteAll?(ids: ID[], others?: any): Observable<SkIResponseWrapper<T[]>>;
 
   /******* OTHERS *********/
 

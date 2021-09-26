@@ -3,7 +3,6 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Store} from '@ngxs/store';
-import {ResponseWrapper} from '../classes';
 import {SKConfigState} from '../ngxs';
 import {LogoutAction, SetRolesAction, SetUserAction} from '../ngxs';
 
@@ -27,7 +26,7 @@ export class SkErrorInterceptor implements HttpInterceptor {
         this.store.dispatch(new SetUserAction(err.error.data.user));
         this.store.dispatch(new SetRolesAction(err.error.data.roles));
       }
-      return throwError(ResponseWrapper.ko<any>({message: err.error.error.message, full: err}, err.error.code));
+      return throwError(err);
     }));
   }
 }

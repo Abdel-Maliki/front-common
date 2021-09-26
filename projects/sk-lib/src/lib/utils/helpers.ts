@@ -1,4 +1,6 @@
-import {SkIObjectMapper} from '../interfaces';
+import {SkIObjectMapper} from 'sk-core';
+import {SkIResponseWrapper} from 'sk-core';
+import {ResponseWrapper} from './response-wrapper';
 
 /**
  * @author abdel-maliki
@@ -22,6 +24,17 @@ export class Helpers {
     return ((response instanceof Array)
       ? response.map(value => skObjectMapper.fromJson(value))
       : skObjectMapper.fromJson(response)) as RETURN_TYPE;
+  }
+
+  static fromJsonResponseWrapper<T, RETURN_TYPE extends T | Array<T> = T>(
+    responseWrapper: SkIResponseWrapper<any>,
+    skObjectMapper: SkIObjectMapper<T>): ResponseWrapper<RETURN_TYPE> {
+    return new ResponseWrapper<RETURN_TYPE>(
+      Helpers.fromJson<T, RETURN_TYPE>(responseWrapper?.data, skObjectMapper),
+      responseWrapper.pagination,
+      responseWrapper.code,
+      responseWrapper.error
+    );
   }
 
   public static fail(value: never): void {
