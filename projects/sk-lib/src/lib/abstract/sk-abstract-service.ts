@@ -2,12 +2,11 @@
  * @author abdel-maliki
  */
 import {
-  ISkService, SKIEntity, i18nConstantes,
-  HeadersOptions, HttpHelpers, ResponseWrapper,
-  SkServiceData, SKConfigState, SKIPagination
+  ISkService, SKIEntity, i18nConstantes, SkServiceData, SKConfigState, SKIPagination, SkIResponseWrapper
 } from 'sk-core';
 import {Observable} from 'rxjs';
 import {Store} from '@ngxs/store';
+import {HeadersOptions, HttpHelpers} from '../utils';
 
 
 export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends string | number = any> implements ISkService<T> {
@@ -31,16 +30,16 @@ export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends strin
    ****************** READ *******************
    ******************************************/
 
-  get(id: ID, others?: any): Observable<ResponseWrapper<T>> {
-    return this.data.httpClient.put<ResponseWrapper<T>>(this.getUrl(`read/${id}`), JSON.stringify(others), this.baseOption);
+  get(id: ID, others?: any): Observable<SkIResponseWrapper<T>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T>>(this.getUrl(`read/${id}`), JSON.stringify(others), this.baseOption);
   }
 
-  getAll(others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.put<ResponseWrapper<T[]>>(this.getUrl('get/all'), JSON.stringify(others), this.baseOption);
+  getAll(others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T[]>>(this.getUrl('get/all'), JSON.stringify(others), this.baseOption);
   }
 
-  pageElements(pagination: SKIPagination, others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.post<ResponseWrapper<T[]>>(this.getUrl('page'),
+  pageElements(pagination: SKIPagination, others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.post<SkIResponseWrapper<T[]>>(this.getUrl('page'),
       JSON.stringify({pagination: this.saFePagination(pagination), others}), this.baseOption);
   }
 
@@ -48,18 +47,18 @@ export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends strin
    ****************** WRITE *****************
    ******************************************/
 
-  create(entity: T, others?: any): Observable<ResponseWrapper<T>> {
-    return this.data.httpClient.post<ResponseWrapper<T>>(this.getUrl(),
+  create(entity: T, others?: any): Observable<SkIResponseWrapper<T>> {
+    return this.data.httpClient.post<SkIResponseWrapper<T>>(this.getUrl(),
       JSON.stringify({entity, others}), this.baseOption);
   }
 
-  createAndGet(data: { entity: T; pagination: SKIPagination; }, others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.post<ResponseWrapper<T[]>>(this.getUrl(`create/and-get`),
+  createAndGet(data: { entity: T; pagination: SKIPagination; }, others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.post<SkIResponseWrapper<T[]>>(this.getUrl(`create/and-get`),
       JSON.stringify({entity: data.entity, pagination: this.saFePagination(data.pagination), others}), this.baseOption);
   }
 
-  createAll(entities: T[], others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.post<ResponseWrapper<T[]>>(this.getUrl('save/all'),
+  createAll(entities: T[], others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.post<SkIResponseWrapper<T[]>>(this.getUrl('save/all'),
       JSON.stringify({entities, others}), this.baseOption);
   }
 
@@ -67,18 +66,18 @@ export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends strin
    ****************** UPDATE *****************
    ******************************************/
 
-  update(entity: T, id: ID, others?: any): Observable<ResponseWrapper<T>> {
-    return this.data.httpClient.put<ResponseWrapper<T>>(this.getUrl(`update/${id}`),
+  update(entity: T, id: ID, others?: any): Observable<SkIResponseWrapper<T>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T>>(this.getUrl(`update/${id}`),
       JSON.stringify({entity, others}), this.baseOption);
   }
 
-  updateAndGet(data: { entity: T; pagination: SKIPagination; }, id: string | number, others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.put<ResponseWrapper<T[]>>(this.getUrl(`/update/and-get/${id}`),
+  updateAndGet(data: { entity: T; pagination: SKIPagination; }, id: string | number, others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T[]>>(this.getUrl(`/update/and-get/${id}`),
       JSON.stringify({entity: data.entity, pagination: this.saFePagination(data.pagination), others}), this.baseOption);
   }
 
-  updateAll(entities: T[], others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.post<ResponseWrapper<T[]>>(this.getUrl('update/all'),
+  updateAll(entities: T[], others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.post<SkIResponseWrapper<T[]>>(this.getUrl('update/all'),
       JSON.stringify({entities, others}), this.baseOption);
   }
 
@@ -87,22 +86,22 @@ export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends strin
    ****************** DELETE *****************
    ******************************************/
 
-  delete(id: ID, others?: any): Observable<ResponseWrapper<T>> {
-    return this.data.httpClient.put<ResponseWrapper<T>>(this.getUrl(`delete/${id}`), JSON.stringify(others), this.baseOption);
+  delete(id: ID, others?: any): Observable<SkIResponseWrapper<T>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T>>(this.getUrl(`delete/${id}`), JSON.stringify(others), this.baseOption);
   }
 
-  deleteAndGet(pagination: SKIPagination, id: string | number, others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.put<ResponseWrapper<T[]>>(this.getUrl(`delete/and-get/${id}`)
+  deleteAndGet(pagination: SKIPagination, id: string | number, others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T[]>>(this.getUrl(`delete/and-get/${id}`)
       , JSON.stringify({pagination: this.saFePagination(pagination), others}), this.baseOption);
   }
 
-  deleteAllAndGet(entities: T[], pagination: SKIPagination, others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.put<ResponseWrapper<T[]>>(this.getUrl('delete-all/and-get'),
+  deleteAllAndGet(entities: T[], pagination: SKIPagination, others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T[]>>(this.getUrl('delete-all/and-get'),
       JSON.stringify({pagination: this.saFePagination(pagination), ids: entities.map(value => value.id), others}), this.baseOption);
   }
 
-  deleteAll(entities: T[], others?: any): Observable<ResponseWrapper<T[]>> {
-    return this.data.httpClient.put<ResponseWrapper<T[]>>(this.getUrl('delete/all'),
+  deleteAll(entities: T[], others?: any): Observable<SkIResponseWrapper<T[]>> {
+    return this.data.httpClient.put<SkIResponseWrapper<T[]>>(this.getUrl('delete/all'),
       JSON.stringify({ids: entities.map(value => value.id), others}), this.baseOption);
   }
 
