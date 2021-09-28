@@ -1,10 +1,11 @@
-import {Directive, Input} from '@angular/core';
+import {Directive, EventEmitter, Input} from '@angular/core';
 import {Store} from '@ngxs/store';
-import {SKIEntity, SkIStateModel, SkServiceData, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction} from 'sk-core';
+import {SKIEntity, SkIStateModel, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction} from 'sk-core';
 import {finalize, map} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
 import {SKCreateAction, SKCreateAllAction, SKCreateAndGetAction, SKIPagination} from 'sk-core';
+import {Helpers} from '../utils';
+import {Observable} from 'rxjs';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
@@ -16,91 +17,43 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   @Input() form: FormGroup | undefined;
   @Input() entity?: T = this.state().current;
   @Input() disableButton = false;
+  @Input() simplePersist = false;
+  @Input() afterCreate: EventEmitter<T> = new EventEmitter<T>();
+  @Input() afterUpdate: EventEmitter<T> = new EventEmitter<T>();
+  @Input() afterCreateAndGet: EventEmitter<T[]> = new EventEmitter<T[]>();
+  @Input() afterUpdateAndGet: EventEmitter<T[]> = new EventEmitter<T[]>();
 
 
-  protected constructor(protected store: Store, protected serviceData: SkServiceData) {
+  protected constructor(protected store: Store) {
   }
 
+
+  /*****************************************************************************
+   ****************************** ABSTRACTS METHODS ****************************
+   *****************************************************************************/
 
   abstract state(): S;
 
   abstract get actions(): SkAbstractFormAction<T, ID>;
 
 
-  subscribeAndReturnPromise(observable: Observable<any>,
-                            success: () => any = this.emptyFunction,
-                            error: () => any = this.emptyFunction,
-  ): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      observable.toPromise()
-        .then(value => {
-          console.log('Class: SkAbstractFormComponent, Function: , Line 37 value(): '
-            , value);
-          success();
-          resolve(value);
-        })
-        .catch(reason => {
-          console.log('Class: SkAbstractFormComponent, Function: , Line 43 reason(): '
-            , reason);
-          error();
-          reject(reason);
-        });
-    });
-  }
+  /*****************************************************************************
+   ****************************** UTILS METHODS ****************************
+   *****************************************************************************/
 
-  create(entity: T = this.form?.getRawValue(),
-         success: () => any = this.emptyFunction,
-         error: () => any = this.emptyFunction,
-         finalizeFunction: () => any = this.emptyFunction): Promise<T> {
-
-    this.disableButton = true;
-
-    if (!this.actions.create) {
-      throw new Error('Create action not found');
-    }
-
-    const observable = this.store
-      .dispatch(this.actions.create(entity))
-      .pipe(
-        map(() => this.state()),
-        finalize(() => {
-          finalizeFunction();
-          this.disableButton = false;
-        }),
-      );
-
-    return this.subscribeAndReturnPromise(observable, success, error);
-  }
-
-  emptyFunction(): any {
-  }
-
-  update(entity: T = this.form?.getRawValue(),
-         id: ID = this.form?.getRawValue()?.id,
-         success: () => any = this.emptyFunction,
-         error: () => any = this.emptyFunction,
-         finalizeFunction: () => any = this.emptyFunction): Promise<T> {
-    this.disableButton = true;
-
-    if (!this.actions.update) {
-      throw new Error('Create action not found');
-    }
-
-    const observable = this.store.dispatch(this.actions.update(entity, id))
-      .pipe(
-        map(() => this.state),
-        finalize(() => {
-          finalizeFunction();
-          this.disableButton = false;
-        }),
-      );
-
-    return this.subscribeAndReturnPromise(observable, success, error);
-  }
 
   saveOrUpdate(): Promise<T> {
     return !!this.entity?.id && this.entity.id > 0 ? this.update() : this.create();
   }
+
+  saveAndGetOrUpdateAndGet(): Promise<T[]> {
+    return !!this.entity?.id && this.entity.id > 0 ? this.updateAndGet() : this.createAndGet();
+  }
+
+  checkAndPersist(): Promise<T | T[]> {
+    return this.simplePersist ? this.saveOrUpdate() : this.saveAndGetOrUpdateAndGet();
+  }
+
 
   get haseUpdate(): boolean {
     return !!this.entity?.id;
@@ -111,6 +64,126 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   }
 
 
+  /*****************************************************************************
+   ***********************************API METHODS********************************
+   /*****************************************************************************/
+
+  create(entity: T = this.form?.getRawValue(),
+         success?: (value: T) => any,
+         error?: (error: any) => any,
+         finalizeFunction?: () => any): Promise<T> {
+
+    this.disableButton = true;
+
+    if (!this.actions.create) {
+      throw new Error('Create action not found');
+    }
+
+    const observable = this.store
+      .dispatch(this.actions.create(entity))
+      .pipe(
+        map(() => this.state().lastCreate as T),
+        finalize(() => {
+          finalizeFunction?.();
+          this.disableButton = false;
+        }),
+      );
+
+    return Helpers.subscribeAndReturnPromise(observable, value => {
+      this.afterCreate.emit(value);
+      success?.(value);
+    }, error);
+  }
+
+  update(entity: T = this.form?.getRawValue(),
+         id: ID = this.form?.getRawValue()?.id,
+         success?: (value: T) => any,
+         error?: (error: any) => any,
+         finalizeFunction?: () => any): Promise<T> {
+    this.disableButton = true;
+
+    if (!this.actions.update) {
+      throw new Error('Create action not found');
+    }
+
+    const observable = this.store.dispatch(this.actions.update(entity, id))
+      .pipe(
+        map(() => this.state().lastUpdate as T),
+        finalize(() => {
+          finalizeFunction?.();
+          this.disableButton = false;
+        }),
+      );
+
+    return Helpers.subscribeAndReturnPromise(observable, value => {
+      this.afterUpdate.emit(value);
+      success?.(value);
+    }, error);
+  }
+
+
+  createAndGet(entity: T = this.form?.getRawValue(),
+               success?: (value: T[]) => any,
+               error?: (error: any) => any,
+               finalizeFunction?: () => any): Promise<T[]> {
+
+    this.disableButton = true;
+
+    if (!this.actions.createAndGet) {
+      throw new Error('Create action not found');
+    }
+
+    const observable = this.store
+      .dispatch(this.actions.createAndGet(entity, Helpers.safePagination(this.state(), this.store)))
+      .pipe(
+        map(() => this.state().lastCreates as T[]),
+        finalize(() => {
+          if (finalizeFunction) {
+            finalizeFunction();
+          }
+          this.disableButton = false;
+        }),
+      );
+
+
+    return Helpers.subscribeAndReturnPromise(observable, (value) => {
+      if (success) {
+        success(value);
+      }
+      this.afterCreateAndGet.emit();
+    }, error);
+  }
+
+  updateAndGet(entity: T = this.form?.getRawValue(),
+               id: ID = this.form?.getRawValue()?.id,
+               success?: (value: T[]) => any,
+               error?: (error: any) => any,
+               finalizeFunction?: () => any): Promise<T[]> {
+    this.disableButton = true;
+
+    if (!this.actions.updateAndGet) {
+      throw new Error('Create action not found');
+    }
+
+    const observable: Observable<T[]> = this.store
+      .dispatch(this.actions.updateAndGet(entity, id, Helpers.safePagination(this.state(), this.store)))
+      .pipe(
+        map(() => this.state().lastCreates as T[]),
+        finalize(() => {
+          if (finalizeFunction) {
+            finalizeFunction();
+          }
+          this.disableButton = false;
+        }),
+      );
+
+    return Helpers.subscribeAndReturnPromise(observable, value => {
+      if (success) {
+        success(value);
+      }
+      this.afterUpdateAndGet.emit(value);
+    }, error);
+  }
 }
 
 export interface SkAbstractFormAction<T extends SKIEntity<T, ID>, ID extends string | number = any> {

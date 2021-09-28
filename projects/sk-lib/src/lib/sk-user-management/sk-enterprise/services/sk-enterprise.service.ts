@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SkEnterpriseModel, SkIEnterprise} from '../sk-enterprise-model';
-import {SkServiceData, SkIResponseWrapper} from 'sk-core';
+import {SkServiceData, SkIResponseWrapper, SKIPagination} from 'sk-core';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
 import {Pagination} from '../../../utils/pagination';
@@ -57,4 +57,51 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     return of(new ResponseWrapper<SkIEnterprise>({...entity, id}, undefined, 200));
   }
 
+  createAndGet(data: { entity: SkEnterpriseModel; pagination: SKIPagination }, others?: any)
+    : Observable<SkIResponseWrapper<SkIEnterprise[]>> {
+    const pagination = this.saFePagination(data.pagination);
+    const list: SkIEnterprise[] = [];
+    const first = (pagination.size * pagination.page) + 1;
+    const second = (pagination.size * (pagination.page + 1)) + 1;
+    for (let i = first; i < second; i++) {
+      list.push(new SkEnterpriseModel(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
+        `email${i}@gmail.com`, `${i}`));
+    }
+
+    console.log('Class: SkEnterpriseService, Function: createAndGet, Line 71 pagination(): '
+      , pagination);
+
+    console.log('Class: SkEnterpriseService, Function: createAndGet, Line 74 list(): '
+      , list);
+
+    return of(new ResponseWrapper<SkIEnterprise[]>(list, {
+      page: pagination.page,
+      totalElements: pagination.size * 10,
+      size: pagination.size
+    }, 200));
+  }
+
+  updateAndGet(data: { entity: SkEnterpriseModel; pagination: SKIPagination }, id: string | number, others?: any)
+    : Observable<SkIResponseWrapper<SkIEnterprise[]>> {
+    const pagination = this.saFePagination(data.pagination);
+    const list: SkIEnterprise[] = [];
+    const first = (pagination.size * pagination.page) + 1;
+    const second = (pagination.size * (pagination.page + 1)) + 1;
+    for (let i = first; i < second; i++) {
+      list.push(new SkEnterpriseModel(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
+        `email${i}@gmail.com`, `${i}`));
+    }
+
+    console.log('Class: SkEnterpriseService, Function: createAndGet, Line 95 list(): '
+      , list);
+
+    console.log('Class: SkEnterpriseService, Function: createAndGet, Line 98 pagination(): '
+      , pagination);
+
+    return of(new ResponseWrapper<SkIEnterprise[]>(list, {
+      page: pagination.page,
+      totalElements: pagination.size * 10,
+      size: pagination.size
+    }, 200));
+  }
 }

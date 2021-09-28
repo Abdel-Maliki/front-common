@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {SkEnterpriseModel} from '../../sk-enterprise-model';
 import {Store} from '@ngxs/store';
-import {SKConfigState, SkFormConfig, SkServiceData} from 'sk-core';
+import {SKConfigState, SkFormConfig} from 'sk-core';
 import {
   SKCreateAllEnterpriseAction,
   SKCreateAndGetEnterpriseAction,
@@ -25,10 +25,9 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
   disableButton = false;
 
   constructor(store: Store,
-              serviceData: SkServiceData,
               protected router: Router,
               protected formBuilder: FormBuilder) {
-    super(store, serviceData);
+    super(store);
   }
 
   state(): SKEnterpriseModelStateModel {
@@ -76,10 +75,20 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
   }
 
   update(): Promise<SkEnterpriseModel> {
-    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']), this.emptyFunction());
+    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
   }
 
   create(): Promise<SkEnterpriseModel> {
-    return super.create(this.form?.getRawValue(), () => this.router.navigate(['../']), this.emptyFunction());
+    return super.create(this.form?.getRawValue(), () => this.router.navigate(['../']));
   }
+
+  updateAndGet(): Promise<SkEnterpriseModel[]> {
+    return super.updateAndGet(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
+  }
+
+  createAndGet(): Promise<SkEnterpriseModel[]> {
+    return super.createAndGet(this.form?.getRawValue(), () => this.router.navigate(['../']));
+  }
+
+
 }

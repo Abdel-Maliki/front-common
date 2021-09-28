@@ -1,6 +1,10 @@
 import {SkIObjectMapper} from 'sk-core';
 import {SkIResponseWrapper} from 'sk-core';
 import {ResponseWrapper} from './response-wrapper';
+import {SKIPagination, SkIStateModel} from '../../../../sk-core/src/lib/interfaces';
+import {Store} from '@ngxs/store';
+import {SKConfigState} from '../../../../sk-core/src/lib/ngxs';
+import {Observable} from 'rxjs';
 
 /**
  * @author abdel-maliki
@@ -35,6 +39,33 @@ export class Helpers {
       responseWrapper.code,
       responseWrapper.error
     );
+  }
+
+  static safePagination<T>(state: SkIStateModel<T>, store: Store): SKIPagination<T> {
+    return state.pagination ?? store.selectSnapshot(SKConfigState.paginationSelector);
+  }
+
+  static subscribeAndReturnPromise<T>(observable: Observable<T>,
+                                      success?: (value: T) => any,
+                                      error?: (error: any) => any,
+  ): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      observable.toPromise()
+        .then(value => {
+          if (success) {
+            success(value);
+          }
+          resolve(value);
+        })
+        .catch(reason => {
+          console.log('Class: Helpers, Function: , Line 61 reason(): '
+            , reason);
+          if (error) {
+            error(reason);
+          }
+          reject(reason);
+        });
+    });
   }
 
   public static fail(value: never): void {
