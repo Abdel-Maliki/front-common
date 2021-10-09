@@ -1,5 +1,5 @@
 import {Action, NgxsOnInit, Selector, State, StateContext, StateToken} from '@ngxs/store';
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {
   SKCreateAction,
   SKCreateAllAction,
@@ -20,12 +20,13 @@ import {
   SkIActionsError,
   SKSetCurrentAction
 } from 'sk-core';
-import {SkEnterpriseModel} from './sk-enterprise-model';
-import {SkEnterpriseService} from './services/sk-enterprise.service';
-import {Pagination} from '../../utils/pagination';
+import {SkEnterpriseDomain} from '../classes/sk-enterprise-domain';
+import {SkEnterpriseService} from './sk-enterprise.service';
+import {Pagination} from '../../../utils/pagination';
 import {Observable} from 'rxjs';
-import {SkAbstractStateModel, SKDefaultState} from '../../abstract';
-import {SKSelectorHelpers, SkStateHelpers} from '../../utils';
+import {SkAbstractStateModel, SKDefaultState} from '../../../abstract';
+import {SKSelectorHelpers, SkStateHelpers} from '../../../utils';
+import {SK_ENTERPRISE_SERVICE} from '../../../classes';
 
 /**
  * @author abdel-maliki
@@ -60,7 +61,7 @@ export class SkGetAllEnterpriseAction implements SkGetAllAction {
   }
 }
 
-export class SKEnterprisePageAction implements SKPageAction<SkEnterpriseModel> {
+export class SKEnterprisePageAction implements SKPageAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKEnterprisePage';
 
@@ -73,29 +74,29 @@ export class SKEnterprisePageAction implements SKPageAction<SkEnterpriseModel> {
  *********************** WRITE  ACTIONS ***********************
  **************************************************************/
 
-export class SKCreateEnterpriseAction implements SKCreateAction<SkEnterpriseModel> {
+export class SKCreateEnterpriseAction implements SKCreateAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKCreateEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, others?: any }) {
   }
 }
 
 
-export class SKCreateAndGetEnterpriseAction implements SKCreateAndGetAction<SkEnterpriseModel> {
+export class SKCreateAndGetEnterpriseAction implements SKCreateAndGetAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKCreateAndGetEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, pagination: Pagination, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, pagination: Pagination, others?: any }) {
   }
 }
 
 
-export class SKCreateAllEnterpriseAction implements SKCreateAllAction<SkEnterpriseModel> {
+export class SKCreateAllEnterpriseAction implements SKCreateAllAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKCreateAllEnterprise';
 
-  constructor(public payload: { entities: SkEnterpriseModel[], others?: any }) {
+  constructor(public payload: { entities: SkEnterpriseDomain[], others?: any }) {
   }
 }
 
@@ -103,29 +104,29 @@ export class SKCreateAllEnterpriseAction implements SKCreateAllAction<SkEnterpri
  *********************** UPDATE  ACTIONS ***********************
  **************************************************************/
 
-export class SKUpdateEnterpriseAction implements SKUpdateAction<SkEnterpriseModel> {
+export class SKUpdateEnterpriseAction implements SKUpdateAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKUpdateEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, id: number | string, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, id: number | string, others?: any }) {
   }
 }
 
 
-export class SKUpdateAndGetEnterpriseAction implements SKUpdateAndGetAction<SkEnterpriseModel> {
+export class SKUpdateAndGetEnterpriseAction implements SKUpdateAndGetAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKUpdateAndGetEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, pagination: Pagination, id: number | string, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, pagination: Pagination, id: number | string, others?: any }) {
   }
 }
 
 
-export class SKUpdateAllEnterpriseAction implements SKUpdateAllAction<SkEnterpriseModel> {
+export class SKUpdateAllEnterpriseAction implements SKUpdateAllAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKUpdateAllEnterprise';
 
-  constructor(public payload: { entities: SkEnterpriseModel[], others?: any }) {
+  constructor(public payload: { entities: SkEnterpriseDomain[], others?: any }) {
   }
 }
 
@@ -134,37 +135,37 @@ export class SKUpdateAllEnterpriseAction implements SKUpdateAllAction<SkEnterpri
  **************************************************************/
 
 
-export class SKDeleteEnterpriseAction implements SKDeleteAction<SkEnterpriseModel> {
+export class SKDeleteEnterpriseAction implements SKDeleteAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKDeleteEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, id: number | string, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, id: number | string, others?: any }) {
   }
 }
 
 
-export class SKDeleteAndGetEnterpriseAction implements SKDeleteAndGetAction<SkEnterpriseModel> {
+export class SKDeleteAndGetEnterpriseAction implements SKDeleteAndGetAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKDeleteAndGetEnterprise';
 
-  constructor(public payload: { entity: SkEnterpriseModel, pagination: Pagination, id: number | string, others?: any }) {
+  constructor(public payload: { entity: SkEnterpriseDomain, pagination: Pagination, id: number | string, others?: any }) {
   }
 }
 
 
-export class SKDeleteAllEnterpriseAction implements SKDeleteAllAction<SkEnterpriseModel> {
+export class SKDeleteAllEnterpriseAction implements SKDeleteAllAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKDeleteAllEnterprise';
 
-  constructor(public payload: { entities: SkEnterpriseModel[], others?: any }) {
+  constructor(public payload: { entities: SkEnterpriseDomain[], others?: any }) {
   }
 }
 
-export class SKDeleteAllAndGetEnterpriseAction implements SKDeleteAllAndGetAction<SkEnterpriseModel> {
+export class SKDeleteAllAndGetEnterpriseAction implements SKDeleteAllAndGetAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKDeleteAllAndGetEnterprise';
 
-  constructor(public payload: { entities: SkEnterpriseModel[], pagination: Pagination, others?: any }) {
+  constructor(public payload: { entities: SkEnterpriseDomain[], pagination: Pagination, others?: any }) {
   }
 }
 
@@ -181,11 +182,11 @@ export class SKSetCurrentForFormEnterpriseAction implements SKSetCurrentForFormA
   }
 }
 
-export class SKSetCurrentEnterpriseAction implements SKSetCurrentAction<SkEnterpriseModel> {
+export class SKSetCurrentEnterpriseAction implements SKSetCurrentAction<SkEnterpriseDomain> {
 
   static readonly type = '[SkEnterprise] SKSetCurrentEnterpriseAction';
 
-  constructor(public payload?: SkEnterpriseModel) {
+  constructor(public payload?: SkEnterpriseDomain) {
   }
 }
 
@@ -197,7 +198,7 @@ export class SKSetCurrentEnterpriseAction implements SKSetCurrentAction<SkEnterp
  **************************************************************/
 
 
-export class SKEnterpriseModelStateModel extends SkAbstractStateModel<SkEnterpriseModel> {
+export class SKEnterpriseModelStateModel extends SkAbstractStateModel<SkEnterpriseDomain> {
 }
 
 export const SK_ENTERPRISE_STATE_TOKEN = new StateToken<SKEnterpriseModelStateModel>('SKEnterpriseModelState');
@@ -210,9 +211,9 @@ export const SK_ENTERPRISE_DEFAULT_STATE: SKEnterpriseModelStateModel = SKDefaul
   defaults: SK_ENTERPRISE_DEFAULT_STATE
 })
 @Injectable()
-export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterpriseModel, SKEnterpriseModelStateModel> {
+export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterpriseDomain, SKEnterpriseModelStateModel> {
 
-  constructor(protected service: SkEnterpriseService) {
+  constructor(@Inject(SK_ENTERPRISE_SERVICE) protected service: SkEnterpriseService) {
   }
 
   /**************************************************************
@@ -222,33 +223,33 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
    **************************************************************/
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static allSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
+  static allSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain[] {
     return SKSelectorHelpers.allSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static entitiesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
+  static entitiesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain[] {
     return SKSelectorHelpers.entitiesSelector(state);
 
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastCreatesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
+  static lastCreatesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain[] {
     return SKSelectorHelpers.lastCreatesSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastUpdatesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
+  static lastUpdatesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain[] {
     return SKSelectorHelpers.lastUpdatesSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastDeletesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel[] {
+  static lastDeletesSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain[] {
     return SKSelectorHelpers.lastDeletesSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static entitySelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
+  static entitySelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain | undefined {
     return SKSelectorHelpers.entitySelector(state);
   }
 
@@ -258,22 +259,22 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static currentSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
+  static currentSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain | undefined {
     return SKSelectorHelpers.currentSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastCreateSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
+  static lastCreateSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain | undefined {
     return SKSelectorHelpers.lastCreateSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastUpdateSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
+  static lastUpdateSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain | undefined {
     return SKSelectorHelpers.lastUpdateSelector(state);
   }
 
   @Selector([SK_ENTERPRISE_STATE_TOKEN])
-  static lastDeleteSelector(state: SKEnterpriseModelStateModel): SkEnterpriseModel | undefined {
+  static lastDeleteSelector(state: SKEnterpriseModelStateModel): SkEnterpriseDomain | undefined {
     return SKSelectorHelpers.lastDeleteSelector(state);
   }
 
@@ -402,7 +403,7 @@ export class SKEnterpriseModelState implements NgxsOnInit, ISkState<SkEnterprise
 
   @Action(SKSetCurrentForFormEnterpriseAction)
   setCurrentForForm(ctx: StateContext<SKEnterpriseModelStateModel>, action: SKSetCurrentForFormEnterpriseAction): Observable<any> {
-    return SkStateHelpers.setCurrentForForm(this.service, ctx, action, new SkEnterpriseModel());
+    return SkStateHelpers.setCurrentForForm(this.service, ctx, action, new SkEnterpriseDomain());
   }
 
   @Action(SKSetCurrentEnterpriseAction)

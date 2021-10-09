@@ -13,7 +13,7 @@ import {SKIPagination} from '../../interfaces';
 export const SK_CONFIG_STATE_TOKEN = new StateToken<SkConfigStateModel>('skConfigState');
 
 export const DEFAULT_PAGINATION: SKIPagination = {
-  direction: 0,
+  direction: 1,
   page: 0,
   size: 10,
   sort: 'desc',

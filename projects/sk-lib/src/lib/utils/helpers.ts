@@ -1,9 +1,8 @@
 import {SkIObjectMapper} from 'sk-core';
 import {SkIResponseWrapper} from 'sk-core';
 import {ResponseWrapper} from './response-wrapper';
-import {SKIPagination, SkIStateModel} from '../../../../sk-core/src/lib/interfaces';
+import {SKIPagination, SkIStateModel, SKConfigState} from 'sk-core';
 import {Store} from '@ngxs/store';
-import {SKConfigState} from '../../../../sk-core/src/lib/ngxs';
 import {Observable} from 'rxjs';
 
 /**

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SkEnterpriseModel, SkIEnterprise} from '../sk-enterprise-model';
+import {SkEnterpriseDomain, SkIEnterprise} from '../classes/sk-enterprise-domain';
 import {SkServiceData, SkIResponseWrapper, SKIPagination} from 'sk-core';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
@@ -8,7 +8,7 @@ import {SkAbstractService} from '../../../abstract';
 import {ResponseWrapper} from '../../../utils';
 
 @Injectable()
-export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
+export class SkEnterpriseService extends SkAbstractService<SkEnterpriseDomain> {
 
   constructor(protected data: SkServiceData, protected store: Store) {
     super(data, store);
@@ -18,16 +18,16 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     return 'enterprises';
   }
 
-  fromJson(jsonValue: SkIEnterprise | undefined): SkEnterpriseModel | undefined {
-    return SkEnterpriseModel.fromJson(jsonValue);
+  fromJson(jsonValue: SkIEnterprise | undefined): SkEnterpriseDomain | undefined {
+    return SkEnterpriseDomain.fromJson(jsonValue);
   }
 
-  toJson(model: SkEnterpriseModel | undefined): SkIEnterprise | undefined {
-    return SkEnterpriseModel.toJson(model);
+  toJson(model: SkEnterpriseDomain | undefined): SkIEnterprise | undefined {
+    return SkEnterpriseDomain.toJson(model);
   }
 
   get(id: any, others?: any): Observable<SkIResponseWrapper<SkIEnterprise>> {
-    return of(new ResponseWrapper<SkIEnterprise>(new SkEnterpriseModel('name', 'tel', 'desciption', 'address', 'email@gmail.com', id),
+    return of(new ResponseWrapper<SkIEnterprise>(new SkEnterpriseDomain('name', 'tel', 'desciption', 'address', 'email@gmail.com', id),
       undefined, 200));
   }
 
@@ -37,7 +37,7 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     const first = (pagination.size * pagination.page) + 1;
     const second = (pagination.size * (pagination.page + 1)) + 1;
     for (let i = first; i < second; i++) {
-      list.push(new SkEnterpriseModel(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
+      list.push(new SkEnterpriseDomain(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
         `email${i}@gmail.com`, `${i}`));
     }
 
@@ -48,23 +48,23 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     }, 200));
   }
 
-  create(entity: SkEnterpriseModel, others?: any): Observable<SkIResponseWrapper<SkEnterpriseModel>> {
+  create(entity: SkEnterpriseDomain, others?: any): Observable<SkIResponseWrapper<SkEnterpriseDomain>> {
     entity.id = Math.round(Math.random() * 10);
     return of(new ResponseWrapper<SkIEnterprise>(entity, undefined, 200));
   }
 
-  update(entity: SkEnterpriseModel, id: any, others?: any): Observable<SkIResponseWrapper<SkEnterpriseModel>> {
+  update(entity: SkEnterpriseDomain, id: any, others?: any): Observable<SkIResponseWrapper<SkEnterpriseDomain>> {
     return of(new ResponseWrapper<SkIEnterprise>({...entity, id}, undefined, 200));
   }
 
-  createAndGet(data: { entity: SkEnterpriseModel; pagination: SKIPagination }, others?: any)
+  createAndGet(data: { entity: SkEnterpriseDomain; pagination: SKIPagination }, others?: any)
     : Observable<SkIResponseWrapper<SkIEnterprise[]>> {
     const pagination = this.saFePagination(data.pagination);
     const list: SkIEnterprise[] = [];
     const first = (pagination.size * pagination.page) + 1;
     const second = (pagination.size * (pagination.page + 1)) + 1;
     for (let i = first; i < second; i++) {
-      list.push(new SkEnterpriseModel(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
+      list.push(new SkEnterpriseDomain(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
         `email${i}@gmail.com`, `${i}`));
     }
 
@@ -81,14 +81,14 @@ export class SkEnterpriseService extends SkAbstractService<SkEnterpriseModel> {
     }, 200));
   }
 
-  updateAndGet(data: { entity: SkEnterpriseModel; pagination: SKIPagination }, id: string | number, others?: any)
+  updateAndGet(data: { entity: SkEnterpriseDomain; pagination: SKIPagination }, id: string | number, others?: any)
     : Observable<SkIResponseWrapper<SkIEnterprise[]>> {
     const pagination = this.saFePagination(data.pagination);
     const list: SkIEnterprise[] = [];
     const first = (pagination.size * pagination.page) + 1;
     const second = (pagination.size * (pagination.page + 1)) + 1;
     for (let i = first; i < second; i++) {
-      list.push(new SkEnterpriseModel(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
+      list.push(new SkEnterpriseDomain(`name ${i}`, `tel ${i}`, `desc ${i}`, `adress ${i}`,
         `email${i}@gmail.com`, `${i}`));
     }
 

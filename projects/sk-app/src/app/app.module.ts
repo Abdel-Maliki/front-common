@@ -7,10 +7,11 @@ import {NgModule} from '@angular/core';
 import {NgxsModule} from '@ngxs/store';
 import {environment} from '../environments/environment';
 import {skStates} from 'sk-core';
-import {SkSidenavContainerModule} from 'sk-lib';
+import {SkSidenavContainerModule, SK_ENTERPRISE_SERVICE} from 'sk-lib';
 import {SharedModule} from '../../../sk-lib/src/lib/shared/shared-module';
 import {TranslateModule} from '@ngx-translate/core';
 import {HttpClientModule} from '@angular/common/http';
+import {SkEnterpriseService} from '../../../sk-lib/src/lib/sk-user-management';
 
 
 @NgModule({
@@ -36,7 +37,9 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     // LayoutModule
   ],
-  providers: [],
+  providers: [
+    {provide: SK_ENTERPRISE_SERVICE, useClass: SkEnterpriseService}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

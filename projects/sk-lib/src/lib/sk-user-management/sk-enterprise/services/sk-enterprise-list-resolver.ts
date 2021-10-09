@@ -1,6 +1,6 @@
-import {SkEnterpriseModel} from '../sk-enterprise-model';
+import {SkEnterpriseDomain} from '../classes/sk-enterprise-domain';
 import {Store} from '@ngxs/store';
-import {SKEnterpriseModelState, SKEnterpriseModelStateModel, SKEnterprisePageAction} from '../sk-enterprise-state';
+import {SKEnterpriseModelState, SKEnterpriseModelStateModel, SKEnterprisePageAction} from './sk-enterprise-state';
 import {Injectable} from '@angular/core';
 import {SKConfigState} from 'sk-core';
 import {SkAbstractListResolver} from '../../../abstract';
@@ -10,7 +10,7 @@ import {SkAbstractListResolver} from '../../../abstract';
  */
 
 @Injectable()
-export class SKEnterpriseListResolver extends SkAbstractListResolver<SkEnterpriseModel, SKEnterpriseModelStateModel> {
+export class SKEnterpriseListResolver extends SkAbstractListResolver<SkEnterpriseDomain, SKEnterpriseModelStateModel> {
   constructor(protected store: Store) {
     super(store, SKEnterpriseModelState.loadEntitiesSelector, new SKEnterprisePageAction({
       pagination: store.selectSnapshot(SKConfigState.paginationSelector)

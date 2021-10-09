@@ -1,7 +1,7 @@
 import {SKIEntity, UpdateLog} from 'sk-core';
-import {SkAbstractEntity} from '../../abstract';
+import {SkAbstractEntity} from '../../../abstract';
 
-export class SkEnterpriseModel extends SkAbstractEntity<SkEnterpriseModel> implements SkIEnterprise {
+export class SkEnterpriseDomain extends SkAbstractEntity<SkEnterpriseDomain> implements SkIEnterprise {
   constructor(public name?: string,
               public tel?: string,
               public description?: string,
@@ -11,12 +11,12 @@ export class SkEnterpriseModel extends SkAbstractEntity<SkEnterpriseModel> imple
               public createdAt?: Date,
               public updateDate?: Date,
               public createdBy?: number,
-              public updateLogs?: UpdateLog<SkEnterpriseModel>[]) {
+              public updateLogs?: UpdateLog<SkEnterpriseDomain>[]) {
     super(id, createdAt, updateDate, createdBy, updateLogs);
   }
 
-  static fromJson(json: SkIEnterprise | undefined): SkEnterpriseModel | undefined {
-    return new SkEnterpriseModel(
+  static fromJson(json: SkIEnterprise | undefined): SkEnterpriseDomain | undefined {
+    return new SkEnterpriseDomain(
       json?.name,
       json?.tel,
       json?.description,
@@ -30,7 +30,7 @@ export class SkEnterpriseModel extends SkAbstractEntity<SkEnterpriseModel> imple
     );
   }
 
-  static toJson(model: SkEnterpriseModel | undefined): SkIEnterprise | undefined {
+  static toJson(model: SkEnterpriseDomain | undefined): SkIEnterprise | undefined {
     return model;
   }
 }

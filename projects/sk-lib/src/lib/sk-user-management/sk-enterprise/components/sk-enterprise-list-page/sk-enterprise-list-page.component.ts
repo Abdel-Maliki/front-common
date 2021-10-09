@@ -1,17 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {SKConfigState} from 'sk-core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Store} from '@ngxs/store';
+import {SK_ENTERPRISE_SERVICE} from '../../../../classes';
+import {SkEnterpriseService} from '../../services/sk-enterprise.service';
 
 @Component({
-  selector: 'sk-sk-enterprise-list-page',
+  selector: 'sk-enterprise-list-page',
   templateUrl: './sk-enterprise-list-page.component.html',
   styleUrls: ['./sk-enterprise-list-page.component.css']
 })
 export class SkEnterpriseListPageComponent implements OnInit {
 
-  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.selector).links.enterpriseLink;
-
-  constructor(protected store: Store) {
+  constructor(@Inject(SK_ENTERPRISE_SERVICE) protected service: SkEnterpriseService, protected store: Store) {
   }
 
   ngOnInit(): void {

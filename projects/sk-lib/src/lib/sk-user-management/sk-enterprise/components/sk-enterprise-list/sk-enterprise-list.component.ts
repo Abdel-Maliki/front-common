@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {SkEnterpriseModel} from '../../sk-enterprise-model';
+import {SkEnterpriseDomain} from '../../classes/sk-enterprise-domain';
 import {ColumnItem} from '../../../../components';
 import {Store} from '@ngxs/store';
-import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAction} from '../../sk-enterprise-state';
+import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAction} from '../../services/sk-enterprise-state';
 import {Subscription} from 'rxjs';
 import { SKConfigState, SKIPagination} from 'sk-core';
 import {Router} from '@angular/router';
@@ -17,12 +17,12 @@ import {DateHelpers} from '../../../../utils';
 export class SkEnterpriseListComponent implements OnInit, OnDestroy {
 
   subscriptionList: Subscription = new Subscription();
-  datasource: MatTableDataSource<SkEnterpriseModel> = new MatTableDataSource<SkEnterpriseModel>([]);
+  datasource: MatTableDataSource<SkEnterpriseDomain> = new MatTableDataSource<SkEnterpriseDomain>([]);
   pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector)
     || this.store.selectSnapshot(SKConfigState.selector).pagination;
   enterpriseLink: string = this.store.selectSnapshot(SKConfigState.selector).links.enterpriseLink;
 
-  @Input() displayedColumns: ColumnItem<SkEnterpriseModel>[] = [
+  @Input() displayedColumns: ColumnItem<SkEnterpriseDomain>[] = [
     {title: 'ID', value: data => data?.id ?? ''},
     {title: 'Nom', value: data => data?.name ?? ''},
     {title: 'Téléphone', value: data => data?.tel ?? ''},
@@ -35,7 +35,7 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
     this.subscriptionList.add(this.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
   }
 
-  goToUpdate(entity: SkEnterpriseModel): void {
+  goToUpdate(entity: SkEnterpriseDomain): void {
     this.store
       .dispatch(new SKSetCurrentEnterpriseAction(entity))
       .toPromise()

@@ -17,8 +17,8 @@ export class ResponseWrapper<T, F extends { [key: string]: any } = any> implemen
     return new ResponseWrapper<T>(undefined, undefined, status, error);
   }
 
-  static ok<T>(message: string, status = 200): ResponseWrapper<T> {
-    return new ResponseWrapper<T>(undefined, undefined, status, {message});
+  static ok<T>(data?: T, message?: string, status = 200): ResponseWrapper<T> {
+    return new ResponseWrapper<T>(data, undefined, status);
   }
 
   isValid(): boolean {
