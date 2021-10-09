@@ -2,11 +2,12 @@
  * @author abdel-maliki
  */
 import {
-  ISkService, SKIEntity, i18nConstantes, SkServiceData, SKConfigState, SKIPagination, SkIResponseWrapper
+  ISkService, SKIEntity, i18nConstantes, SKConfigState, SKIPagination, SkIResponseWrapper
 } from 'sk-core';
 import {Observable} from 'rxjs';
 import {Store} from '@ngxs/store';
 import {HeadersOptions, HttpHelpers} from '../utils';
+import {SkServiceData} from '../services';
 
 
 export abstract class SkAbstractService<T extends SKIEntity<T>, ID extends string | number = any> implements ISkService<T> {

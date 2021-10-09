@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SkUserListComponent } from './sk-user-list.component';
+import {SkTableModule} from '../../../../components';
+import {SharedModule} from '../../../../shared/shared-module';
 
 
 
@@ -8,8 +10,13 @@ import { SkUserListComponent } from './sk-user-list.component';
   declarations: [
     SkUserListComponent
   ],
+  exports: [
+    SkUserListComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    SkTableModule,
+    SharedModule
   ]
 })
 export class SkUserListModule { }

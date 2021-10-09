@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { SkUserListPageRoutingModule } from './sk-user-list-page-routing.module';
 import { SkUserListPageComponent } from './sk-user-list-page.component';
+import {SkUserListModule} from '../sk-user-list/sk-user-list.module';
+import {SkAddButtonModule, SkListComponentHeaderModule} from '../../../../components';
 
 
 @NgModule({
@@ -11,7 +13,10 @@ import { SkUserListPageComponent } from './sk-user-list-page.component';
   ],
   imports: [
     CommonModule,
-    SkUserListPageRoutingModule
+    SkUserListPageRoutingModule,
+    SkUserListModule,
+    SkListComponentHeaderModule,
+    SkAddButtonModule
   ]
 })
 export class SkUserListPageModule { }

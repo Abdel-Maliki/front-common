@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
-import {SKProfileModelState, SKProfilePageAction, SKSetCurrentProfileAction} from '../../../sk-profile';
+import {SKProfileModelState, SKProfilePageAction, SKSetCurrentProfileAction} from '../../services/sk-profile-state';
 import {ColumnItem} from '../../../../components';
 import {DateHelpers} from '../../../../utils';
 import {Store} from '@ngxs/store';

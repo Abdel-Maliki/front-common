@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {SK_PROFILE_SERVICE} from '../../../../classes';
-import {SkProfileService} from '../../../sk-profile';
+import {SkProfileService} from '../../services/sk-profile.service';
 import {Store} from '@ngxs/store';
 
 @Component({

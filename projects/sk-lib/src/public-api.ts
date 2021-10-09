@@ -8,3 +8,4 @@ export * from './lib/sk-user-management/index';
 export * from './lib/abstract/index';
 export * from './lib/utils/index';
 export * from './lib/classes/index';
+export * from './lib/services/index';

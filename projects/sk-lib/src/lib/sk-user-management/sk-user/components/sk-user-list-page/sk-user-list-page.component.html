@@ -1,1 +1,20 @@
-<p>sk-user-list-page works!</p>
+<br>
+<sk-list-component-header [leftTemplate]="leftTemplate"
+                          [centerTemplate]="centerTemplate"
+                          [rightTemplate]="rightTemplate">
+</sk-list-component-header>
+
+<ng-template #leftTemplate>
+  <sk-add-button routerLink="new"></sk-add-button>
+</ng-template>
+
+<ng-template #rightTemplate>
+  <div></div>
+</ng-template>
+
+
+<ng-template #centerTemplate>
+  <div>Liste des entreprises</div>
+</ng-template>
+
+<sk-user-list></sk-user-list>

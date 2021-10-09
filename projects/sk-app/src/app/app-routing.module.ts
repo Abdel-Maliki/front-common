@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkProfileModule),
   },
   {
+    path: 'users',
+    loadChildren: () => import('../../../sk-lib/src/lib/sk-user-management').then(m => m.SkUserModule),
+  },
+  {
     path: '',
     redirectTo: 'enterprises'
   }

@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {SkEnterpriseDomain, SkIEnterprise} from '../classes/sk-enterprise-domain';
-import {SkServiceData, SkIResponseWrapper, SKIPagination} from 'sk-core';
+import {SkIResponseWrapper, SKIPagination} from 'sk-core';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
 import {Pagination} from '../../../utils/pagination';
 import {SkAbstractService} from '../../../abstract';
 import {ResponseWrapper} from '../../../utils';
+import {SkServiceData} from '../../../services';
 
 @Injectable()
 export class SkEnterpriseService extends SkAbstractService<SkEnterpriseDomain> {

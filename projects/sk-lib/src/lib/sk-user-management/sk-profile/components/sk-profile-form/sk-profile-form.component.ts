@@ -7,7 +7,7 @@ import {
   SKCreateProfileAction,
   SKProfileModelState,
   SKProfileModelStateModel, SKUpdateAllProfileAction, SKUpdateAndGetProfileAction, SKUpdateProfileAction
-} from '../../../sk-profile';
+} from '../../services/sk-profile-state';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngxs/store';
 import {ActivatedRoute, Router} from '@angular/router';

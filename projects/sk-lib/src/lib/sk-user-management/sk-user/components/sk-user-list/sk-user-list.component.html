@@ -1,1 +1,15 @@
-<p>sk-user-list works!</p>
+<ng-template #actionsTemplate let-data>
+  <button mat-menu-item aria-label="edit" (click)="goToUpdate(data)">
+    <mat-icon>edit</mat-icon>
+    <span>Modifier</span>
+  </button>
+</ng-template>
+
+
+<sk-table
+  [datasource]="datasource"
+  [totalElements]="pagination.totalElements"
+  [pagination]="pagination"
+  (pageChange)="pageChange($event)"
+  [displayedColumns]="displayedColumns" [actionsTemplate]="actionsTemplate">
+</sk-table>
