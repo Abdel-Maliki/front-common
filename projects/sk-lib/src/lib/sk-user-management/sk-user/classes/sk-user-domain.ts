@@ -23,6 +23,9 @@ export class SkUserDomain extends SkAbstractEntity<SkUserDomain> implements SkIU
               public updateLogs?: UpdateLog<SkUserDomain>[]
   ) {
     super(id, createdAt, updateDate, createdBy, updateLogs);
+    if (!status) {
+      this.status = UserState.ACTIVE;
+    }
   }
 
 

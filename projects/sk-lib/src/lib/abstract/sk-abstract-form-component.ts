@@ -43,11 +43,11 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
 
 
   saveOrUpdate(): Promise<T> {
-    return !!this.entity?.id && this.entity.id > 0 ? this.update() : this.create();
+    return !!this.entity?.id && (this.entity.id + '').trim().length > 0 ? this.update() : this.create();
   }
 
   saveAndGetOrUpdateAndGet(): Promise<T[]> {
-    return !!this.entity?.id && this.entity.id > 0 ? this.updateAndGet() : this.createAndGet();
+    return !!this.entity?.id && (this.entity.id + '').trim().length > 0 ? this.updateAndGet() : this.createAndGet();
   }
 
   checkAndPersist(): Promise<T | T[]> {

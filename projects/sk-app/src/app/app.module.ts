@@ -12,6 +12,8 @@ import {SharedModule} from '../../../sk-lib/src/lib/shared/shared-module';
 import {TranslateModule} from '@ngx-translate/core';
 import {HttpClientModule} from '@angular/common/http';
 import {SkEnterpriseService} from '../../../sk-lib/src/lib/sk-user-management';
+import {SK_PROFILE_SERVICE} from '../../../sk-lib/src/lib/classes';
+import {SkProfileService} from '../../../sk-lib/src/lib/sk-user-management/sk-profile/services/sk-profile.service';
 
 
 @NgModule({
@@ -38,7 +40,8 @@ import {SkEnterpriseService} from '../../../sk-lib/src/lib/sk-user-management';
     // LayoutModule
   ],
   providers: [
-    {provide: SK_ENTERPRISE_SERVICE, useClass: SkEnterpriseService}
+    {provide: SK_ENTERPRISE_SERVICE, useClass: SkEnterpriseService},
+    {provide: SK_PROFILE_SERVICE, useClass: SkProfileService}
   ],
   bootstrap: [AppComponent]
 })

@@ -43,6 +43,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
+import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 
 
 @NgModule({
@@ -94,6 +95,7 @@ import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-mater
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     MatIconModule,
+    NgxMatSelectSearchModule,
   ]
 })
 export class MaterialModules {

@@ -1,1 +1,123 @@
-<p>sk-user-form works!</p>
+<form *ngIf="form" [formGroup]="form" class="full-width">
+
+  <!--  Name-->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom & Prenom</mat-label>
+      <mat-icon matSuffix class="secondary-text">label</mat-icon>
+      <input formControlName="name" matInput required>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors &&
+           form.controls['name'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors && form.controls['name'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors &&
+          form.controls['name'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['name'] && form.controls['name'].invalid && form.controls['name'].dirty &&
+          form.controls['name'].errors">
+        {{ !!form && !!form.controls && !!form.controls['name'] && !!form.controls['name'].errors ? (form.controls['name'].errors | json) : '' }}
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+
+  <!--  Nom d'utilisateur-->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom d'utilisateur</mat-label>
+      <mat-icon matSuffix class="secondary-text">label</mat-icon>
+      <input formControlName="userName" matInput required>
+
+      <mat-error *ngIf="form && form.controls && form.controls['userName'] && form.controls['userName'].invalid && form.controls['userName'].dirty &&
+          form.controls['userName'].errors &&
+           form.controls['userName'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['userName'] && form.controls['userName'].invalid && form.controls['userName'].dirty &&
+          form.controls['userName'].errors && form.controls['userName'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['userName'] && form.controls['userName'].invalid && form.controls['userName'].dirty &&
+          form.controls['userName'].errors &&
+          form.controls['userName'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['userName'] && form.controls['userName'].invalid && form.controls['userName'].dirty &&
+          form.controls['userName'].errors">
+        {{ !!form && !!form.controls && !!form.controls['userName'] && !!form.controls['userName'].errors ? (form.controls['userName'].errors | json) : '' }}
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+
+  <!--  Email -->
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <mat-icon matSuffix class="secondary-text">label</mat-icon>
+      <input formControlName="email" matInput required>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors &&
+           form.controls['email'].errors['maxlength']">
+        Le nombre de caractère doit être plus petit que {{ formConfig.validators.maxLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors && form.controls['email'].errors['minLength']">
+        Le nombre de caractère doit être plus petit que {{  formConfig.validators.minLength }}
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors &&
+          form.controls['email'].errors['required']">
+        Le champ est requis
+      </mat-error>
+
+      <mat-error *ngIf="form && form.controls && form.controls['email'] && form.controls['email'].invalid && form.controls['email'].dirty &&
+          form.controls['email'].errors">
+        {{ !!form && !!form.controls && !!form.controls['email'] && !!form.controls['email'].errors ? (form.controls['email'].errors | json) : '' }}
+      </mat-error>
+
+
+    </mat-form-field>
+  </div>
+
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Profile</mat-label>
+      <mat-select formControlName="profile" [compareWith]="compareById">
+        <mat-option>
+          <ngx-mat-select-search [formControl]="profileFilterControl">
+            <mat-icon ngxMatSelectSearchClear>delete</mat-icon>
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let profile of filterProduct" [value]="profile">{{profile.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-checkbox formControlName="status">Status</mat-checkbox>
+
+  <button mat-raised-button color="primary" (click)="checkAndPersist()" class="full-width"
+          [disabled]="disableButton || (form && form.invalid)">{{ buttonTitle}}
+  </button>
+
+
+</form>
