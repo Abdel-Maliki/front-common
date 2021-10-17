@@ -4,11 +4,11 @@ import {Observable} from 'rxjs';
 import {SkAbstractService} from '../../../abstract';
 import {ResponseWrapper} from '../../../utils';
 import {SkIProfileDomain, SkProfileDomain} from '../classes/sk-profile-domain';
-import {InterfaceProfile} from './interface-profile';
+import {SkIProfile} from './sk-i-profile';
 import {SkServiceData} from '../../../services';
 
 @Injectable()
-export class SkProfileService extends SkAbstractService<SkIProfileDomain> implements InterfaceProfile {
+export class SkProfileService extends SkAbstractService<SkIProfileDomain> implements SkIProfile {
 
   constructor(protected data: SkServiceData, protected store: Store) {
     super(data, store);

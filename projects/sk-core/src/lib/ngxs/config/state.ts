@@ -1,13 +1,22 @@
-import {NgxsOnInit, Selector, State, StateContext, StateToken} from '@ngxs/store';
+import {Action, NgxsOnInit, Selector, State, StateContext, StateToken} from '@ngxs/store';
 import {SkAuthStateModel} from '../auth/type';
 import {Injectable} from '@angular/core';
-import {SkConfigStateModel, SkFormConfig, SkLinksConfig} from './type';
-import {SKIPagination} from '../../interfaces';
+import {SkConfigStateModel, SkFormConfig} from './type';
+import {SKIPagination, MenuCategory} from '../../interfaces';
+import {Observable, of} from 'rxjs';
 
 /**
  * @author abdel-maliki
  * Date : 15/03/2021
  */
+
+export class SkSetConfigAction {
+
+  static readonly type = '[SkConfig] SkSetConfig';
+
+  constructor(public payload: SkConfigStateModel) {
+  }
+}
 
 
 export const SK_CONFIG_STATE_TOKEN = new StateToken<SkConfigStateModel>('skConfigState');
@@ -19,11 +28,6 @@ export const DEFAULT_PAGINATION: SKIPagination = {
   sort: 'desc',
 };
 
-export const DEFAULT_LINKS_CONFIG: SkLinksConfig = {
-  enterpriseLink: 'enterprises',
-  userLink: 'users',
-};
-
 export const DEFAULT_FORM_CONFIG: SkFormConfig = {
   validators: {
     maxLength: 255,
@@ -31,18 +35,20 @@ export const DEFAULT_FORM_CONFIG: SkFormConfig = {
   }
 };
 
+export const DEFAULT_CONFIG: SkConfigStateModel = {
+  backendUrl: `http://localhost:3000/`,
+  useErrorInterceptor: true,
+  useJwtInterceptor: true,
+  useLoadingInterceptor: true,
+  pagination: DEFAULT_PAGINATION,
+  pageSizeOptions: [10, 20, 50, 100, 150, 200, 300, 500],
+  form: DEFAULT_FORM_CONFIG,
+  menuLeftItems: [],
+};
+
 @State({
   name: SK_CONFIG_STATE_TOKEN,
-  defaults: {
-    backendUrl: `http://localhost:3000/`,
-    useErrorInterceptor: true,
-    useJwtInterceptor: true,
-    useLoadingInterceptor: true,
-    pagination: DEFAULT_PAGINATION,
-    pageSizeOptions: [10, 20, 50, 100, 150, 200, 300, 500],
-    links: DEFAULT_LINKS_CONFIG,
-    form: DEFAULT_FORM_CONFIG,
-  }
+  defaults: DEFAULT_CONFIG,
 })
 @Injectable()
 export class SKConfigState implements NgxsOnInit {
@@ -82,14 +88,22 @@ export class SKConfigState implements NgxsOnInit {
     return state.form;
   }
 
+  @Selector([SK_CONFIG_STATE_TOKEN])
+  static menuLeftItemsSelector(state: SkConfigStateModel): MenuCategory[] {
+    return state.menuLeftItems;
+  }
 
   @Selector([SK_CONFIG_STATE_TOKEN])
   static selector(state: SkConfigStateModel): SkConfigStateModel {
     return state;
   }
 
-
   ngxsOnInit(ctx?: StateContext<SkAuthStateModel>): any {
+  }
+
+  @Action(SkSetConfigAction)
+  pageAction(ctx: StateContext<SkConfigStateModel>, action: SkSetConfigAction): Observable<any> {
+    return of(ctx.setState(action.payload));
   }
 
 }

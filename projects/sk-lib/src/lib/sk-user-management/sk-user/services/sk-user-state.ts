@@ -201,14 +201,14 @@ export class SKSetCurrentUserAction implements SKSetCurrentAction<SkUserDomain> 
 export class SKUserModelStateModel extends SkAbstractStateModel<SkUserDomain> {
 }
 
-export const SK_PROFILE_STATE_TOKEN = new StateToken<SKUserModelStateModel>('SKUserModelState');
+export const SK_USER_STATE_TOKEN = new StateToken<SKUserModelStateModel>('SKUserModelState');
 
 
-export const SK_PROFILE_DEFAULT_STATE: SKUserModelStateModel = SKDefaultState;
+export const SK_USER_DEFAULT_STATE: SKUserModelStateModel = SKDefaultState;
 
 @State<SKUserModelStateModel>({
-  name: SK_PROFILE_STATE_TOKEN,
-  defaults: SK_PROFILE_DEFAULT_STATE
+  name: SK_USER_STATE_TOKEN,
+  defaults: SK_USER_DEFAULT_STATE
 })
 @Injectable()
 export class SKUserModelState implements NgxsOnInit, ISkState<SkUserDomain, SKUserModelStateModel> {
@@ -222,73 +222,73 @@ export class SKUserModelState implements NgxsOnInit, ISkState<SkUserDomain, SKUs
    **************************************************************
    **************************************************************/
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static allSelector(state: SKUserModelStateModel): SkUserDomain[] {
     return SKSelectorHelpers.allSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static entitiesSelector(state: SKUserModelStateModel): SkUserDomain[] {
     return SKSelectorHelpers.entitiesSelector(state);
 
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastCreatesSelector(state: SKUserModelStateModel): SkUserDomain[] {
     return SKSelectorHelpers.lastCreatesSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastUpdatesSelector(state: SKUserModelStateModel): SkUserDomain[] {
     return SKSelectorHelpers.lastUpdatesSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastDeletesSelector(state: SKUserModelStateModel): SkUserDomain[] {
     return SKSelectorHelpers.lastDeletesSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static entitySelector(state: SKUserModelStateModel): SkUserDomain | undefined {
     return SKSelectorHelpers.entitySelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static actionsErrorSelector(state: SKUserModelStateModel): SkIActionsError | undefined {
     return SKSelectorHelpers.actionsErrorSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static currentSelector(state: SKUserModelStateModel): SkUserDomain | undefined {
     return SKSelectorHelpers.currentSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastCreateSelector(state: SKUserModelStateModel): SkUserDomain | undefined {
     return SKSelectorHelpers.lastCreateSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastUpdateSelector(state: SKUserModelStateModel): SkUserDomain | undefined {
     return SKSelectorHelpers.lastUpdateSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static lastDeleteSelector(state: SKUserModelStateModel): SkUserDomain | undefined {
     return SKSelectorHelpers.lastDeleteSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static paginationSelector(state: SKUserModelStateModel): SKIPagination | undefined {
     return SKSelectorHelpers.paginationSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static loadEntitiesSelector(state: SKUserModelStateModel): boolean {
     return SKSelectorHelpers.loadEntitiesSelector(state);
   }
 
-  @Selector([SK_PROFILE_STATE_TOKEN])
+  @Selector([SK_USER_STATE_TOKEN])
   static selector(state: SKUserModelStateModel): SKUserModelStateModel {
     return SKSelectorHelpers.selector(state);
   }

@@ -1,5 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MenuCategory} from './type';
+import {MenuCategory} from 'sk-core';
+import {Store} from '@ngxs/store';
+import {Subscription} from 'rxjs';
+import {SKConfigState} from 'sk-core';
 
 @Component({
   selector: 'sk-menu-left',
@@ -8,12 +11,15 @@ import {MenuCategory} from './type';
 })
 export class SkMenuLeftComponent implements OnInit, OnDestroy {
 
-  menuCategories: MenuCategory[] = MenuLeftItems;
+  menuCategories: MenuCategory[] = JSON.parse(JSON.stringify(this.store.selectSnapshot(SKConfigState.menuLeftItemsSelector)));
+  subscription: Subscription = new Subscription();
 
-  constructor() {
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
+    this.subscription.add(this.store.select(SKConfigState.menuLeftItemsSelector)
+      .subscribe(value => this.menuCategories = JSON.parse(JSON.stringify(value))));
   }
 
   hasLast(menuCategory: MenuCategory): boolean {
@@ -21,59 +27,10 @@ export class SkMenuLeftComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
 
-export let MenuLeftItems: MenuCategory[] = [
-  {
-    title: 'categorie 1',
-    menuItems: [
-      {title: 'item3', link: '#', icon: 'fa fa-deaf'},
-      {
-        title: 'item21', link: '#', icon: 'fa fa-cubes', menuItems: [
-          {title: 'sub1 item1', link: '#', icon: 'fa fa-fax'},
-          {title: 'sub1 item2', link: '#', icon: 'fa fa-cubes'},
-          {title: 'sub1 item3', link: '#', icon: 'fa fa-fire'},
-        ]
-      },
-      {
-        title: 'item22', link: '#', icon: 'fa fa-film', menuItems: [
-          {title: 'sub item1', link: '#', icon: 'fa fa-question'},
-          {
-            title: 'sub item2', link: '#', icon: 'fa fa-filter', menuItems: [
-              {title: 'sub1 sub item1', link: '#', icon: 'fa fa-plane'},
-              {title: 'sub1 sub item2', link: '#', icon: 'fa fa-random'},
-              {title: 'sub1 sub item3', link: '#', icon: 'fa fa-paw'},
-            ]
-          },
-          {
-            title: 'sub item3', link: '#', icon: 'fa fa-folder-o', menuItems: [
-              {title: 'sub sub item1', link: '#', icon: 'fa fa-photo'},
-              {
-                title: 'sub sub item2', link: '#', icon: 'fa fa-cubes', menuItems: [
-                  {title: 'sub sub sub1 item1', link: '#', icon: 'fa fa-magic'},
-                  {title: 'sub sub sub1 item2', link: '#', icon: 'fa fa-recycle'},
-                  {title: 'sub sub sub1 item3', link: '#', icon: 'fa fa-cubes'},
-                ]
-              },
-              {
-                title: 'sub sub item3', link: '#', icon: 'fa fa-history', menuItems: [
-                  {title: 'sub sub sub2 item1', link: '#', icon: 'fa fa-legal'},
-                  {title: 'sub sub sub2 item2', link: '#', icon: 'fa fa-reoader'},
-                  {title: 'sub sub sub2 item3', link: '#', icon: 'fa fa-print'},
-                ]
-              },
-            ]
-          },
-        ]
-      },
-    ]
-  },
-  {
-    title: 'categorie 2',
-    menuItems: [
-      {title: 'itemPP', link: '#', icon: 'fa fa-deaf'},
-    ]
-  }
-];
 

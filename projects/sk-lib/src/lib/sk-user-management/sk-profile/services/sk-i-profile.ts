@@ -7,7 +7,7 @@ import {ResponseWrapper} from '../../../utils';
  * @author abdel-maliki
  */
 
-export interface InterfaceProfile extends ISkService<SkIProfileDomain> {
+export interface SkIProfile extends ISkService<SkIProfileDomain> {
   getRoles(id: number | string): Observable<ResponseWrapper<string[]>>;
 
   setRoles(id: number | string, roles: string[], password: string): Observable<ResponseWrapper<void>>;

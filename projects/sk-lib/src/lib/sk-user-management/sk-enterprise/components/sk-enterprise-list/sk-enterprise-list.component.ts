@@ -20,7 +20,6 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
   datasource: MatTableDataSource<SkEnterpriseDomain> = new MatTableDataSource<SkEnterpriseDomain>([]);
   pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector)
     || this.store.selectSnapshot(SKConfigState.selector).pagination;
-  enterpriseLink: string = this.store.selectSnapshot(SKConfigState.selector).links.enterpriseLink;
 
   @Input() displayedColumns: ColumnItem<SkEnterpriseDomain>[] = [
     {title: 'ID', value: data => data?.id ?? ''},

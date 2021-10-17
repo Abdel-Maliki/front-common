@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {MenuItem} from '../sk-menu-left/type';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {SkMenuLeftCategoryComponent} from '../sk-menu-left-category/sk-menu-left-category.component';
 import {Store} from '@ngxs/store';
-import {SkLayoutState} from 'sk-core';
+import {SkLayoutState, MenuItem} from 'sk-core';
 
 @Component({
   selector: 'sk-menu-left-item',

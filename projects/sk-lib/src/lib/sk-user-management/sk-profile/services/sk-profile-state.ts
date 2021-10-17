@@ -26,7 +26,7 @@ import {Observable} from 'rxjs';
 import {SkAbstractStateModel, SKDefaultState} from '../../../abstract';
 import {SKSelectorHelpers, SkStateHelpers} from '../../../utils';
 import {SK_PROFILE_SERVICE} from '../../../classes';
-import {InterfaceProfile} from './interface-profile';
+import {SkIProfile} from './sk-i-profile';
 
 /**
  * @author abdel-maliki
@@ -213,7 +213,7 @@ export const SK_PROFILE_DEFAULT_STATE: SKProfileModelStateModel = SKDefaultState
 @Injectable()
 export class SKProfileModelState implements NgxsOnInit, ISkState<SkProfileDomain, SKProfileModelStateModel> {
 
-  constructor(@Inject(SK_PROFILE_SERVICE) protected service: InterfaceProfile) {
+  constructor(@Inject(SK_PROFILE_SERVICE) protected service: SkIProfile) {
   }
 
   /**************************************************************

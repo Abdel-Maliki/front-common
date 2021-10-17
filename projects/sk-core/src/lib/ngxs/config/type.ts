@@ -2,7 +2,7 @@
  * @author abdel-maliki
  * Date : 15/03/2021
  */
-import {SKIPagination} from '../../interfaces';
+import {SKIPagination, MenuCategory} from '../../interfaces';
 
 export interface SkConfigStateModel {
   backendUrl: string;
@@ -11,13 +11,8 @@ export interface SkConfigStateModel {
   useLoadingInterceptor: boolean;
   pagination: SKIPagination;
   pageSizeOptions: number[];
-  links: SkLinksConfig;
   form: SkFormConfig;
-}
-
-export interface SkLinksConfig {
-  userLink: string;
-  enterpriseLink: string;
+  menuLeftItems: MenuCategory[];
 }
 
 export interface SkFormConfig {
