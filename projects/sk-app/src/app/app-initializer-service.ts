@@ -64,7 +64,13 @@ export let MenuLeftItems: MenuCategory[] = [
   {
     title: 'categorie 2',
     menuItems: [
-      {title: 'itemPP', link: '#', icon: 'fa fa-deaf'},
+      {
+        title: 'User Management', link: 'users-management', icon: 'fa fa-users', menuItems: [
+          {title: 'Utilisateur', link: 'users', icon: 'fa fa-users'},
+          {title: 'Profile', link: 'profiles', icon: 'fa fa-user'},
+          {title: 'Entreprise', link: 'enterprises', icon: 'fa fa-deaf'},
+        ]
+      },
     ]
   }
 ];

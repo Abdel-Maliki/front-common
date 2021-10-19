@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {SkMenuLeftCategoryComponent} from '../sk-menu-left-category/sk-menu-left-category.component';
 import {Store} from '@ngxs/store';
 import {SkLayoutState, MenuItem} from 'sk-core';
+import {Router, IsActiveMatchOptions} from '@angular/router';
+
 
 @Component({
   selector: 'sk-menu-left-item',
@@ -25,27 +27,39 @@ import {SkLayoutState, MenuItem} from 'sk-core';
 })
 export class SkMenuLeftItemComponent implements OnInit, OnDestroy {
 
-  @Input() menuItem: MenuItem | undefined;
+  @Input() menuItem: SkLikMenuItem = {title: ''};
   @Input() level = 0;
+  @Input() parentPath = '';
   @Output() closeBrother: EventEmitter<MenuItem> = new EventEmitter<MenuItem>();
   @Output() currentMenuItemEvent: EventEmitter<MenuItem[]> = new EventEmitter<MenuItem[]>();
   @Input() parents: MenuItem[] = [];
+  displayChildren = false;
+  autoSelected = true;
   isLeave = false;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private router: Router) {
   }
 
+
   ngOnInit(): void {
+    this.buildAbsolutePath();
+  }
+
+  buildAbsolutePath(): void {
+    this.menuItem.absolutePath = this.parentPath && this.parentPath.length > 0
+      ? `${this.parentPath}/${this.menuItem?.link ?? ''}`
+      : this.menuItem?.link ?? '';
   }
 
   updateShow(): void {
-    if (this.menuItem) {
-      this.menuItem.selected = !this.menuItem.selected;
-      if (this.menuItem.selected) {
-        const item = this.emptyChild(this.menuItem);
-        this.currentMenuItemEvent.emit(Object.assign([], item ? [item, ...this.parents] : this.parents));
-        this.closeBrother.emit(this.menuItem);
-      }
+    this.autoSelected = false;
+    this.displayChildren = !this.displayChildren;
+    if (this.displayChildren) {
+      this.closeBrother.emit(this.menuItem);
+    }
+
+    if (this.menuItem.absolutePath && (!this.menuItem.menuItems || this.menuItem.menuItems.length === 0)) {
+      this.router.navigateByUrl(this.menuItem.absolutePath).then();
     }
   }
 
@@ -92,6 +106,25 @@ export class SkMenuLeftItemComponent implements OnInit, OnDestroy {
   }
 
   selectedClass(): string {
-    return this.menuItem && (this.isLeave || this.menuItem.selected) ? ' sk-menu-selected' : ' default-color';
+    return this.isLeave || this.isActive() ? ' sk-menu-selected' : ' default-color';
   }
+
+  isActive(): boolean {
+    const val = this.router.isActive(this.menuItem.absolutePath ?? '', subsetMatchOptions);
+    if (this.autoSelected) {
+      this.displayChildren = val;
+    }
+    return val;
+  }
+}
+
+export const subsetMatchOptions: IsActiveMatchOptions = {
+  paths: 'subset',
+  fragment: 'ignored',
+  matrixParams: 'ignored',
+  queryParams: 'subset'
+};
+
+export interface SkLikMenuItem extends MenuItem {
+  absolutePath?: string;
 }

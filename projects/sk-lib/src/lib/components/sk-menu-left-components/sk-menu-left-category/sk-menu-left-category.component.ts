@@ -22,7 +22,6 @@ export class SkMenuLeftCategoryComponent implements OnInit, OnDestroy {
   }
 
   private static setDisplay(menuItem: MenuItem): MenuItem {
-    menuItem.selected = false;
     return menuItem;
   }
 
