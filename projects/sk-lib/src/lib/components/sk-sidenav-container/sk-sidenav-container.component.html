@@ -4,7 +4,7 @@
                  [mode]="menuLeftState.mode"
                  [fixedTopGap]="menuLeftState.fixedTopGap"
                  [fixedInViewport]="menuLeftState.fixedInViewport">
-      <sk-menu-left></sk-menu-left>
+      <sk-menu-left [menuCategories]="menuCategories"></sk-menu-left>
     </mat-sidenav>
     <mat-sidenav-content>
       <sk-tool-bar [color]="'primary'" [templateRef]="toolBarRightContent" class="example-toolbar"></sk-tool-bar>

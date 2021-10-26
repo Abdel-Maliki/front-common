@@ -1,5 +1,5 @@
-import {SKIPagination} from 'sk-core';
-import {SkIResponseWrapper} from 'sk-core';
+import {SKIPagination} from '@sk-framework/sk-core';
+import {SkIResponseWrapper} from '@sk-framework/sk-core';
 
 /**
  * @author abdel-maliki

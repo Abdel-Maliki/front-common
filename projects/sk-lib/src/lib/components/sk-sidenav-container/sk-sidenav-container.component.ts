@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
-import {MenuLeftState, SkLayoutState, SK_MENU_LEFT_DEFAULT_STATE, HideMenuLeftAction} from 'sk-core';
+import {MenuLeftState, SkLayoutState, SK_MENU_LEFT_DEFAULT_STATE, HideMenuLeftAction, MenuCategory} from '@sk-framework/sk-core';
 import {MatSidenav} from '@angular/material/sidenav';
 
 @Component({
@@ -10,6 +10,7 @@ import {MatSidenav} from '@angular/material/sidenav';
   styleUrls: ['./sk-sidenav-container.component.css']
 })
 export class SkSidenavContainerComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() menuCategories: MenuCategory[] = [];
   @Input() toolBarRightContent: TemplateRef<any> | undefined;
   @Input() sidenavContent: TemplateRef<any> | undefined;
   @Select(SkLayoutState.menuLeftStateSelector) menuLeftState$: Observable<MenuLeftState> | undefined;

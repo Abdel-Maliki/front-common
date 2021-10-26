@@ -19,7 +19,7 @@ import {
   ISkState,
   SkIActionsError,
   SKSetCurrentAction
-} from 'sk-core';
+} from '@sk-framework/sk-core';
 import {SkProfileDomain} from '../classes/sk-profile-domain';
 import {Pagination} from '../../../utils/pagination';
 import {Observable} from 'rxjs';

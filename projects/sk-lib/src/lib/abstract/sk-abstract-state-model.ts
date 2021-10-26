@@ -1,5 +1,5 @@
-import {SkIActionsError, SkIStateModel} from 'sk-core';
-import {SKIPagination} from 'sk-core';
+import {SkIActionsError, SkIStateModel} from '@sk-framework/sk-core';
+import {SKIPagination} from '@sk-framework/sk-core';
 
 /**
  * @author abdel-maliki

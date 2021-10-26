@@ -1,13 +1,13 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
-import {SKProfileModelState, SKProfilePageAction, SKSetCurrentProfileAction} from '../../services/sk-profile-state';
+import {SKProfileModelState, SKProfilePageAction, SKSetCurrentProfileAction} from '../../services';
 import {ColumnItem} from '../../../../components';
 import {DateHelpers} from '../../../../utils';
 import {Store} from '@ngxs/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SkProfileDomain} from '../../classes/sk-profile-domain';
-import {SKIPagination, SKConfigState} from 'sk-core';
+import {SKIPagination, SKConfigState} from '@sk-framework/sk-core';
 
 @Component({
   selector: 'sk-profile-list',

@@ -7,7 +7,7 @@ import {ColumnItem} from '../../../../components';
 import {DateHelpers} from '../../../../utils';
 import {Store} from '@ngxs/store';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SKIPagination, SKConfigState} from 'sk-core';
+import {SKIPagination, SKConfigState} from '@sk-framework/sk-core';
 
 @Component({
   selector: 'sk-user-list',

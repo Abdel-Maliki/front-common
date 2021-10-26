@@ -19,7 +19,7 @@ import {
   ISkState,
   SkIActionsError,
   SKSetCurrentAction
-} from 'sk-core';
+} from '@sk-framework/sk-core';
 import {SkEnterpriseDomain} from '../classes/sk-enterprise-domain';
 import {SkEnterpriseService} from './sk-enterprise.service';
 import {Pagination} from '../../../utils/pagination';

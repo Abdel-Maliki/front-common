@@ -1,18 +1,21 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {TranslateService} from '@ngx-translate/core';
 import {PasswordStateService} from './password-state-service';
 import {Store} from '@ngxs/store';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FormBuilder} from '@angular/forms';
 
 /**
  * @author abdel-maliki
  */
 
 @Injectable({providedIn: 'root'})
-export class SkServiceData {
-  protected constructor(public httpClient: HttpClient,
-                        public translate: TranslateService,
+export class SkComponentsData {
+  protected constructor(public translate: TranslateService,
                         public store: Store,
+                        public router: Router,
+                        public activatedRoute: ActivatedRoute,
+                        public formBuilder: FormBuilder,
                         public passwordStateService: PasswordStateService) {
   }
 }

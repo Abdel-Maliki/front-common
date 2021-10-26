@@ -2,7 +2,7 @@ import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 import {Observable} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
-import {SidenavToggleAction, SkLayoutState} from 'sk-core';
+import {SidenavToggleAction, SkLayoutState} from '@sk-framework/sk-core';
 
 @Component({
   selector: 'sk-tool-bar',

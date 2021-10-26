@@ -11,12 +11,10 @@ import {
   SKUserModelState,
   SKUserModelStateModel
 } from '../../services/sk-user-state';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Store} from '@ngxs/store';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SKConfigState, SkFormConfig} from 'sk-core';
-import {SkProfileDomain} from '../../../sk-profile/classes/sk-profile-domain';
-import {SKProfileModelState} from '../../../sk-profile/services/sk-profile-state';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {SKConfigState, SkFormConfig} from '@sk-framework/sk-core';
+import {SkProfileDomain, SKProfileModelState} from '../../../sk-profile';
+import {SkComponentsData} from '../../../../services/sk-components-data';
 
 @Component({
   selector: 'sk-user-form',
@@ -25,21 +23,18 @@ import {SKProfileModelState} from '../../../sk-profile/services/sk-profile-state
 })
 export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, SKUserModelStateModel> implements OnInit {
   form: FormGroup | undefined;
-  entity: SkUserDomain = this.store.selectSnapshot(SKUserModelState.currentSelector) || new SkUserDomain();
-  profiles: SkProfileDomain[] = this.store.selectSnapshot(SKProfileModelState.allSelector);
-  formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
+  entity: SkUserDomain = this.data.store.selectSnapshot(SKUserModelState.currentSelector) || new SkUserDomain();
+  profiles: SkProfileDomain[] = this.data.store.selectSnapshot(SKProfileModelState.allSelector);
+  formConfig: SkFormConfig = this.data.store.selectSnapshot(SKConfigState.formSelector);
   disableButton = false;
   profileFilterControl: FormControl = new FormControl('');
 
-  constructor(store: Store,
-              protected router: Router,
-              protected activatedRoute: ActivatedRoute,
-              protected formBuilder: FormBuilder) {
-    super(store);
+  constructor(data: SkComponentsData) {
+    super(data);
   }
 
   state(): SKUserModelStateModel {
-    return this.store.selectSnapshot(SKUserModelState.selector);
+    return this.data.store.selectSnapshot(SKUserModelState.selector);
   }
 
   get actions(): SkAbstractFormAction<SkUserDomain> {
@@ -83,7 +78,7 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
       status: [entity.status === UserState.ACTIVE, [Validators.required]],
       profile: [entity.profile, [Validators.required]]
     };
-    this.form = this.formBuilder.group(Object.assign(target, source));
+    this.form = this.data.formBuilder.group(Object.assign(target, source));
   }
 
   passwordValidators(entity: SkUserDomain): Validators[] {
@@ -96,7 +91,7 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
 
   update(): Promise<SkUserDomain> {
     return super.update(this.buildEntityFromForm(), this.entity.id,
-      () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}));
+      () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}));
   }
 
   private buildEntityFromForm(): SkIUserDomain {
@@ -108,17 +103,17 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
 
   create(): Promise<SkUserDomain> {
     return super.create(this.buildEntityFromForm(),
-      () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}));
+      () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}));
   }
 
   updateAndGet(): Promise<SkUserDomain[]> {
     return super.updateAndGet(this.buildEntityFromForm(), this.entity.id,
-      () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}));
+      () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}));
   }
 
   createAndGet(): Promise<SkUserDomain[]> {
     return super.createAndGet(this.buildEntityFromForm(),
-      () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}));
+      () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}));
   }
 
   get filterProduct(): SkProfileDomain[] {

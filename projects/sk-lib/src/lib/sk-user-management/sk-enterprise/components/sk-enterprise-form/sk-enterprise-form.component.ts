@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {SkEnterpriseDomain} from '../../classes/sk-enterprise-domain';
-import {Store} from '@ngxs/store';
-import {SKConfigState, SkFormConfig} from 'sk-core';
+import {SKConfigState, SkFormConfig} from '@sk-framework/sk-core';
 import {
   SKCreateAllEnterpriseAction,
   SKCreateAndGetEnterpriseAction,
@@ -11,7 +10,7 @@ import {
   SKEnterpriseModelStateModel, SKUpdateAllEnterpriseAction, SKUpdateAndGetEnterpriseAction, SKUpdateEnterpriseAction
 } from '../../services/sk-enterprise-state';
 import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
-import {Router} from '@angular/router';
+import {SkComponentsData} from '../../../../services/sk-components-data';
 
 @Component({
   selector: 'sk-enterprise-form',
@@ -20,18 +19,16 @@ import {Router} from '@angular/router';
 })
 export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpriseDomain, SKEnterpriseModelStateModel> implements OnInit {
   form: FormGroup | undefined;
-  entity: SkEnterpriseDomain = this.store.selectSnapshot(SKEnterpriseModelState.currentSelector) || new SkEnterpriseDomain();
-  formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
+  entity: SkEnterpriseDomain = this.data.store.selectSnapshot(SKEnterpriseModelState.currentSelector) || new SkEnterpriseDomain();
+  formConfig: SkFormConfig = this.data.store.selectSnapshot(SKConfigState.formSelector);
   disableButton = false;
 
-  constructor(store: Store,
-              protected router: Router,
-              protected formBuilder: FormBuilder) {
-    super(store);
+  constructor(data: SkComponentsData) {
+    super(data);
   }
 
   state(): SKEnterpriseModelStateModel {
-    return this.store.selectSnapshot(SKEnterpriseModelState.selector);
+    return this.data.store.selectSnapshot(SKEnterpriseModelState.selector);
   }
 
   get actions(): SkAbstractFormAction<SkEnterpriseDomain> {
@@ -71,24 +68,6 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
       tel: [this.entity.tel],
       description: [this.entity.description]
     };
-    this.form = this.formBuilder.group(Object.assign(target, source));
+    this.form =  this.data.formBuilder.group(Object.assign(target, source));
   }
-
-  update(): Promise<SkEnterpriseDomain> {
-    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
-  }
-
-  create(): Promise<SkEnterpriseDomain> {
-    return super.create(this.form?.getRawValue(), () => this.router.navigate(['../']));
-  }
-
-  updateAndGet(): Promise<SkEnterpriseDomain[]> {
-    return super.updateAndGet(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
-  }
-
-  createAndGet(): Promise<SkEnterpriseDomain[]> {
-    return super.createAndGet(this.form?.getRawValue(), () => this.router.navigate(['../']));
-  }
-
-
 }

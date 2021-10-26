@@ -1,11 +1,12 @@
 import {Directive, EventEmitter, Input} from '@angular/core';
-import {Store} from '@ngxs/store';
-import {SKIEntity, SkIStateModel, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction} from 'sk-core';
+import {SKIEntity, SkIStateModel, SKUpdateAction, SKUpdateAllAction, SKUpdateAndGetAction} from '@sk-framework/sk-core';
 import {finalize, map} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
-import {SKCreateAction, SKCreateAllAction, SKCreateAndGetAction, SKIPagination} from 'sk-core';
+import {SKCreateAction, SKCreateAllAction, SKCreateAndGetAction, SKIPagination} from '@sk-framework/sk-core';
 import {Helpers} from '../utils';
 import {Observable} from 'rxjs';
+import {SkFormConfig, SKConfigState} from '@sk-framework/sk-core';
+import {SkComponentsData} from '../services/sk-components-data';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
@@ -22,9 +23,10 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   @Input() afterUpdate: EventEmitter<T> = new EventEmitter<T>();
   @Input() afterCreateAndGet: EventEmitter<T[]> = new EventEmitter<T[]>();
   @Input() afterUpdateAndGet: EventEmitter<T[]> = new EventEmitter<T[]>();
+  formConfig: SkFormConfig = this.data.store.selectSnapshot(SKConfigState.formSelector);
 
 
-  protected constructor(protected store: Store) {
+  protected constructor(protected data: SkComponentsData) {
   }
 
 
@@ -68,8 +70,8 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
    ***********************************API METHODS********************************
    /*****************************************************************************/
 
-  create(entity: T = this.form?.getRawValue(),
-         success?: (value: T) => any,
+  create(entity: T = this.form?.getRawValue() ?? this.entity,
+         success: (value: T) => any = () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}),
          error?: (error: any) => any,
          finalizeFunction?: () => any): Promise<T> {
 
@@ -79,7 +81,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
       throw new Error('Create action not found');
     }
 
-    const observable = this.store
+    const observable = this.data.store
       .dispatch(this.actions.create(entity))
       .pipe(
         map(() => this.state().lastCreate as T),
@@ -96,8 +98,8 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   }
 
   update(entity: T = this.form?.getRawValue(),
-         id: ID = this.form?.getRawValue()?.id,
-         success?: (value: T) => any,
+         id: ID = this.form?.getRawValue()?.id ?? this.entity?.id,
+         success: (value: T) => any = () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}),
          error?: (error: any) => any,
          finalizeFunction?: () => any): Promise<T> {
     this.disableButton = true;
@@ -106,7 +108,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
       throw new Error('Create action not found');
     }
 
-    const observable = this.store.dispatch(this.actions.update(entity, id))
+    const observable = this.data.store.dispatch(this.actions.update(entity, id))
       .pipe(
         map(() => this.state().lastUpdate as T),
         finalize(() => {
@@ -123,7 +125,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
 
 
   createAndGet(entity: T = this.form?.getRawValue(),
-               success?: (value: T[]) => any,
+               success: (value: T[]) => any = () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}),
                error?: (error: any) => any,
                finalizeFunction?: () => any): Promise<T[]> {
 
@@ -133,8 +135,8 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
       throw new Error('Create action not found');
     }
 
-    const observable = this.store
-      .dispatch(this.actions.createAndGet(entity, Helpers.safePagination(this.state(), this.store)))
+    const observable = this.data.store
+      .dispatch(this.actions.createAndGet(entity, Helpers.safePagination(this.state(), this.data.store)))
       .pipe(
         map(() => this.state().lastCreates as T[]),
         finalize(() => {
@@ -155,8 +157,8 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   }
 
   updateAndGet(entity: T = this.form?.getRawValue(),
-               id: ID = this.form?.getRawValue()?.id,
-               success?: (value: T[]) => any,
+               id: ID = this.form?.getRawValue()?.id ?? this.entity?.id,
+               success: (value: T[]) => any = () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}),
                error?: (error: any) => any,
                finalizeFunction?: () => any): Promise<T[]> {
     this.disableButton = true;
@@ -165,8 +167,8 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
       throw new Error('Create action not found');
     }
 
-    const observable: Observable<T[]> = this.store
-      .dispatch(this.actions.updateAndGet(entity, id, Helpers.safePagination(this.state(), this.store)))
+    const observable: Observable<T[]> = this.data.store
+      .dispatch(this.actions.updateAndGet(entity, id, Helpers.safePagination(this.state(), this.data.store)))
       .pipe(
         map(() => this.state().lastCreates as T[]),
         finalize(() => {
@@ -183,6 +185,10 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
       }
       this.afterUpdateAndGet.emit(value);
     }, error);
+  }
+
+  compareById(first: { id: any }, second: { id: any }): boolean {
+    return first && second && first.id === second.id;
   }
 }
 

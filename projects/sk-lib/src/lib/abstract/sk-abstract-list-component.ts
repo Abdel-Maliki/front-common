@@ -1,10 +1,10 @@
 import {Directive} from '@angular/core';
-import {Store} from '@ngxs/store';
+import {SkComponentsData} from '../services/sk-components-data';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
 export abstract class SkAbstractListComponent {
 
-  protected constructor(protected store: Store) {
+  protected constructor(protected data: SkComponentsData) {
   }
 }

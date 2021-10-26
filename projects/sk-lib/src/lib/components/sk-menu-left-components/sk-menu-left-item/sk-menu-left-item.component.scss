@@ -1,6 +1,6 @@
 $sk-default-color: rgba(white, 0.7);
 $sk-selected-color: rgba(white, 1);
-;
+
 
 .sk-menu-expand {
   transition: 300ms ease-in-out;
@@ -23,9 +23,11 @@ $sk-selected-color: rgba(white, 1);
 }
 
 .default-color {
-  color: $sk-default-color;
+  //color: $sk-default-color;
 }
 
 .sk-menu-selected {
-  color: $sk-selected-color;
+  //color: $sk-selected-color;
+  color: red;
+
 }

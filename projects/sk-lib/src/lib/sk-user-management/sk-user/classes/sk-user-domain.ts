@@ -1,6 +1,6 @@
 import {SkAbstractEntity} from '../../../abstract';
-import {SKIEntity, UpdateLog} from 'sk-core';
-import {SkIProfileDomain} from '../../sk-profile/classes/sk-profile-domain';
+import {SKIEntity, UpdateLog} from '@sk-framework/sk-core';
+import {SkIProfileDomain} from '../../sk-profile';
 
 /**
  * @author abdel-maliki

@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngxs/store';
-import {SkLayoutState, CurrentMenuLeftItem, MenuCategory, MenuItem} from 'sk-core';
+import {SkLayoutState, CurrentMenuLeftItem, MenuCategory, MenuItem} from '@sk-framework/sk-core';
 
 @Component({
   selector: 'sk-menu-left-category',

@@ -2,7 +2,7 @@ import {SkProfileDomain} from '../classes/sk-profile-domain';
 import {Store} from '@ngxs/store';
 import {SKProfileModelState, SKProfileModelStateModel, SKProfilePageAction} from './sk-profile-state';
 import {Injectable} from '@angular/core';
-import {SKConfigState} from 'sk-core';
+import {SKConfigState} from '@sk-framework/sk-core';
 import {SkAbstractListResolver} from '../../../abstract';
 
 /**

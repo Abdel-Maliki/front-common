@@ -2,7 +2,7 @@ import {SkUserDomain} from '../classes/sk-user-domain';
 import {Store} from '@ngxs/store';
 import {SKUserModelState, SKUserModelStateModel, SKUserPageAction} from './sk-user-state';
 import {Injectable} from '@angular/core';
-import {SKConfigState} from 'sk-core';
+import {SKConfigState} from '@sk-framework/sk-core';
 import {SkAbstractListResolver} from '../../../abstract';
 
 /**

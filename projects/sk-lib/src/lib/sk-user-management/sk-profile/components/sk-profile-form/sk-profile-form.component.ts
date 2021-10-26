@@ -7,11 +7,9 @@ import {
   SKCreateProfileAction,
   SKProfileModelState,
   SKProfileModelStateModel, SKUpdateAllProfileAction, SKUpdateAndGetProfileAction, SKUpdateProfileAction
-} from '../../services/sk-profile-state';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Store} from '@ngxs/store';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SKConfigState, SkFormConfig} from 'sk-core';
+} from '../../services';
+import {Validators} from '@angular/forms';
+import {SkComponentsData} from '../../../../services/sk-components-data';
 
 @Component({
   selector: 'sk-profile-form',
@@ -19,20 +17,14 @@ import {SKConfigState, SkFormConfig} from 'sk-core';
   styleUrls: ['./sk-profile-form.component.css']
 })
 export class SkProfileFormComponent extends SkAbstractFormComponent<SkProfileDomain, SKProfileModelStateModel> implements OnInit {
-  form: FormGroup | undefined;
-  entity: SkProfileDomain = this.store.selectSnapshot(SKProfileModelState.currentSelector) || new SkProfileDomain();
-  formConfig: SkFormConfig = this.store.selectSnapshot(SKConfigState.formSelector);
-  disableButton = false;
+  entity: SkProfileDomain = this.data.store.selectSnapshot(SKProfileModelState.currentSelector) || new SkProfileDomain();
 
-  constructor(store: Store,
-              protected router: Router,
-              protected activatedRoute: ActivatedRoute,
-              protected formBuilder: FormBuilder) {
-    super(store);
+  constructor(data: SkComponentsData) {
+    super(data);
   }
 
   state(): SKProfileModelStateModel {
-    return this.store.selectSnapshot(SKProfileModelState.selector);
+    return this.data.store.selectSnapshot(SKProfileModelState.selector);
   }
 
   get actions(): SkAbstractFormAction<SkProfileDomain> {
@@ -40,7 +32,6 @@ export class SkProfileFormComponent extends SkAbstractFormComponent<SkProfileDom
       create: (entity: SkProfileDomain, others) => new SKCreateProfileAction({entity, others}),
       createAndGet: ((entity, pagination, others) => new SKCreateAndGetProfileAction({entity, pagination, others})),
       createAll: (entities: SkProfileDomain[], others) => new SKCreateAllProfileAction({entities, others}),
-
       update: (entity: SkProfileDomain, id, others) => new SKUpdateProfileAction({entity, id, others}),
       updateAndGet: ((entity, id, pagination, others) => new SKUpdateAndGetProfileAction({entity, id, pagination, others})),
       updateAll: (entities: SkProfileDomain[], others) => new SKUpdateAllProfileAction({entities, others})
@@ -50,7 +41,6 @@ export class SkProfileFormComponent extends SkAbstractFormComponent<SkProfileDom
   ngOnInit(): void {
     this.buildForm();
   }
-
 
   buildForm(): void {
     const target = Object
@@ -69,25 +59,6 @@ export class SkProfileFormComponent extends SkAbstractFormComponent<SkProfileDom
       ]],
       description: [this.entity.description]
     };
-    this.form = this.formBuilder.group(Object.assign(target, source));
+    this.form = this.data.formBuilder.group(Object.assign(target, source));
   }
-
-  update(): Promise<SkProfileDomain> {
-    return super.update(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
-  }
-
-  create(): Promise<SkProfileDomain> {
-    return super.create(this.form?.getRawValue(), () => this.router.navigate(['../']));
-  }
-
-  updateAndGet(): Promise<SkProfileDomain[]> {
-    return super.updateAndGet(this.form?.getRawValue(), this.entity.id, () => this.router.navigate(['../../']));
-  }
-
-  createAndGet(): Promise<SkProfileDomain[]> {
-    return super.createAndGet(this.form?.getRawValue(), () => this.router.navigate(['../'],
-      {relativeTo: this.activatedRoute}));
-  }
-
-
 }

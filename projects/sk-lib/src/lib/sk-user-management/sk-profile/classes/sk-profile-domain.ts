@@ -1,5 +1,5 @@
 import {SkAbstractEntity} from '../../../abstract';
-import {SKIEntity, UpdateLog} from 'sk-core';
+import {SKIEntity, UpdateLog} from '@sk-framework/sk-core';
 
 /**
  * @author abdel-maliki

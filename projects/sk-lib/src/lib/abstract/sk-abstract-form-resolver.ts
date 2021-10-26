@@ -1,6 +1,6 @@
 import {Resolve} from '@angular/router';
 import {Store} from '@ngxs/store';
-import {SKIEntity, SkIStateModel, SKSetCurrentForFormAction} from 'sk-core';
+import {SKIEntity, SkIStateModel, SKSetCurrentForFormAction} from '@sk-framework/sk-core';
 import {SkAbstractFindResolver} from './sk-abstract-find-resolver';
 
 export abstract class SkAbstractFormResolver<T extends SKIEntity<T, ID>,

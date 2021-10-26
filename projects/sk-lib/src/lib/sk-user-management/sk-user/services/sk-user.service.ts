@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {SkAbstractService} from '../../../abstract';
 import {ResponseWrapper} from '../../../utils';
 import {InterfaceUser} from './interface-user';
-import {SKIPagination} from 'sk-core';
+import {SKIPagination} from '@sk-framework/sk-core';
 import {SkIUserDomain, SkUserDomain} from '../classes/sk-user-domain';
 import {SkServiceData} from '../../../services';
 

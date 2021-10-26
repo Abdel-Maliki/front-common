@@ -1,4 +1,4 @@
-import {SKIPagination} from 'sk-core';
+import {SKIPagination} from '@sk-framework/sk-core';
 
 /**
  * @author abdel-maliki

@@ -2,7 +2,7 @@ import {SkEnterpriseDomain} from '../classes/sk-enterprise-domain';
 import {Store} from '@ngxs/store';
 import {SKEnterpriseModelState, SKEnterpriseModelStateModel, SKEnterprisePageAction} from './sk-enterprise-state';
 import {Injectable} from '@angular/core';
-import {SKConfigState} from 'sk-core';
+import {SKConfigState} from '@sk-framework/sk-core';
 import {SkAbstractListResolver} from '../../../abstract';
 
 /**

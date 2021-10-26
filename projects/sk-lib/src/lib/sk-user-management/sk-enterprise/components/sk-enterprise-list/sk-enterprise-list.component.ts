@@ -2,27 +2,26 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {SkEnterpriseDomain} from '../../classes/sk-enterprise-domain';
 import {ColumnItem} from '../../../../components';
-import {Store} from '@ngxs/store';
 import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAction} from '../../services/sk-enterprise-state';
 import {Subscription} from 'rxjs';
-import { SKConfigState, SKIPagination} from 'sk-core';
-import {Router} from '@angular/router';
+import {SKConfigState, SKIPagination} from '@sk-framework/sk-core';
 import {DateHelpers} from '../../../../utils';
+import {SkComponentsData} from '../../../../services/sk-components-data';
+import {SkAbstractListComponent} from '../../../../abstract';
 
 @Component({
   selector: 'sk-enterprise-list',
   templateUrl: './sk-enterprise-list.component.html',
   styleUrls: ['./sk-enterprise-list.component.css']
 })
-export class SkEnterpriseListComponent implements OnInit, OnDestroy {
+export class SkEnterpriseListComponent extends SkAbstractListComponent implements OnInit, OnDestroy {
 
   subscriptionList: Subscription = new Subscription();
   datasource: MatTableDataSource<SkEnterpriseDomain> = new MatTableDataSource<SkEnterpriseDomain>([]);
-  pagination: SKIPagination = this.store.selectSnapshot(SKEnterpriseModelState.paginationSelector)
-    || this.store.selectSnapshot(SKConfigState.selector).pagination;
+  pagination: SKIPagination = this.data.store.selectSnapshot(SKEnterpriseModelState.paginationSelector)
+    || this.data.store.selectSnapshot(SKConfigState.selector).pagination;
 
   @Input() displayedColumns: ColumnItem<SkEnterpriseDomain>[] = [
-    {title: 'ID', value: data => data?.id ?? ''},
     {title: 'Nom', value: data => data?.name ?? ''},
     {title: 'Téléphone', value: data => data?.tel ?? ''},
     {title: 'Adresse', value: data => data?.address ?? ''},
@@ -30,22 +29,25 @@ export class SkEnterpriseListComponent implements OnInit, OnDestroy {
     {title: 'Date d\'Ajout', value: data => DateHelpers.dateToDDMMYYYY(data?.createdAt) ?? ''},
   ];
 
-  constructor(protected store: Store, protected router: Router) {
-    this.subscriptionList.add(this.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
+  constructor(protected data: SkComponentsData) {
+    super(data);
+
+    this.subscriptionList
+      .add(this.data.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
   }
 
   goToUpdate(entity: SkEnterpriseDomain): void {
-    this.store
+    this.data.store
       .dispatch(new SKSetCurrentEnterpriseAction(entity))
       .toPromise()
-      .then(() => this.router.navigate([`update/${entity.id}`]).then());
+      .then(() => this.data.router.navigate(['update', `${entity.id}`], {relativeTo: this.data.activatedRoute}).then());
   }
 
   ngOnInit(): void {
   }
 
   pageChange(pagination: SKIPagination): void {
-    this.store.dispatch(new SKEnterprisePageAction({pagination}));
+    this.data.store.dispatch(new SKEnterprisePageAction({pagination}));
   }
 
   ngOnDestroy(): void {

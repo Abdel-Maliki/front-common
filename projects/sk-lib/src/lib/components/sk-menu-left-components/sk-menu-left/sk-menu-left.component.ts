@@ -1,8 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MenuCategory} from 'sk-core';
-import {Store} from '@ngxs/store';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {MenuCategory} from '@sk-framework/sk-core';
 import {Subscription} from 'rxjs';
-import {SKConfigState} from 'sk-core';
 
 @Component({
   selector: 'sk-menu-left',
@@ -11,15 +9,10 @@ import {SKConfigState} from 'sk-core';
 })
 export class SkMenuLeftComponent implements OnInit, OnDestroy {
 
-  menuCategories: MenuCategory[] = JSON.parse(JSON.stringify(this.store.selectSnapshot(SKConfigState.menuLeftItemsSelector)));
+  @Input() menuCategories: MenuCategory[] = [];
   subscription: Subscription = new Subscription();
 
-  constructor(private store: Store) {
-  }
-
   ngOnInit(): void {
-    this.subscription.add(this.store.select(SKConfigState.menuLeftItemsSelector)
-      .subscribe(value => this.menuCategories = JSON.parse(JSON.stringify(value))));
   }
 
   hasLast(menuCategory: MenuCategory): boolean {

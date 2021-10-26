@@ -22,7 +22,7 @@ import {
   SkIStateModel,
   SKSetCurrentAction,
   SKSetCurrentForFormAction
-} from 'sk-core';
+} from '@sk-framework/sk-core';
 import {Helpers} from './helpers';
 
 /**

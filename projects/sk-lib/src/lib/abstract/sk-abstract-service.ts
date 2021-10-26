@@ -3,7 +3,7 @@
  */
 import {
   ISkService, SKIEntity, i18nConstantes, SKConfigState, SKIPagination, SkIResponseWrapper
-} from 'sk-core';
+} from '@sk-framework/sk-core';
 import {Observable} from 'rxjs';
 import {Store} from '@ngxs/store';
 import {HeadersOptions, HttpHelpers} from '../utils';

@@ -15,7 +15,6 @@
   </mat-icon>
 </mat-list-item>
 
-
 <div [@submenu]="withChild(menuItem) && displayChildren ? 'visible': 'hidden'">
   <mat-divider style="margin-left: 20px" [vertical]="true"></mat-divider>
   <ng-container *ngFor="let menuItem2 of (menuItem && menuItem.menuItems ? menuItem.menuItems : [])">

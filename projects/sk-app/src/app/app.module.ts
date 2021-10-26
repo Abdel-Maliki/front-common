@@ -6,18 +6,18 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {NgxsModule} from '@ngxs/store';
 import {environment} from '../environments/environment';
-import {skStates} from 'sk-core';
-import {
-  SkSidenavContainerModule,
-  SK_ENTERPRISE_SERVICE,
-  SkEnterpriseService,
-  SK_PROFILE_SERVICE,
-  SkProfileService,
-} from 'sk-lib';
 import {TranslateModule} from '@ngx-translate/core';
 import {HttpClientModule} from '@angular/common/http';
 import {AppInitializerService} from './app-initializer-service';
 import {SharedModule} from '../../../sk-lib/src/lib/shared/shared-module';
+import {skStates} from '@sk-framework/sk-core';
+import {
+  SkProfileService,
+  SkSidenavContainerModule,
+  SK_ENTERPRISE_SERVICE,
+  SkEnterpriseService,
+  SK_PROFILE_SERVICE,
+} from '../../../sk-lib/src/public-api';
 
 export function appInit(appInitializerService: AppInitializerService): () => Promise<void> {
   return () => appInitializerService.initApp();

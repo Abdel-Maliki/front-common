@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {SkMenuLeftCategoryComponent} from '../sk-menu-left-category/sk-menu-left-category.component';
 import {Store} from '@ngxs/store';
-import {SkLayoutState, MenuItem} from 'sk-core';
+import {SkLayoutState, MenuItem} from '@sk-framework/sk-core';
 import {Router, IsActiveMatchOptions} from '@angular/router';
 
 

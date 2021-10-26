@@ -1,5 +1,5 @@
 import {SkIProfileDomain} from '../classes/sk-profile-domain';
-import {ISkService} from 'sk-core';
+import {ISkService} from '@sk-framework/sk-core';
 import {Observable} from 'rxjs';
 import {ResponseWrapper} from '../../../utils';
 

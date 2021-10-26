@@ -1,6 +1,6 @@
 import {Resolve} from '@angular/router';
 import {Store} from '@ngxs/store';
-import {SKGetAction, SKIEntity, SkIStateModel} from 'sk-core';
+import {SKGetAction, SKIEntity, SkIStateModel} from '@sk-framework/sk-core';
 import {SkAbstractFindResolver} from './sk-abstract-find-resolver';
 
 export abstract class SkAbstractDisplayResolver<T extends SKIEntity<T, ID>, S extends SkIStateModel<T>,

@@ -1,4 +1,4 @@
-import {SKIEntity, UpdateLog} from 'sk-core';
+import {SKIEntity, UpdateLog} from '@sk-framework/sk-core';
 import {SkAbstractEntity} from '../../../abstract';
 
 export class SkEnterpriseDomain extends SkAbstractEntity<SkEnterpriseDomain> implements SkIEnterprise {

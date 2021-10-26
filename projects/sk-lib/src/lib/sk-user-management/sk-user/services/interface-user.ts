@@ -1,8 +1,8 @@
-import {ISkService} from 'sk-core';
+import {ISkService} from '@sk-framework/sk-core';
 import {Observable} from 'rxjs';
 import {ResponseWrapper} from '../../../utils';
 import {SkIUserDomain} from '../classes/sk-user-domain';
-import {SKIPagination} from 'sk-core';
+import {SKIPagination} from '@sk-framework/sk-core';
 
 /**
  * @author abdel-maliki

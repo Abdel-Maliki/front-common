@@ -1,7 +1,7 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
-import {SKIEntity, SkIStateModel} from 'sk-core';
+import {SKIEntity, SkIStateModel} from '@sk-framework/sk-core';
 
 export abstract class SkAbstractFindResolver<T extends SKIEntity<T, ID>, S extends SkIStateModel<T>,
   ID extends string | number = any> implements Resolve<T> {

@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output, TemplateRef} from '@a
 import {MatTableDataSource} from '@angular/material/table';
 import {PageEvent} from '@angular/material/paginator';
 import {Router} from '@angular/router';
-import {SKConfigState, SKIPagination} from 'sk-core';
+import {SKConfigState, SKIPagination} from '@sk-framework/sk-core';
 import {Store} from '@ngxs/store';
 import {Subscription} from 'rxjs';
 
