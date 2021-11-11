@@ -14,7 +14,8 @@ import {
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SKConfigState, SkFormConfig} from '@sk-framework/sk-core';
 import {SkProfileDomain, SKProfileModelState} from '../../../sk-profile';
-import {SkComponentsData} from '../../../../services/sk-components-data';
+import {SkComponentsData} from '../../../../services';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'sk-user-form',
@@ -29,8 +30,10 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
   disableButton = false;
   profileFilterControl: FormControl = new FormControl('');
 
-  constructor(data: SkComponentsData) {
-    super(data);
+  constructor(data: SkComponentsData,
+              protected router: Router,
+              protected activatedRoute: ActivatedRoute) {
+    super(data, router, activatedRoute);
   }
 
   state(): SKUserModelStateModel {
@@ -91,7 +94,7 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
 
   update(): Promise<SkUserDomain> {
     return super.update(this.buildEntityFromForm(), this.entity.id,
-      () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}));
+      () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}));
   }
 
   private buildEntityFromForm(): SkIUserDomain {
@@ -103,17 +106,17 @@ export class SkUserFormComponent extends SkAbstractFormComponent<SkUserDomain, S
 
   create(): Promise<SkUserDomain> {
     return super.create(this.buildEntityFromForm(),
-      () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}));
+      () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}));
   }
 
   updateAndGet(): Promise<SkUserDomain[]> {
     return super.updateAndGet(this.buildEntityFromForm(), this.entity.id,
-      () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}));
+      () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}));
   }
 
   createAndGet(): Promise<SkUserDomain[]> {
     return super.createAndGet(this.buildEntityFromForm(),
-      () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}));
+      () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}));
   }
 
   get filterProduct(): SkProfileDomain[] {

@@ -5,11 +5,14 @@ import {Router} from '@angular/router';
 import {SKConfigState, SKIPagination} from '@sk-framework/sk-core';
 import {Store} from '@ngxs/store';
 import {Subscription} from 'rxjs';
+import {expendAnimation} from '../../classes/expendAnimation';
+
 
 @Component({
   selector: 'sk-table',
   templateUrl: './sk-table.component.html',
-  styleUrls: ['./sk-table.component.scss']
+  styleUrls: ['./sk-table.component.scss'],
+  animations: [expendAnimation],
 })
 export class SkTableComponent implements OnDestroy {
   @Input() datasource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
@@ -23,9 +26,12 @@ export class SkTableComponent implements OnDestroy {
   @Input() actionsTemplate: TemplateRef<any> | null = null;
   @Input() cursor: 'default' | 'pointer' = 'pointer';
   @Input() pagination: SKIPagination = this.store.selectSnapshot(SKConfigState.paginationSelector);
+  @Input() expandedTemplate: TemplateRef<any> | null = null;
+
 
   @Output() pageChange: EventEmitter<SKIPagination> = new EventEmitter();
   @Output() lineClicked: EventEmitter<any> = new EventEmitter();
+  expandedElement: any | null;
 
   private subscriptionList: Subscription = new Subscription();
 
@@ -39,6 +45,11 @@ export class SkTableComponent implements OnDestroy {
 
   pageEvent(pageEvent: PageEvent): void {
     this.pageChange.emit({...this.pagination, page: pageEvent.pageIndex, size: pageEvent.pageSize});
+  }
+
+  lineClick(element: any): void {
+    this.lineClicked.emit(element);
+    this.expandedElement = this.expandedElement === element ? null : element;
   }
 
   ngOnDestroy(): void {

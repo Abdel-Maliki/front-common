@@ -9,7 +9,8 @@ import {
   SKProfileModelStateModel, SKUpdateAllProfileAction, SKUpdateAndGetProfileAction, SKUpdateProfileAction
 } from '../../services';
 import {Validators} from '@angular/forms';
-import {SkComponentsData} from '../../../../services/sk-components-data';
+import {SkComponentsData} from '../../../../services';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'sk-profile-form',
@@ -19,8 +20,10 @@ import {SkComponentsData} from '../../../../services/sk-components-data';
 export class SkProfileFormComponent extends SkAbstractFormComponent<SkProfileDomain, SKProfileModelStateModel> implements OnInit {
   entity: SkProfileDomain = this.data.store.selectSnapshot(SKProfileModelState.currentSelector) || new SkProfileDomain();
 
-  constructor(data: SkComponentsData) {
-    super(data);
+  constructor(data: SkComponentsData,
+              protected router: Router,
+              protected activatedRoute: ActivatedRoute) {
+    super(data, router, activatedRoute);
   }
 
   state(): SKProfileModelStateModel {

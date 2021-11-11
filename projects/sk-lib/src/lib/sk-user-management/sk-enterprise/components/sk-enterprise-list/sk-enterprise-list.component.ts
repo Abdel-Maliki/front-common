@@ -6,13 +6,15 @@ import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAc
 import {Subscription} from 'rxjs';
 import {SKConfigState, SKIPagination} from '@sk-framework/sk-core';
 import {DateHelpers} from '../../../../utils';
-import {SkComponentsData} from '../../../../services/sk-components-data';
+import {SkComponentsData} from '../../../../services';
 import {SkAbstractListComponent} from '../../../../abstract';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'sk-enterprise-list',
   templateUrl: './sk-enterprise-list.component.html',
-  styleUrls: ['./sk-enterprise-list.component.css']
+  styleUrls: ['./sk-enterprise-list.component.css'],
+
 })
 export class SkEnterpriseListComponent extends SkAbstractListComponent implements OnInit, OnDestroy {
 
@@ -29,7 +31,9 @@ export class SkEnterpriseListComponent extends SkAbstractListComponent implement
     {title: 'Date d\'Ajout', value: data => DateHelpers.dateToDDMMYYYY(data?.createdAt) ?? ''},
   ];
 
-  constructor(protected data: SkComponentsData) {
+  constructor(data: SkComponentsData,
+              protected router: Router,
+              protected activatedRoute: ActivatedRoute) {
     super(data);
 
     this.subscriptionList
@@ -40,7 +44,7 @@ export class SkEnterpriseListComponent extends SkAbstractListComponent implement
     this.data.store
       .dispatch(new SKSetCurrentEnterpriseAction(entity))
       .toPromise()
-      .then(() => this.data.router.navigate(['update', `${entity.id}`], {relativeTo: this.data.activatedRoute}).then());
+      .then(() => this.router.navigate(['update', `${entity.id}`], {relativeTo: this.activatedRoute}).then());
   }
 
   ngOnInit(): void {

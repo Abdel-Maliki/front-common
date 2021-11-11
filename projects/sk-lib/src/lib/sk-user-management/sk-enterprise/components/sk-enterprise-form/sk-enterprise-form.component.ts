@@ -11,6 +11,7 @@ import {
 } from '../../services/sk-enterprise-state';
 import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
 import {SkComponentsData} from '../../../../services/sk-components-data';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'sk-enterprise-form',
@@ -23,8 +24,10 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
   formConfig: SkFormConfig = this.data.store.selectSnapshot(SKConfigState.formSelector);
   disableButton = false;
 
-  constructor(data: SkComponentsData) {
-    super(data);
+  constructor(data: SkComponentsData,
+              protected router: Router,
+              protected activatedRoute: ActivatedRoute) {
+    super(data, router, activatedRoute);
   }
 
   state(): SKEnterpriseModelStateModel {
@@ -68,6 +71,6 @@ export class SkEnterpriseFormComponent extends SkAbstractFormComponent<SkEnterpr
       tel: [this.entity.tel],
       description: [this.entity.description]
     };
-    this.form =  this.data.formBuilder.group(Object.assign(target, source));
+    this.form = this.data.formBuilder.group(Object.assign(target, source));
   }
 }

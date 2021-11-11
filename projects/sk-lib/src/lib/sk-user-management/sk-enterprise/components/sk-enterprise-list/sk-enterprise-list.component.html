@@ -11,5 +11,12 @@
   [totalElements]="pagination.totalElements"
   [pagination]="pagination"
   (pageChange)="pageChange($event)"
+  [expandedTemplate]="elll"
   [displayedColumns]="displayedColumns" [actionsTemplate]="actionsTemplate">
 </sk-table>
+
+<ng-template #elll let-element>
+  <div>
+    example-element-position
+  </div>
+</ng-template>

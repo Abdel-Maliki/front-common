@@ -7,6 +7,7 @@ import {Helpers} from '../utils';
 import {Observable} from 'rxjs';
 import {SkFormConfig, SKConfigState} from '@sk-framework/sk-core';
 import {SkComponentsData} from '../services/sk-components-data';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
@@ -26,7 +27,9 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
   formConfig: SkFormConfig = this.data.store.selectSnapshot(SKConfigState.formSelector);
 
 
-  protected constructor(protected data: SkComponentsData) {
+  protected constructor(protected data: SkComponentsData,
+                        protected router: Router,
+                        protected activatedRoute: ActivatedRoute) {
   }
 
 
@@ -71,7 +74,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
    /*****************************************************************************/
 
   create(entity: T = this.form?.getRawValue() ?? this.entity,
-         success: (value: T) => any = () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}),
+         success: (value: T) => any = () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}),
          error?: (error: any) => any,
          finalizeFunction?: () => any): Promise<T> {
 
@@ -99,7 +102,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
 
   update(entity: T = this.form?.getRawValue(),
          id: ID = this.form?.getRawValue()?.id ?? this.entity?.id,
-         success: (value: T) => any = () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}),
+         success: (value: T) => any = () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}),
          error?: (error: any) => any,
          finalizeFunction?: () => any): Promise<T> {
     this.disableButton = true;
@@ -125,7 +128,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
 
 
   createAndGet(entity: T = this.form?.getRawValue(),
-               success: (value: T[]) => any = () => this.data.router.navigate(['../'], {relativeTo: this.data.activatedRoute}),
+               success: (value: T[]) => any = () => this.router.navigate(['../'], {relativeTo: this.activatedRoute}),
                error?: (error: any) => any,
                finalizeFunction?: () => any): Promise<T[]> {
 
@@ -158,7 +161,7 @@ export abstract class SkAbstractFormComponent<T extends SKIEntity<T, ID>,
 
   updateAndGet(entity: T = this.form?.getRawValue(),
                id: ID = this.form?.getRawValue()?.id ?? this.entity?.id,
-               success: (value: T[]) => any = () => this.data.router.navigate(['../../'], {relativeTo: this.data.activatedRoute}),
+               success: (value: T[]) => any = () => this.router.navigate(['../../'], {relativeTo: this.activatedRoute}),
                error?: (error: any) => any,
                finalizeFunction?: () => any): Promise<T[]> {
     this.disableButton = true;

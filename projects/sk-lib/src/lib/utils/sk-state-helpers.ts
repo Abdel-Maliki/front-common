@@ -43,7 +43,7 @@ export abstract class SkStateHelpers {
     val: keyof ST,
     actionError: keyof SkIActionsError,
     updatePageInf: boolean = false,
-    loadEntities: boolean = true): Partial<ST> {
+    loadEntities?: boolean): Partial<ST> {
 
     const partial: Partial<ST> = {};
     partial.actionsError = ({...ctx.getState().actionError, [actionError]: undefined} as any);
@@ -54,7 +54,9 @@ export abstract class SkStateHelpers {
 
     if (val && response.data && response.isValid) {
       partial[val] = (response.data as any);
-      partial.loadEntities = loadEntities;
+      if (loadEntities !== null && loadEntities !== undefined) {
+        partial.loadEntities = loadEntities;
+      }
 
       if (updatePageInf) {
         partial.pagination = {...ctx.getState().pagination, ...response.pagination};
@@ -81,7 +83,7 @@ export abstract class SkStateHelpers {
     fieldToSet: keyof ST,
     actionError: keyof SkIActionsError,
     updatePageInf: boolean = false,
-    loadEntities: boolean = true,
+    loadEntities?: boolean,
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
@@ -116,7 +118,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKGetAction<ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', 'get', false, false);
+    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', 'get', false, undefined);
   }
 
   static getAll<T extends SKIEntity<T, ID>,
@@ -128,7 +130,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SkGetAllAction<A>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', 'getAll', false, false);
+    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', 'getAll', false, undefined);
   }
 
   static pageElements<T extends SKIEntity<T, ID>,
@@ -193,7 +195,7 @@ export abstract class SkStateHelpers {
       'entities',
       'createAndGet',
       true,
-      true
+      false
     );
   }
 
@@ -265,7 +267,7 @@ export abstract class SkStateHelpers {
       'entities',
       'updateAndGet',
       true,
-      true
+      false
     );
   }
 
@@ -335,7 +337,7 @@ export abstract class SkStateHelpers {
       'entities',
       'deleteAndGet',
       true,
-      true
+      false
     );
   }
 
@@ -360,7 +362,7 @@ export abstract class SkStateHelpers {
       'entities',
       'deleteAllAndGet',
       true,
-      true
+      false
     );
   }
 
