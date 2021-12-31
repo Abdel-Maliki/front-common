@@ -35,13 +35,14 @@ export abstract class SkStateHelpers {
 
   static success<K,
     T extends SKIEntity<T, ID>,
-    ST extends SkIStateModel<T, F>,
+    ST extends SkIStateModel<T, F, E>,
     ID extends string | number = any,
-    F = { [key: string]: any }>(
+    F = { [key: string]: any },
+    E extends SkIActionsError = SkIActionsError>(
     response: SkIResponseWrapper<K, F>,
     ctx: StateContext<any>,
-    val: keyof ST,
-    actionError: keyof SkIActionsError,
+    val: keyof ST | ((partial: Partial<ST>, data: K) => void),
+    actionError: keyof E,
     updatePageInf: boolean = false,
     loadEntities?: boolean): Partial<ST> {
 
@@ -53,7 +54,8 @@ export abstract class SkStateHelpers {
     }
 
     if (val && response.data && response.isValid) {
-      partial[val] = (response.data as any);
+      const data = response.data as any;
+      typeof val === 'function' ? val(partial, data) : partial[val] = data;
       if (loadEntities !== null && loadEntities !== undefined) {
         partial.loadEntities = loadEntities;
       }
@@ -80,23 +82,22 @@ export abstract class SkStateHelpers {
     observable: Observable<SkIResponseWrapper<T | Array<T>>>,
     service: S,
     ctx: StateContext<ST>,
-    fieldToSet: keyof ST,
-    actionError: keyof SkIActionsError,
+    fieldToSet: keyof ST | ((partial: Partial<ST>, data: any) => void),
+    actionError: keyof E,
     updatePageInf: boolean = false,
     loadEntities?: boolean,
   ): Observable<RETURN_TYPE> {
     return observable
       .pipe(
         map((value: SkIResponseWrapper<T | Array<T>>) => Helpers.fromJsonResponseWrapper(value, service)),
-        tap(response => ctx.patchState({...this.success(response, ctx, fieldToSet, actionError, updatePageInf, loadEntities)})),
-        catchError(err => this.error(err, ctx, actionError))
+        tap(response => ctx.patchState({...SkStateHelpers.success(response, ctx, fieldToSet, actionError, updatePageInf, loadEntities)})),
+        catchError(err => SkStateHelpers.error(err, ctx, actionError))
       );
   }
 
   private static error<T, ST extends SkIStateModel<T, F, E>, S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError>(
     err: any, ctx: StateContext<ST>,
-    actionError: keyof SkIActionsError): Observable<any> {
-
+    actionError: keyof E): Observable<any> {
     ctx.patchState(({
       actionsError: {
         ...ctx.getState().actionsError,
@@ -118,31 +119,43 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKGetAction<ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(service.get(action.payload), service, ctx, 'entity', 'get', false, undefined);
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(service.get(action.payload), service, ctx, 'entity', 'get', false, undefined);
   }
 
   static getAll<T extends SKIEntity<T, ID>,
     ST extends SkIStateModel<T, F, E>,
-    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
+    S extends ISkService<T>,
+    F = any,
+    E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
     ctx: StateContext<ST>,
     action: SkGetAllAction<A>,
-  ): Observable<T> {
-    return SkStateHelpers.setState(service.getAll(action.payload), service, ctx, 'all', 'getAll', false, undefined);
+  ): Observable<T[]> {
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
+      service.getAll(action.payload),
+      service,
+      ctx,
+      'all',
+      'getAll',
+      false,
+      undefined
+    );
   }
 
   static pageElements<T extends SKIEntity<T, ID>,
     ST extends SkIStateModel<T, F, E>,
-    S extends ISkService<T>, F = any, E extends SkIActionsError = SkIActionsError,
+    S extends ISkService<T>,
+    F = any,
+    E extends SkIActionsError = SkIActionsError,
     ID extends string | number = any,
     A = any>(
     service: S,
     ctx: StateContext<ST>,
     action: SKPageAction<T, ID>,
-  ): Observable<T> {
-    return SkStateHelpers.setState(
+  ): Observable<T[]> {
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
       service.pageElements(action.payload.pagination, action.payload.others),
       service,
       ctx,
@@ -168,7 +181,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKCreateAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.create(action.payload.entity, action.payload.others),
       service,
       ctx,
@@ -188,7 +201,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKCreateAndGetAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.createAndGet({entity: action.payload.entity, pagination: action.payload.pagination}, action.payload.others),
       service,
       ctx,
@@ -207,13 +220,13 @@ export abstract class SkStateHelpers {
     service: S,
     ctx: StateContext<ST>,
     action: SKCreateAllAction<T, ID>,
-  ): Observable<T> {
+  ): Observable<T[]> {
 
     if (typeof service.createAll === 'undefined') {
       throw new Error('la fonction saveAll n\'as pas été implementé');
     }
 
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
       service.createAll(action.payload.entities, action.payload.others),
       service,
       ctx,
@@ -237,7 +250,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKUpdateAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.update(action.payload.entity, action.payload.id, action.payload.others),
       service,
       ctx,
@@ -257,7 +270,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKUpdateAndGetAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.updateAndGet(
         {entity: action.payload.entity, pagination: action.payload.pagination},
         action.payload.id,
@@ -279,13 +292,13 @@ export abstract class SkStateHelpers {
     service: S,
     ctx: StateContext<ST>,
     action: SKUpdateAllAction<T, ID>,
-  ): Observable<T> {
+  ): Observable<T[]> {
 
     if (typeof service.updateAll === 'undefined') {
       throw new Error('la fonction saveAll n\'as pas été implementé');
     }
 
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
       service.updateAll(action.payload.entities, action.payload.others),
       service,
       ctx,
@@ -310,7 +323,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKDeleteAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.delete(action.payload.id, action.payload.others),
       service,
       ctx,
@@ -330,7 +343,7 @@ export abstract class SkStateHelpers {
     ctx: StateContext<ST>,
     action: SKDeleteAndGetAction<T, ID>,
   ): Observable<T> {
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T>(
       service.deleteAndGet(action.payload.pagination, action.payload.id, action.payload.others),
       service,
       ctx,
@@ -349,13 +362,13 @@ export abstract class SkStateHelpers {
     service: S,
     ctx: StateContext<ST>,
     action: SKDeleteAllAndGetAction<T, ID>,
-  ): Observable<T> {
+  ): Observable<T[]> {
 
     if (typeof service.deleteAllAndGet === 'undefined') {
       throw new Error('la fonction deleteAllAndGet n\'as pas été implementé');
     }
 
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
       service.deleteAllAndGet(action.payload.entities, action.payload.pagination, action.payload.others),
       service,
       ctx,
@@ -375,7 +388,7 @@ export abstract class SkStateHelpers {
     service: S,
     ctx: StateContext<ST>,
     action: SKDeleteAllAction<T, ID>,
-  ): Observable<T> {
+  ): Observable<T[]> {
 
     if (typeof service.deleteAll === 'undefined') {
       throw new Error('la fonction deleteAll n\'as pas été implementé');
@@ -383,7 +396,7 @@ export abstract class SkStateHelpers {
 
     const ids: ID[] = action.payload.entities.map(value => value.id as ID);
 
-    return SkStateHelpers.setState(
+    return SkStateHelpers.setState<T, ST, S, F, E, ID, T[]>(
       service.deleteAll(ids, action.payload.others),
       service,
       ctx,
@@ -423,7 +436,7 @@ export abstract class SkStateHelpers {
     newInstance: T,
   ): Observable<any> {
     return action.payload
-      ? this.setState(service.get(action.payload), service, ctx, 'current', 'get', false, false)
+      ? this.setState<T, ST, S, F, E, ID, T>(service.get(action.payload), service, ctx, 'current', 'get', false, false)
       : of(ctx.patchState(({current: newInstance} as Partial<ST>))).pipe(map(() => newInstance));
   }
 }
