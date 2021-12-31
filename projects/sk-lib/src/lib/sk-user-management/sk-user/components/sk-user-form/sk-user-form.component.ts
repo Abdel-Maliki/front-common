@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
+import {SkAbstractFormComponent} from '../../../../abstract';
 import {SkIUserDomain, SkUserDomain, UserState} from '../../classes/sk-user-domain';
 import {
   SKCreateAllUserAction,
@@ -16,6 +16,7 @@ import {SKConfigState, SkFormConfig} from '@sk-framework/sk-core';
 import {SkProfileDomain, SKProfileModelState} from '../../../sk-profile';
 import {SkComponentsData} from '../../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SkAbstractFormAction} from '../../../../abstract';
 
 @Component({
   selector: 'sk-user-form',
