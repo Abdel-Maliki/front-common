@@ -55,8 +55,8 @@
 
 <mat-paginator *ngIf="displayPagination"
                [pageSizeOptions]="pageSizeOptions"
-               [length]='totalElements ?? pagination.totalElements ?? datasource.data.length'
-               [pageIndex]="pageIndex ?? pagination.page ?? 0"
-               [pageSize]="pageSize ?? pagination.size ?? pageSizeOptions[0]"
+               [length]='totalElements ?? pagination?.totalElements ?? datasource.data.length'
+               [pageIndex]="pageIndex ?? pagination?.page ?? 0"
+               [pageSize]="pageSize ?? pagination?.size ?? pageSizeOptions[0]"
                (page)="pageEvent($event)">
 </mat-paginator>

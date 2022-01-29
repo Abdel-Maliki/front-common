@@ -2,13 +2,19 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {SkEnterpriseDomain} from '../../classes/sk-enterprise-domain';
 import {ColumnItem} from '../../../../components';
-import {SKEnterpriseModelState, SKEnterprisePageAction, SKSetCurrentEnterpriseAction} from '../../services/sk-enterprise-state';
+import {
+  SKEnterpriseModelState,
+  SKEnterpriseModelStateModel,
+  SKEnterprisePageAction,
+  SKSetCurrentEnterpriseAction
+} from '../../services/sk-enterprise-state';
 import {Subscription} from 'rxjs';
 import {SKConfigState, SKIPagination} from '@sk-framework/sk-core';
 import {DateHelpers} from '../../../../utils';
 import {SkComponentsData} from '../../../../services';
 import {SkAbstractListComponent} from '../../../../abstract';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SkAbstractFormAction} from '../../../../abstract/sk-abstract-component';
 
 @Component({
   selector: 'sk-enterprise-list',
@@ -16,7 +22,8 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./sk-enterprise-list.component.css'],
 
 })
-export class SkEnterpriseListComponent extends SkAbstractListComponent implements OnInit, OnDestroy {
+export class SkEnterpriseListComponent extends SkAbstractListComponent<SkEnterpriseDomain, SKEnterpriseModelStateModel>
+  implements OnInit, OnDestroy {
 
   subscriptionList: Subscription = new Subscription();
   datasource: MatTableDataSource<SkEnterpriseDomain> = new MatTableDataSource<SkEnterpriseDomain>([]);
@@ -34,7 +41,7 @@ export class SkEnterpriseListComponent extends SkAbstractListComponent implement
   constructor(data: SkComponentsData,
               protected router: Router,
               protected activatedRoute: ActivatedRoute) {
-    super(data);
+    super(data, router, activatedRoute);
 
     this.subscriptionList
       .add(this.data.store.select(SKEnterpriseModelState.entitiesSelector).subscribe(value => this.datasource.data = value));
@@ -56,5 +63,13 @@ export class SkEnterpriseListComponent extends SkAbstractListComponent implement
 
   ngOnDestroy(): void {
     this.subscriptionList.unsubscribe();
+  }
+
+  get actions(): SkAbstractFormAction<SkEnterpriseDomain, any> {
+    return {};
+  }
+
+  state(): SKEnterpriseModelStateModel {
+    return this.data.store.selectSnapshot(SKEnterpriseModelState.selector);
   }
 }

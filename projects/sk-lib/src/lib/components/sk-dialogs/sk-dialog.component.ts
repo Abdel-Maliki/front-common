@@ -56,7 +56,7 @@ export class SkDialogComponent implements OnInit {
   }
 
   get disabledValidateButton(): boolean {
-    return this.data && this.data.disabledValidateButton ? this.data.disabledValidateButton : false;
+    return this.data && this.data.disabledValidateButton ? this.data.disabledValidateButton() : false;
   }
 
   get disabledCancelButton(): boolean {
@@ -81,7 +81,7 @@ export interface DialogComponentData {
   displayValidateButton?: boolean;
   cancelTitle?: string;
   validateTitle?: string;
-  disabledValidateButton?: boolean;
+  disabledValidateButton?: () => boolean;
   disabledCancelButton?: boolean;
   cancelEvent?: () => any;
   validateEvent?: () => any;

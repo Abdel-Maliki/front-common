@@ -8,7 +8,7 @@
 
 <sk-table
   [datasource]="datasource"
-  [totalElements]="pagination.totalElements"
+  [totalElements]="pagination?.totalElements"
   [pagination]="pagination"
   (pageChange)="pageChange($event)"
   [expandedTemplate]="elll"

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
+import {SkAbstractFormComponent} from '../../../../abstract';
 import {SkProfileDomain} from '../../classes/sk-profile-domain';
 import {
   SKCreateAllProfileAction,
@@ -11,6 +11,7 @@ import {
 import {Validators} from '@angular/forms';
 import {SkComponentsData} from '../../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SkAbstractFormAction} from '../../../../abstract/sk-abstract-component';
 
 @Component({
   selector: 'sk-profile-form',

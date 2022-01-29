@@ -9,9 +9,10 @@ import {
   SKEnterpriseModelState,
   SKEnterpriseModelStateModel, SKUpdateAllEnterpriseAction, SKUpdateAndGetEnterpriseAction, SKUpdateEnterpriseAction
 } from '../../services/sk-enterprise-state';
-import {SkAbstractFormAction, SkAbstractFormComponent} from '../../../../abstract';
-import {SkComponentsData} from '../../../../services/sk-components-data';
+import {SkAbstractFormComponent} from '../../../../abstract';
+import {SkComponentsData} from '../../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SkAbstractFormAction} from '../../../../abstract/sk-abstract-component';
 
 @Component({
   selector: 'sk-enterprise-form',
